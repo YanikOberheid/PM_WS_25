@@ -11,7 +11,7 @@ import javafx.stage.Stage;
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
 public class KundeControl {
-       
+	
     // das View-Objekt des Grundfensters mit den Kundendaten
 	private KundeView kundeView;
     // das Model-Objekt des Grundfensters mit den Kundendaten

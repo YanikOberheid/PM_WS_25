@@ -52,9 +52,9 @@ public final class KundeModel {
 	 * @return ObservableList<Integer> , enthaelt saemtliche Plannummern der Haeuser
 	 */
 	public ObservableList<Integer> getPlannummern(){
-		return this.plannummern; 
+		return this.plannummern;
 	}
-		 	
+
 	// ---- Datenbankzugriffe -------------------
 	
 	/**
@@ -63,8 +63,7 @@ public final class KundeModel {
 	 * @throws SQLException, Fehler beim Speichern in die Datenbank
 	 * @throws Exception, unbekannter Fehler
 	 */
-	public void speichereKunden(Kunde kunde)
-	    throws SQLException, Exception{
+	public void speichereKunden(Kunde kunde) throws SQLException, Exception{
         // Speicherung des Kunden in der DB
    	    this.kunde = kunde;
 	}  
