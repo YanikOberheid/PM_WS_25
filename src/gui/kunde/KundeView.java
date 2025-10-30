@@ -94,7 +94,6 @@ public class KundeView{
     		 leseKunden();
      	});
        	btnAnlegen.setOnAction(aEvent-> {
-       		System.out.println("Lege Kunde an!");
  	        legeKundenAn();
 	    });
     	btnAendern.setOnAction(aEvent-> {

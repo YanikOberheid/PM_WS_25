@@ -22,7 +22,7 @@ public class DBTestShowTables {
 
             // Schritt 2: Verbindung herstellen
             Connection conn = DriverManager.getConnection(url, user, password);
-            System.out.println("✅ Verbindung hergestellt!");
+            System.out.println("Verbindung hergestellt!");
 
             // Schritt 3: Statement erstellen
             Statement stmt = conn.createStatement();
@@ -31,7 +31,7 @@ public class DBTestShowTables {
             ResultSet rs = stmt.executeQuery("SHOW TABLES");
 
             // Schritt 5: Ergebnisse anzeigen
-            System.out.println("\n📋 Tabellen in der Datenbank:");
+            System.out.println("\nTabellen in der Datenbank:");
             int count = 0;
             while (rs.next()) {
                 count++;
@@ -46,7 +46,7 @@ public class DBTestShowTables {
             rs.close();
             stmt.close();
             conn.close();
-            System.out.println("\n✅ Verbindung geschlossen.");
+            System.out.println("\nVerbindung geschlossen.");
 
         } catch (Exception e) {
             e.printStackTrace();
