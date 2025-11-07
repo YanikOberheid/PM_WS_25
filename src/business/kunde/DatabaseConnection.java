@@ -19,8 +19,9 @@ public class DatabaseConnection {
 		try {
 			System.out.println("Datenbankverbindung herstellen...");
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			//con = DriverManager.getConnection(url, user, pass);
-		} catch (ClassNotFoundException e) {//| SQLException e) {
+			con = DriverManager.getConnection(url, user, pass);
+			System.out.println("Datenbankverbindung erfolgreich hergestellt!");
+		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 	}
