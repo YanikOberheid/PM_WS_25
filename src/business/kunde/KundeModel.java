@@ -75,8 +75,8 @@ public final class KundeModel {
 	public void speichereKunden(Kunde kunde) throws SQLException, Exception {
 		this.kunde = kunde;
 		// Datenbank speichern
-		KundeDAO dao = new KundeDAO();
-		dao.insertKunde(kunde);
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+		kundeDAO.add(kunde);
 	}
 
 }
