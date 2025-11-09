@@ -1,8 +1,6 @@
 package business.kunde;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Data Access Object (DAO) für Kunden.
@@ -10,7 +8,7 @@ import java.util.List;
  */
 public class KundeDaoImplementation implements KundenDAO{
 	
-	static Connection con = DatabaseConnection.getConnection();
+	static Connection con = DatabaseConnection.getInstance().getConnection();
 
 	@Override
 	public int add(Kunde kunde) throws SQLException {

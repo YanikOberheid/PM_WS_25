@@ -9,6 +9,7 @@ import java.sql.SQLException;
 public interface KundenDAO {
 	public int add(Kunde kunde)
 	        throws SQLException;
+	
 	// Weitere Funktionen entprechend hinzufügen
 	// Beispiel: GetInfo, Löschen usw. von Kunden
 	// usw.
