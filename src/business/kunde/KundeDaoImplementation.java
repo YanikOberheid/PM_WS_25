@@ -12,7 +12,21 @@ public class KundeDaoImplementation implements KundenDAO{
 
 	@Override
 	public int add(Kunde kunde) throws SQLException {
-		System.out.println("Die Kunde hinzufügen Funktionalität muss noch implementiert werden!");
-		return 0;
+		String sql = "INSERT INTO Kunde (Haus_Hausnr, Vorname, Nachname, Telefon, email) VALUES (?, ?, ?, ?, ?)";
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        pstmt.setInt(1, kunde.getHausnummer());
+	        pstmt.setString(2, kunde.getVorname());
+	        pstmt.setString(3, kunde.getNachname());
+	        pstmt.setString(4, kunde.getTelefonnummer());
+	        pstmt.setString(5, kunde.getEmail());
+	        
+	        int rowsAffected = pstmt.executeUpdate();
+	        System.out.println("✅ Kunde erfolgreich hinzugefügt: " + kunde.getVorname() + " " + kunde.getNachname());
+	        return rowsAffected;
+	    } catch (SQLException e) {
+	        System.err.println("❌ Fehler beim Hinzufügen des Kunden!");
+	        e.printStackTrace();
+	        throw e;
+	    }
 	}
 }
