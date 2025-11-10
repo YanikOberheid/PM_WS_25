@@ -1,0 +1,27 @@
+2. Branch/Task die erstellt wurde - JUnitTest für addKunde() Funktionalität
+Ein Package test mit der Klasse KundeDaoImplementationTest als inhalt erstellt
+
+################################################################################
+Aktuell funktioniert addKunde() nur im Test, weil die GUI und das auslesen der
+Kundendaten noch nicht implementiert wurde.
+Die GUI muss noch um weitere Textfelder erweitert werden und außerdem muessen die eingaben 
+noch ausgelesen und damit einen Kunden erzeugen welches dann mit addKunde(kunde) 
+uebergeben wird
+
+Deswegen if kunde == null überprüfung, weil mit den Klick auf den 
+Button Speichern aktuell addKunde() mit kunde = null übergeben und aufgerufen wird.
+################################################################################
+
+// Ueberpruefen ob tatsächlich der uebergebene Kunde hinzugefuegt wurde
+// Aktuell wird nur unter der Hausnummer geschaut 
+// ob Vornamen und Nachnamen übereinstimmen mit dem der zu speichenden Kunde
+// Es fehlt noch die weiteren Daten einfaben Telefonnr, Emailadresse usw.
+testAddKundeErfolgreich()
+
+// Testen ob die KundenDaten, AKTUELL nur Vorname, Nachname
+// Leer sind und es dann dementprechend einen SQLException "wirft"
+testAddKundeLeereDaten()
+
+// Testen ob es eine Dopplung gibt.
+// quasi ob die Hausnummer schon besetzt ist.
+testAddKundeHausnummerDopplung
