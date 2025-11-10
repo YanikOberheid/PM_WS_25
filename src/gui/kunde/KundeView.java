@@ -151,7 +151,12 @@ public class KundeView{
             		txtNachname.getText(),
             		txtNummer.getText(),
             		txtEmail.getText());
-
+         
+            // Validation before saving
+            if (!kundeModel.isValidCustomer(kunde)) {
+                zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
+                return; 
+            }
             kundeControl.speichereKunden(kunde);
             System.out.println("✅ Kunde gespeichert!");
         } catch (Exception e) {

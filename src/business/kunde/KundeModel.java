@@ -79,4 +79,56 @@ public final class KundeModel {
 		kundeDAO.add(kunde);
 	}
 
+	/**
+	 * Checks whether the given customer data is valid.
+	 *
+	 * @param kunde the customer object to validate
+	 * @return true if all required fields contain valid data; false otherwise
+	 */
+	public boolean isValidCustomer(Kunde kunde) {
+	    if (kunde == null) {
+	        System.err.println("❌ Validation failed: Kunde object is null.");
+	        return false;
+	    }
+
+	    // Validate Hausnummer (must be between 1 and 24)
+	    if (kunde.getHausnummer() < 1 || kunde.getHausnummer() > 24) {
+	        System.err.println("❌ Validation failed: Invalid house number.");
+	        return false;
+	    }
+
+	    // Validate first name
+	    if (isNullOrEmpty(kunde.getVorname())) {
+	        System.err.println("❌ Validation failed: First name is missing.");
+	        return false;
+	    }
+
+	    // Validate last name
+	    if (isNullOrEmpty(kunde.getNachname())) {
+	        System.err.println("❌ Validation failed: Last name is missing.");
+	        return false;
+	    }
+
+	    // Validate phone number (only digits)
+	    if (isNullOrEmpty(kunde.getTelefonnummer()) || !kunde.getTelefonnummer().matches("\\d+")) {
+	        System.err.println("❌ Validation failed: Invalid phone number.");
+	        return false;
+	    }
+
+	    // Validate email format (simple check)
+	    if (isNullOrEmpty(kunde.getEmail()) || !kunde.getEmail().contains("@")) {
+	        System.err.println("❌ Validation failed: Invalid email address.");
+	        return false;
+	    }
+
+	    return true;
+	}
+
+	/**
+	 * Helper method to check if a string is null or empty after trimming.
+	 */
+	private boolean isNullOrEmpty(String s) {
+	    return s == null || s.trim().isEmpty();
+	}
+
 }
