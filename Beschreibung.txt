@@ -1,0 +1,5 @@
+1. Branch/Task die erstellt wurde SingletonDatenbank erstellen
+Implementiert einen Singleton Datenbank
+KundeDaoImplementation.java  <--  KundenDAO.java(Interface) - DatabaseConnection.java
+Interface fuers Implementieren der Funktionen wie addKunde() usw. in KundeDaoImplementation
+KundeDaoImplementation stellt die Bruecke zur Singleton DatabaseConnectin, fuer die Verbindung zur Datenbank
