@@ -1,8 +1,8 @@
-package gui.grundriss;
+package src.gui.grundriss;
 
-import gui.basis.BasisView;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import src.gui.basis.BasisView;
 
 /**
  * Klasse, welche das Fenster mit den Sonderwuenschen zu 

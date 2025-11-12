@@ -1,4 +1,4 @@
-package gui.basis;
+package src.gui.basis;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

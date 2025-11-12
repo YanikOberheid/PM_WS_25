@@ -1,6 +1,4 @@
-package gui.kunde;
-
-import business.kunde.*;
+package src.gui.kunde;
 
 import javafx.geometry.*;
 import javafx.scene.Scene;
@@ -9,6 +7,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import src.business.kunde.Kunde;
+import src.business.kunde.KundeModel;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten bereitstellt.
@@ -142,20 +142,9 @@ public class KundeView {
 	}
 
 	private void legeKundenAn() {
-		try {
-			Kunde kunde = new Kunde(cmbBxNummerHaus.getValue(), txtVorname.getText(), txtNachname.getText(),
-					txtNummer.getText(), txtEmail.getText());
-			// Validation before saving
-			if (!kundeModel.isValidCustomer(kunde)) {
-				zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
-				return;
-			}
-			kundeControl.speichereKunden(kunde);
-			System.out.println("✅ Kunde gespeichert!");
-		} catch (Exception e) {
-			zeigeFehlermeldung("Fehler", "Kunde konnte nicht angelegt werden!");
-			e.printStackTrace();
-		}
+		Kunde kunde = new Kunde(cmbBxNummerHaus.getValue(), txtVorname.getText(), txtNachname.getText(),
+				txtNummer.getText(), txtEmail.getText());
+		kundeControl.speichereKunden(kunde);
 	}
 
 	private void aendereKunden() {

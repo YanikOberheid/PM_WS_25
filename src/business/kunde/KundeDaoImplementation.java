@@ -1,4 +1,4 @@
-package business.kunde;
+package src.business.kunde;
 
 import java.sql.*;
 
@@ -7,25 +7,11 @@ import java.sql.*;
  * Kundenobjekte.
  */
 public class KundeDaoImplementation implements KundenDAO {
-
+	
 	static Connection con = DatabaseConnection.getInstance().getConnection();
-	PreparedStatement ps = null;
-
+	
 	@Override
 	public int add(Kunde kunde) throws SQLException {
-
-		// Kunden Daten in die Datenbank schreiben, speichern!
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
-			ps.setInt(1, hausnummer);
-			ps.setString(2, vorname);
-			ps.setString(3, nachname); // Nachname, die GUI muss noch erweitert werden
-			ps.setNull(4, java.sql.Types.VARCHAR); // Telefon fehlt, die GUI muss noch erweitert werden
-			ps.setNull(5, java.sql.Types.VARCHAR); // Email fehlt, die GUI muss noch erweitert werden
-
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		String sql = "INSERT INTO Kunde (Haus_Hausnr, Vorname, Nachname, Telefon, email) VALUES (?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, kunde.getHausnummer());
@@ -42,5 +28,17 @@ public class KundeDaoImplementation implements KundenDAO {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	// Auf Dopplung prüfen
+	@Override
+	public boolean istHausnummerBesetzt(int hausnummer) throws SQLException {
+		PreparedStatement ps = null;
+		ps = con.prepareStatement("SELECT * FROM Kunde WHERE Haus_Hausnr = ?");
+		ps.setInt(1, hausnummer);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			return true;
+		}
+		return false;
 	}
 }

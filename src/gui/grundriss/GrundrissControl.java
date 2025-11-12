@@ -1,8 +1,8 @@
-package gui.grundriss;
+package src.gui.grundriss;
 
-import business.kunde.KundeModel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import src.business.kunde.KundeModel;
 
 /**
  * Klasse, welche das Fenster mit den Sonderwuenschen zu den Grundriss-Varianten
