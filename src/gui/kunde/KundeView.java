@@ -27,13 +27,21 @@ public class KundeView{
     private Label lblNummerHaus     	= new Label("Plannummer des Hauses");
     private ComboBox<Integer> 
         cmbBxNummerHaus                 = new ComboBox<Integer>();
+    private Label lblKundennummer      = new Label("Kundennummer");
+    private TextField txtKundennummer  = new TextField();
     private Label lblVorname         	= new Label("Vorname");
     private TextField txtVorname     	= new TextField();   
+    private Label lblNachname          = new Label("Nachname");
+    private TextField txtNachname      = new TextField();   
+    private Label lblTelefonnummer     = new Label("Telefonnummer");
+    private TextField txtTelefonnummer = new TextField();
+    private Label lblEmail             = new Label("E-Mail");
+    private TextField txtEmail         = new TextField();
     private Button btnAnlegen	 	  	= new Button("Anlegen");
-    private Button btnAendern 	      	= new Button("Ändern");
-    private Button btnLoeschen 	 		= new Button("Löschen");
+    private Button btnAendern 	      	= new Button("Ã„ndern");
+    private Button btnLoeschen 	 		= new Button("LÃ¶schen");
     private MenuBar mnBar 			  	= new MenuBar();
-    private Menu mnSonderwuensche    	= new Menu("Sonderwünsche");
+    private Menu mnSonderwuensche    	= new Menu("SonderwÃ¼nsche");
     private MenuItem mnItmGrundriss  	= new MenuItem("Grundrissvarianten");
     //-------Ende Attribute der grafischen Oberflaeche-------
   
@@ -49,7 +57,7 @@ public class KundeView{
         this.kundeModel = kundeModel;
         
         primaryStage.setTitle(this.kundeModel.getUeberschrift());	
-	    Scene scene = new Scene(borderPane, 550, 400);
+	    Scene scene = new Scene(borderPane, 600, 460);
 	    primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -65,21 +73,41 @@ public class KundeView{
 	    gridPane.setVgap(10);
 	    gridPane.setPadding(new Insets(25, 25, 25, 25));
        	
-	    gridPane.add(lblKunde, 0, 1);
-       	lblKunde.setMinSize(150, 40);
+	    gridPane.add(lblKunde, 0, 0, 2, 1);
+       	lblKunde.setMinSize(200, 40);
 	    lblKunde.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-	    gridPane.add(lblNummerHaus, 0, 2);
-	    gridPane.add(cmbBxNummerHaus, 1, 2);
-	    cmbBxNummerHaus.setMinSize(150,  25);
-	    cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
-	    gridPane.add(lblVorname, 0, 3);
-	    gridPane.add(txtVorname, 1, 3);
+
+        gridPane.add(lblNummerHaus, 0, 1);
+        gridPane.add(cmbBxNummerHaus, 1, 1);
+        cmbBxNummerHaus.setMinSize(150,  25);
+        cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
+
+        gridPane.add(lblKundennummer, 0, 2);
+        gridPane.add(txtKundennummer, 1, 2);
+        txtKundennummer.setMinSize(150,  25);
+
+        gridPane.add(lblVorname, 0, 3);
+        gridPane.add(txtVorname, 1, 3);
+        txtVorname.setMinSize(150,  25);
+
+        gridPane.add(lblNachname, 0, 4);
+        gridPane.add(txtNachname, 1, 4);
+        txtNachname.setMinSize(150, 25);
+
+        gridPane.add(lblTelefonnummer, 0, 5);
+        gridPane.add(txtTelefonnummer, 1, 5);
+        txtTelefonnummer.setMinSize(150, 25);
+
+        gridPane.add(lblEmail, 0, 6);
+        gridPane.add(txtEmail, 1, 6);
+        txtEmail.setMinSize(150, 25);
+
 	    // Buttons
-	    gridPane.add(btnAnlegen, 0, 7);
+	    gridPane.add(btnAnlegen, 0, 8);
 	    btnAnlegen.setMinSize(150,  25);
-	    gridPane.add(btnAendern, 1, 7);
+	    gridPane.add(btnAendern, 1, 8);
 	    btnAendern.setMinSize(150,  25);
-	    gridPane.add(btnLoeschen, 2, 7);
+	    gridPane.add(btnLoeschen, 2, 8);
 	    btnLoeschen.setMinSize(150,  25);
 	    // MenuBar und Menu
 	    borderPane.setTop(mnBar);
@@ -114,7 +142,21 @@ public class KundeView{
     }
     
     private void legeKundenAn(){
-         Kunde kunde = null;
+         // Werte aus den Textfeldern fÃ¼r das Kundenobjekt Ã¼bernehmen
+         Integer kundennummer = null;
+         try {
+             kundennummer = Integer.parseInt(txtKundennummer.getText());
+         } catch (NumberFormatException e) {
+             zeigeFehlermeldung("Eingabefehler", "Kundennummer muss eine Zahl sein!");
+             return;
+         }
+         String vorname = txtVorname.getText();
+         String nachname = txtNachname.getText();
+         String telefonnummer = txtTelefonnummer.getText();
+         String email = txtEmail.getText();
+         Integer plannummer = cmbBxNummerHaus.getValue();
+
+         Kunde kunde = new Kunde(kundennummer, vorname, nachname, telefonnummer, email, plannummer);
          // Objekt kunde fuellen
          kundeControl.speichereKunden(kunde);
    	}
@@ -138,5 +180,4 @@ public class KundeView{
     }
 
 }
-
 
