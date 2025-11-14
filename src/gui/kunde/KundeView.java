@@ -1,4 +1,4 @@
-package src.gui.kunde;
+package gui.kunde;
 
 import javafx.geometry.*;
 import javafx.scene.Scene;
@@ -7,8 +7,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
-import src.business.kunde.Kunde;
-import src.business.kunde.KundeModel;
+import business.kunde.Kunde;
+import business.kunde.KundeModel;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten bereitstellt.

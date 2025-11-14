@@ -1,8 +1,8 @@
-package src.gui;
+package gui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import src.gui.kunde.KundeControl;
+import gui.kunde.KundeControl;
 
 public class Main extends Application {
 	

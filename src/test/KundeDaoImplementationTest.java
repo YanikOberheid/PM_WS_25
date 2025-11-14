@@ -1,4 +1,4 @@
-package src.test;
+package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,11 +11,10 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import src.business.kunde.DatabaseConnection;
-import src.business.kunde.Kunde;
-import src.business.kunde.KundeDaoImplementation;
-import src.business.kunde.KundeModel;
-import src.gui.kunde.KundeControl;
+import business.kunde.DatabaseConnection;
+import business.kunde.Kunde;
+import business.kunde.KundeDaoImplementation;
+import business.kunde.KundeModel;
 
 class KundeDaoImplementationTest {
 

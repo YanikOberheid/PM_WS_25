@@ -1,11 +1,11 @@
-package src.gui.kunde;
+package gui.kunde;
 
 import java.sql.SQLException;
 
 import javafx.stage.Stage;
-import src.business.kunde.Kunde;
-import src.business.kunde.KundeModel;
-import src.gui.grundriss.GrundrissControl;
+import business.kunde.Kunde;
+import business.kunde.KundeModel;
+import gui.grundriss.GrundrissControl;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
