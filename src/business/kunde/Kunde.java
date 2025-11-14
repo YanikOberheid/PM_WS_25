@@ -1,4 +1,4 @@
-package business.kunde;
+package src.business.kunde;
 
 public class Kunde {
 	

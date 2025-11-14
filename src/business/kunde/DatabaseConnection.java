@@ -1,4 +1,5 @@
-package business.kunde;
+package src.business.kunde;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;

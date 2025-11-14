@@ -1,11 +1,11 @@
-package gui.kunde;
+package src.gui.kunde;
 
 import java.sql.SQLException;
 
-import business.kunde.Kunde;
-import business.kunde.KundeModel;
-import gui.grundriss.GrundrissControl;
 import javafx.stage.Stage;
+import src.business.kunde.Kunde;
+import src.business.kunde.KundeModel;
+import src.gui.grundriss.GrundrissControl;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
@@ -47,7 +47,13 @@ public class KundeControl {
 	 */
     public void speichereKunden(Kunde kunde){
       	try{
-    		kundeModel.speichereKunden(kunde);
+      		// Kundendaten Validieren auf Korrektheit
+			if (!kundeModel.isValidCustomer(kunde)) {
+				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
+				return;
+			}
+			kundeModel.speichereKunden(kunde);
+			System.out.println("Kunde gespeichert!");
     	}
     	catch(SQLException exc){
     		exc.printStackTrace();

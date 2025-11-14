@@ -1,0 +1,44 @@
+CREATE TABLE Haustyp (
+    idHaustyp INT AUTO_INCREMENT PRIMARY KEY,
+    Bild BLOB,
+    Beschreibung VARCHAR(45)
+);
+
+CREATE TABLE Haus (
+    Hausnr INT AUTO_INCREMENT PRIMARY KEY,
+    Haustyp_idHaustyp INT,
+    FOREIGN KEY (Haustyp_idHaustyp) REFERENCES Haustyp(idHaustyp)
+);
+
+CREATE TABLE Kunde (
+    idKunde INT AUTO_INCREMENT PRIMARY KEY,
+    Haus_Hausnr INT,
+    Vorname VARCHAR(45),
+    Nachname VARCHAR(45),
+    Telefon VARCHAR(45),
+    email VARCHAR(45),
+    FOREIGN KEY (Haus_Hausnr) REFERENCES Haus(Hausnr)
+);
+
+CREATE TABLE Sonderwunschkategorie (
+    idSonderwunschkategorie INT AUTO_INCREMENT PRIMARY KEY,
+    Kategorie VARCHAR(45)
+);
+
+CREATE TABLE Sonderwunsch (
+    idSonderwunsch INT AUTO_INCREMENT PRIMARY KEY,
+    Beschreibung VARCHAR(45),
+    Preis INT,
+    Sonderwunschkategorie_idSonderwunschkategorie INT,
+    FOREIGN KEY (Sonderwunschkategorie_idSonderwunschkategorie) 
+        REFERENCES Sonderwunschkategorie(idSonderwunschkategorie)
+);
+
+
+CREATE TABLE Sonderwunsch_has_Haus (
+    Sonderwunsch_idSonderwunsch INT,
+    Haus_Hausnr INT,
+    PRIMARY KEY (Sonderwunsch_idSonderwunsch, Haus_Hausnr),
+    FOREIGN KEY (Sonderwunsch_idSonderwunsch) REFERENCES Sonderwunsch(idSonderwunsch),
+    FOREIGN KEY (Haus_Hausnr) REFERENCES Haus(Hausnr)
+);
