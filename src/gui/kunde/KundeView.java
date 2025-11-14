@@ -1,4 +1,4 @@
-package gui.kunde;
+ package gui.kunde;
 
 import business.kunde.*;
 
@@ -27,8 +27,19 @@ public class KundeView{
     private Label lblNummerHaus     	= new Label("Plannummer des Hauses");
     private ComboBox<Integer> 
         cmbBxNummerHaus                 = new ComboBox<Integer>();
+    
     private Label lblVorname         	= new Label("Vorname");
-    private TextField txtVorname     	= new TextField();   
+    private TextField txtVorname     	= new TextField();
+    
+    private Label lblNachname = new Label("Nachname");
+    private TextField txtNachname = new TextField();
+    
+    private Label lblNummer = new Label("Telefonnummer");
+    private TextField txtNummer = new TextField();
+    
+    private Label lblEmail = new Label("E-Mail");
+    private TextField txtEmail = new TextField();
+    
     private Button btnAnlegen	 	  	= new Button("Anlegen");
     private Button btnAendern 	      	= new Button("Aendern");
     private Button btnLoeschen 	 		= new Button("Loeschen");
@@ -65,15 +76,33 @@ public class KundeView{
 	    gridPane.setVgap(10);
 	    gridPane.setPadding(new Insets(25, 25, 25, 25));
        	
+	    // Titel
 	    gridPane.add(lblKunde, 0, 1);
        	lblKunde.setMinSize(150, 40);
 	    lblKunde.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+
+	    // Hausnummer
 	    gridPane.add(lblNummerHaus, 0, 2);
 	    gridPane.add(cmbBxNummerHaus, 1, 2);
 	    cmbBxNummerHaus.setMinSize(150,  25);
 	    cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
+	    
+        // Vorname
 	    gridPane.add(lblVorname, 0, 3);
 	    gridPane.add(txtVorname, 1, 3);
+	    
+	    // Nachname
+        gridPane.add(lblNachname, 0, 4);
+        gridPane.add(txtNachname, 1, 4);
+
+        // Telefonnummer
+        gridPane.add(lblNummer, 0, 5);
+        gridPane.add(txtNummer, 1, 5);
+
+        // E-Mail
+        gridPane.add(lblEmail, 0, 6);
+        gridPane.add(txtEmail, 1, 6);
+        
 	    // Buttons
 	    gridPane.add(btnAnlegen, 0, 7);
 	    btnAnlegen.setMinSize(150,  25);
@@ -81,6 +110,7 @@ public class KundeView{
 	    btnAendern.setMinSize(150,  25);
 	    gridPane.add(btnLoeschen, 2, 7);
 	    btnLoeschen.setMinSize(150,  25);
+	    
 	    // MenuBar und Menu
 	    borderPane.setTop(mnBar);
 	    mnBar.getMenus().add(mnSonderwuensche);
@@ -113,10 +143,36 @@ public class KundeView{
     private void leseKunden(){
     }
     
+    
+    //von Yamam bearbeitet
     private void legeKundenAn(){
-         Kunde kunde = null;
-         // Objekt kunde fuellen
-         kundeControl.speichereKunden(kunde);
+    	try {
+            Kunde kunde = new Kunde(
+            		cmbBxNummerHaus.getValue(),
+            		txtVorname.getText(),
+            		txtNachname.getText(),
+            		txtNummer.getText(),
+            		txtEmail.getText());
+         
+         // Validation before saving
+            if (!kundeModel.isValidCustomer(kunde)) {
+
+                String msg = kundeModel.getLastValidationError();
+                if (msg == null || msg.isBlank()) {
+                    msg = "Bitte prüfen Sie die Kundendaten.";
+                }
+
+                zeigeFehlermeldung("Ungültige Eingabe", msg);
+                return;
+            }
+
+            kundeControl.speichereKunden(kunde);
+            System.out.println("✅ Kunde gespeichert!");
+        } catch (Exception e) {
+            zeigeFehlermeldung("Fehler", "Kunde konnte nicht angelegt werden!");
+            e.printStackTrace();
+        }
+         
    	}
     
   	private void aendereKunden(){
@@ -137,6 +193,24 @@ public class KundeView{
         alert.show();
     }
 
+
+
+
+
+    
+    
+    
+    //Von Yamam
+    public void zeigeInfo(String ueberschrift, String meldung){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(ueberschrift);
+        alert.setContentText(meldung);
+        alert.showAndWait();
+    }
+    
 }
+
+
 
 

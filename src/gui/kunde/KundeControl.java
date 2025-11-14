@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
 import gui.grundriss.GrundrissControl;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 /**
@@ -45,19 +46,84 @@ public class KundeControl {
 	 * speichert ein Kunde-Objekt in die Datenbank
 	 * @param kunde, Kunde-Objekt, welches zu speichern ist
 	 */
+    
+    //Von Yamam alles unten 
     public void speichereKunden(Kunde kunde){
-      	try{
-    		kundeModel.speichereKunden(kunde);
-    	}
-    	catch(SQLException exc){
-    		exc.printStackTrace();
-    		this.kundeView.zeigeFehlermeldung("SQLException",
-                "Fehler beim Speichern in die Datenbank");
-    	}
-    	catch(Exception exc){
-    		exc.printStackTrace();
-    		this.kundeView.zeigeFehlermeldung("Exception",
-                "Unbekannter Fehler");
-    	}
+
+        // 1. Validierung
+        if (!istKundeValide(kunde)) {
+            return; // bei Fehler NICHT speichern
+        }
+
+        // 2. Speichern mit Exception Handling
+        try {
+            kundeModel.speichereKunden(kunde);
+
+            // Info bei Erfolg (optional)
+            this.kundeView.zeigeInfo(
+                "Speichern erfolgreich",
+                "Die Kundendaten wurden erfolgreich gespeichert."
+            );
+        }
+        catch (java.sql.SQLException e) {
+
+            // MySQL: 1062 = Duplicate entry (z. B. Kunde/Haus bereits vorhanden)
+            if (e.getErrorCode() == 1062) {
+                this.kundeView.zeigeFehlermeldung(
+                    "Bereits vorhanden",
+                    "Für diese Plannummer existiert bereits ein Kunde oder die Kundendaten sind schon gespeichert."
+                );
+            } else {
+                this.kundeView.zeigeFehlermeldung(
+                    "Datenbankfehler",
+                    "Beim Speichern der Kundendaten ist ein Fehler aufgetreten."
+                );
+            }
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            this.kundeView.zeigeFehlermeldung(
+                "Unbekannter Fehler",
+                "Es ist ein unerwarteter Fehler aufgetreten."
+            );
+            e.printStackTrace();
+        }
     }
+
+    
+    private boolean istKundeValide(Kunde kunde) {
+
+        // 1) Pflichtfelder
+        if (!kunde.isVollstaendig()) {
+            this.kundeView.zeigeFehlermeldung(
+                "Ungültige Eingabe",
+                "Bitte füllen Sie alle Felder aus (Plannummer, Vorname, Nachname, Telefonnummer und E-Mail)."
+            );
+            return false;
+        }
+
+        // 2) Telefonnummer prüfen
+        if (!kunde.isTelefonnummerValid()) {
+            this.kundeView.zeigeFehlermeldung(
+                "Ungültige Telefonnummer",
+                "Die Telefonnummer darf nur aus Ziffern bestehen."
+            );
+            return false;
+        }
+
+        // 3) E-Mail prüfen
+        if (!kunde.isEmailValid()) {
+            this.kundeView.zeigeFehlermeldung(
+                "Ungültige E-Mail-Adresse",
+                "Die E-Mail-Adresse muss ein '@' enthalten."
+            );
+            return false;
+        }
+
+        // alles okay
+        return true;
+    }
+
+   
+
 }
