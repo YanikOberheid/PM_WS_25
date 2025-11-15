@@ -60,8 +60,36 @@ public class GrundrissView extends BasisView{
     
  	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
   	protected void berechneUndZeigePreisSonderwuensche(){
-  		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
-  		// aus dem Control aufgerufen, dann der Preis berechnet.
+		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
+        // aus dem Control aufgerufen, dann der Preis berechnet.
+  		// Beispielhaft: Wir simulieren, dass ein Konfliktfall vorliegt.
+  		// Normalerweise: ausgewaehlteSonderwuensche auslesen und an Control geben.
+  		int[] ausgewaehlteSw = new int[] {1}; // Platzhalter, normalerweise aus UI gelesen
+
+  		boolean konstellationOk = grundrissControl.pruefeKonstellationSonderwuensche(ausgewaehlteSw);
+  		if (!konstellationOk) {
+  			// Mock-Konflikt: Fenster anzeigen
+  			Alert alert = new Alert(Alert.AlertType.ERROR);
+  			alert.setTitle("Konflikt");
+  			alert.setHeaderText("Fehler bei der Auswahl der Sonderwünsche");
+  			alert.setContentText("Dieser Test schlägt fehl.");
+  			alert.showAndWait();
+  			return;
+  		}
+
+  		// Annahme: Preisberechnung, falls keine Konflikte (hier: Platzhalterwert)
+  		double preis = 0.0;
+  		for (int sw : ausgewaehlteSw) {
+  			// Beispielsweise könnte jeder Sonderwunsch 100 Euro kosten (nur als Demo)
+  			// sw wird hier benutzt, um zu zeigen, dass er individuell getestet werden kann
+  			// Man könnte z.B. abhängig von sw verschiedene Preise berechnen
+  			if (sw == 1) {
+  				preis += 150.0; // Für sw == 1, z.B. Wand zur Küche, 150 Euro
+  			} else {
+  				preis += 100.0; // Standardpreis für andere Sonderwünsche
+  			}
+  		}
+  		txtPreisWandKueche.setText(String.format("%.2f", preis));
   	}
   	
    	/* speichert die ausgesuchten Sonderwuensche in der Datenbank ab */
