@@ -63,18 +63,13 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException {
-		// UPDATE ist nur für existierende Tupel -> INSERT und DELETE nötig
-		// Zuerst prüfen, welche Sonderwünsche laut DB ausgewählt sind
+		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
 		String sql_del = "DELETE FROM \"Sonderwunsch_has_Haus\""
-				+ "WHERE \"Haus_Hausnr\" = ?"
-				+ "AND \"Sonderwunsch_idSonderwunsch\" NOT IN (?)";
+				+ "WHERE \"Haus_Hausnr\" = ?";
 		
 		String sql_ins = "INSERT INTO \"Sonderwunsch_has_Haus\""
 				+ "(\"Sonderwunsch_idSonderwunsch\",\"Haus_Hausnr\")"
-				+ "SELECT \"Sonderwunsch_idSonderwunsch\", \"Haus_Hausnr\""
-				+ "FROM \"Sonderwunsch_has_Haus\""
-				+ "WHERE \"Haus_Hausnr\" = ?"
-				+ "AND \"Sonderwunsch_idSonderwunsch\" NOT IN (?)";
+				+ "VALUES (?, ?)";
 		
 		try {
 			/*
@@ -89,18 +84,17 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			 * Für mehr, siehe Java Doc zu commit() und rollback().
 			 */
 			con.setAutoCommit(false);
-			String aSw_string = Arrays.toString(ausgewaehlteSw);
-			String aSw_substring = aSw_string.substring(1, aSw_string.length()-1);
 			// DELETE
 			PreparedStatement pstmt = con.prepareStatement(sql_del);
 			pstmt.setInt(1, hausnummer);
-			pstmt.setString(2, aSw_substring);
 			pstmt.execute();
 			// INSERT
 			pstmt = con.prepareStatement(sql_ins);
-			pstmt.setInt(1, hausnummer);
-			pstmt.setString(2, aSw_substring);
-			pstmt.execute();
+			for (int id: ausgewaehlteSw) {
+				pstmt.setInt(1, id);
+				pstmt.setInt(2, hausnummer);
+				pstmt.execute();
+			}
 			// commit
 			con.commit();
 			con.setAutoCommit(true);

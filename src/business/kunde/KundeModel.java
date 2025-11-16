@@ -2,7 +2,6 @@ package business.kunde;
 
 import java.sql.SQLException;
 import javafx.collections.*;
-import business.kunde.KundeDaoImplementation;
 
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.
@@ -133,17 +132,14 @@ public final class KundeModel {
 		return s == null || s.trim().isEmpty();
 	}
 	
-
-	/*
-	 * enhaelt die IDs der ausgewaehlten Sonderwuensche 
-	 */
-	private int[] ausgewaehlteSw = null;
+	// ------------ Sonderwünsche ------------ 
+	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
 	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
 	
 	/**
 	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
 	 *
-	 * @return ausgewaehlteSw oder null 
+	 * @return Klon von this.ausgewaehlteSw oder null 
 	 */
 	public int[] gibAusgewaehlteSw() {
 		if (kunde == null) return null; 
@@ -168,7 +164,7 @@ public final class KundeModel {
 	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
 	 *
 	 * @param ID einer Sonderwunschkategorie als int
-	 * @return ausgewaehlteSw oder null 
+	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
 	public int[] gibAusgewaehlteSw(int kategorieId) {
 		if (this.kunde == null) return null;
