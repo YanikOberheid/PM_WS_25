@@ -2,6 +2,7 @@ package business.kunde;
 
 import java.sql.SQLException;
 import javafx.collections.*;
+import business.kunde.KundeDaoImplementation;
 
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.
@@ -131,5 +132,84 @@ public final class KundeModel {
 	private boolean isNullOrEmpty(String s) {
 		return s == null || s.trim().isEmpty();
 	}
+	
 
+	/*
+	 * enhaelt die IDs der ausgewaehlten Sonderwuensche 
+	 */
+	private int[] ausgewaehlteSw = null;
+	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
+	
+	/**
+	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
+	 *
+	 * @return ausgewaehlteSw oder null 
+	 */
+	public int[] gibAusgewaehlteSw() {
+		if (kunde == null) return null; 
+		// throw new Exception("Es konnte kein Kunde gefunden werden");
+		int hausnr = this.kunde.getHausnummer();
+		
+		
+		try {
+			this.ausgewaehlteSw = this.swDao.get(hausnr);
+			return this.ausgewaehlteSw.clone();
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche");
+			exc.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
+	 *
+	 * @param ID einer Sonderwunschkategorie als int
+	 * @return ausgewaehlteSw oder null 
+	 */
+	public int[] gibAusgewaehlteSw(int kategorieId) {
+		if (this.kunde == null) return null;
+		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");
+		int hausnr = this.kunde.getHausnummer();
+		
+		try {
+			this.ausgewaehlteSw = this.swDao.get(hausnr, kategorieId);
+			return this.ausgewaehlteSw.clone();
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche");
+			exc.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Holt Sonderwünsche zu einem Kunden Gibt ein Array an Sonderwunschoptionen zurueck, wenn ausgewaehlteSw nicht null ist. Ansonsten wird holeAusgewaehlteSwAusDb() aufgerufen.
+	 *
+	 * @param int[] mit IDs der ausgewaehlten Sonderwünsche
+	 * @throws SQLExceptio oder Exception 
+	 */
+	public void updateAusgewaehlteSw(int[] ausgewaehlteSw) throws SQLException, Exception{
+		if (this.kunde == null)
+			throw new Exception("Fehler beim Aktualisieren ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");;
+		int hausnr = this.kunde.getHausnummer();
+		
+		try {
+			this.swDao.update(hausnr, ausgewaehlteSw);
+			this.ausgewaehlteSw = ausgewaehlteSw;
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche: SQL Fehler");
+			exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche");
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
 }
