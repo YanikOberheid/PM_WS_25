@@ -136,12 +136,18 @@ public final class KundeModel {
 	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
 	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
 	
+	public int[] gibAusgewaehlteSwLokal() {
+		if (kunde == null) return null;
+		if (this.ausgewaehlteSw == null) return null;
+		return this.ausgewaehlteSw.clone();
+	}
+	
 	/**
 	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
 	 *
 	 * @return Klon von this.ausgewaehlteSw oder null 
 	 */
-	public int[] gibAusgewaehlteSw() {
+	public int[] gibAusgewaehlteSwAusDb() {
 		if (kunde == null) return null; 
 		// throw new Exception("Es konnte kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
@@ -166,7 +172,7 @@ public final class KundeModel {
 	 * @param ID einer Sonderwunschkategorie als int
 	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
-	public int[] gibAusgewaehlteSw(int kategorieId) {
+	public int[] gibAusgewaehlteSwAusDb(int kategorieId) {
 		if (this.kunde == null) return null;
 		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
