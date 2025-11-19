@@ -9,7 +9,7 @@ import gui.basis.BasisView;
  * den Grundrissvarianten bereitstellt.
  */
 public class GrundrissView extends BasisView{
- 
+
  	// das Control-Objekt des Grundriss-Fensters
 	private GrundrissControl grundrissControl;
    
@@ -19,6 +19,12 @@ public class GrundrissView extends BasisView{
     private TextField txtPreisWandKueche 	= new TextField();
     private Label lblWandKuecheEuro 		= new Label("Euro");
     private CheckBox chckBxWandKueche 		= new CheckBox();
+    
+    private CheckBox chckBxTuerKueche 		= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
+    private CheckBox chckBxGrossesZimmerOG 	= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
+    private CheckBox chckBxTreppenraumDG 	= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
+    private CheckBox chckBxVorrichtungBadOG	= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
+    private CheckBox chckBxAusfuehrungBadDG = new CheckBox(); // TODO: Absprache mit Yaman erforderlich
     //-------Ende Attribute der grafischen Oberflaeche-------
   
     /**
@@ -56,6 +62,35 @@ public class GrundrissView extends BasisView{
     
     private void leseGrundrissSonderwuensche(){
     	this.grundrissControl.leseGrundrissSonderwuensche();
+    }
+    
+    protected void updateGrundrissCheckboxen(int[] ausgewaehlteSw) {
+    	chckBxWandKueche.setSelected(false);
+    	chckBxTuerKueche.setSelected(false);
+    	chckBxGrossesZimmerOG.setSelected(false);
+    	chckBxTreppenraumDG.setSelected(false);
+    	chckBxVorrichtungBadOG.setSelected(false);
+    	chckBxAusfuehrungBadDG.setSelected(false);
+    	for (int sw: ausgewaehlteSw) {
+    		if (sw < 200 || sw >= 300) continue;
+    		switch (sw) {
+    			case 201:
+    				chckBxWandKueche.setSelected(true);
+    			case 202:
+    				chckBxTuerKueche.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    			case 203:
+    				chckBxGrossesZimmerOG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    			case 204:
+    				chckBxTreppenraumDG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    			case 205:
+    				chckBxVorrichtungBadOG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    			case 206:
+    				chckBxAusfuehrungBadDG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    			default:
+    				System.out.println("Konnte ID " + sw 
+    						+ " keiner Sonderwunsch-Checkbox für Grunriss-Varianten zuordnen");
+    		}
+    	}
     }
     
  	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
