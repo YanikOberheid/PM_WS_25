@@ -70,5 +70,25 @@ public class KundeDaoImplementation implements KundenDAO {
 	        return rowsAffected > 0; // true, wenn ein Datensatz gelöscht wurde
 	    }
 	}
+	
+	public void updateKunde (Kunde kunde) throws SQLException {
+	    String sql = "UPDATE Kunde SET Vorname = ?, Nachname = ?, Telefon = ?, email = ? WHERE Haus_Hausnr = ?";
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setString(1, kunde.getVorname());
+	        ps.setString(2, kunde.getNachname());
+	        ps.setString(3, kunde.getTelefonnummer());
+	        ps.setString(4, kunde.getEmail());
+	        ps.setInt(5, kunde.getHausnummer());
+
+	        int rows = ps.executeUpdate();
+	        if (rows > 0) {
+	            System.out.println("✅ Kunde erfolgreich aktualisiert.");
+	        } else {
+	            System.out.println("ℹ Kein Kunde unter dieser Hausnummer gefunden.");
+	        }
+	    }
+	}
+
+	
 
 }
