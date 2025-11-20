@@ -29,16 +29,30 @@ public class KundeDaoImplementation implements KundenDAO {
 			throw e;
 		}
 	}
-	// Auf Dopplung prüfen
+
+	// Prüft, ob für die angegebene Hausnummer bereits ein Kunde existiert
 	@Override
 	public boolean istHausnummerBesetzt(int hausnummer) throws SQLException {
-		PreparedStatement ps = null;
-		ps = con.prepareStatement("SELECT * FROM Kunde WHERE Haus_Hausnr = ?");
-		ps.setInt(1, hausnummer);
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			return true;
-		}
-		return false;
+		return findByHausnummer(hausnummer) != null;
+	}
+	
+	public Kunde findByHausnummer(int hausnummer) throws SQLException {
+	    String sql = "SELECT Haus_Hausnr, Vorname, Nachname, Telefon, email FROM Kunde WHERE Haus_Hausnr = ?";
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setInt(1, hausnummer);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                return new Kunde(
+	                    rs.getInt("Haus_Hausnr"),
+	                    rs.getString("Vorname"),
+	                    rs.getString("Nachname"),
+	                    rs.getString("Telefon"),
+	                    rs.getString("email")
+	                );
+	            }
+	        }
+	    }
+	    return null; // kein Kunde gefunden
 	}
 }
