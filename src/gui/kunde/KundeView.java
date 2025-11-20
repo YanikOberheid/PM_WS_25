@@ -153,6 +153,14 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
+		Kunde kunde = new Kunde(
+		        cmbBxNummerHaus.getValue(),
+		        txtVorname.getText(),
+		        txtNachname.getText(),
+		        txtNummer.getText(),
+		        txtEmail.getText()
+		    );
+		    kundeControl.updateKunde(kunde);
 	}
 
 	private void loescheKunden() {
