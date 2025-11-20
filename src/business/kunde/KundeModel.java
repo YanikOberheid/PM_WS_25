@@ -80,6 +80,20 @@ public final class KundeModel {
 	}
 
 	/**
+	 * Lädt den Kunden zur gegebenen Hausnummer aus der Datenbank
+	 * und setzt ihn als aktuellen Kunden im Model.
+	 *
+	 * @param hausnummer die ausgewählte Hausnummer / Plannummer
+	 * @return der gefundene Kunde oder null, falls nicht vorhanden
+	 * @throws SQLException Fehler beim Datenbankzugriff
+	 */
+	public Kunde ladeKunde(int hausnummer) throws SQLException {
+	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+	    this.kunde = kundeDAO.findByHausnummer(hausnummer);
+	    return this.kunde;
+	}
+
+	/**
 	 * Checks whether the given customer data is valid.
 	 *
 	 * @param kunde the customer object to validate
