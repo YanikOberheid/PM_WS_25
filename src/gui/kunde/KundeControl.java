@@ -48,7 +48,7 @@ public class KundeControl {
     public void speichereKunden(Kunde kunde){
       	try{
       		// Kundendaten Validieren auf Korrektheit
-			if (!kundeModel.isValidCustomer(kunde)) {
+			if (!kundeModel.isValidCustomer(kunde, false)) {
 				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
 				return;
 			}
@@ -94,6 +94,24 @@ public class KundeControl {
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
             e.printStackTrace();
+        }
+    }
+    
+    public void updateKunde(Kunde kunde) {
+        try {
+            if (!kundeModel.isValidCustomer(kunde, true)) {
+                kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
+                return;
+            }
+
+            kundeModel.updateKunde(kunde);
+            kundeView.zeigeErfolgsmeldung("Erfolg", "Kundendaten wurden erfolgreich aktualisiert.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            kundeView.zeigeFehlermeldung("Fehler", "Kundendaten konnten nicht aktualisiert werden.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
         }
     }
    
