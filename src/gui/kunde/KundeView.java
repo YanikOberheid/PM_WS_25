@@ -156,6 +156,12 @@ public class KundeView {
 	}
 
 	private void loescheKunden() {
+		Integer hausnummer = cmbBxNummerHaus.getValue();
+	    if (hausnummer != null) {
+	        kundeControl.loescheKunden(hausnummer);
+	    } else {
+	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
+	    }
 	}
 	
 	public void zeigeKundeAufGui(Kunde kunde) {
@@ -185,5 +191,13 @@ public class KundeView {
 		alert.setHeaderText(ueberschrift);
 		alert.setContentText(meldung);
 		alert.show();
+	}
+	
+	public void zeigeErfolgsmeldung(String ueberschrift, String meldung) {
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle("Erfolg");
+	    alert.setHeaderText(ueberschrift);
+	    alert.setContentText(meldung);
+	    alert.show();
 	}
 }

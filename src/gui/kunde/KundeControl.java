@@ -53,7 +53,7 @@ public class KundeControl {
 				return;
 			}
 			kundeModel.speichereKunden(kunde);
-			System.out.println("Kunde gespeichert!");
+			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
     	}
     	catch(SQLException exc){
     		exc.printStackTrace();
@@ -79,6 +79,21 @@ public class KundeControl {
             kundeView.zeigeKundeAufGui(kunde);
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
+        }
+    }
+    
+    public void loescheKunden(int hausnummer) {
+        try {
+            boolean erfolg = kundeModel.loescheKunden(hausnummer);
+            if (erfolg) {
+                kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
+                kundeView.zeigeKundeAufGui(null); // GUI leeren
+            } else {
+                kundeView.zeigeFehlermeldung("Fehler", "Kein Kunde unter dieser Hausnummer gefunden.");
+            }
+        } catch (SQLException e) {
+            kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
+            e.printStackTrace();
         }
     }
    

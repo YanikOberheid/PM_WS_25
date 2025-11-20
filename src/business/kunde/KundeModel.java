@@ -80,17 +80,38 @@ public final class KundeModel {
 	}
 
 	/**
-	 * Lädt den Kunden zur gegebenen Hausnummer aus der Datenbank
-	 * und setzt ihn als aktuellen Kunden im Model.
+	 * Prüft zunächst, ob ein Kunde unter der angegebenen Hausnummer existiert.
+	 * Falls ja, wird der Kunde aus der Datenbank geladen und als aktueller Kunde
+	 * im Model gesetzt. Andernfalls wird das aktuelle Kundenobjekt auf null gesetzt.
 	 *
 	 * @param hausnummer die ausgewählte Hausnummer / Plannummer
-	 * @return der gefundene Kunde oder null, falls nicht vorhanden
+	 * @return der gefundene Kunde oder null, falls kein Kunde unter dieser Hausnummer existiert
 	 * @throws SQLException Fehler beim Datenbankzugriff
 	 */
 	public Kunde ladeKunde(int hausnummer) throws SQLException {
 	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-	    this.kunde = kundeDAO.findByHausnummer(hausnummer);
+	    
+	    if (kundeDAO.istHausnummerBesetzt(hausnummer)) {
+	        // Kunde existiert, lade das Objekt
+	        this.kunde = kundeDAO.findByHausnummer(hausnummer);
+	    } else {
+	        // Kein Kunde unter dieser Hausnummer
+	        this.kunde = null;
+	    }
+	    
 	    return this.kunde;
+	}
+	
+	// Löscht den Kunden zur angegebenen Hausnummer.
+	public boolean loescheKunden(int hausnummer) throws SQLException {
+	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+	    boolean geloescht = kundeDAO.deleteKunde(hausnummer);
+
+	    // Wenn gelöscht, auch aktuelles Kunde-Objekt im Model leeren
+	    if (geloescht && this.kunde != null && this.kunde.getHausnummer() == hausnummer) {
+	        this.kunde = null;
+	    }
+	    return geloescht;
 	}
 
 	/**

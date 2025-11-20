@@ -30,7 +30,6 @@ public class KundeDaoImplementation implements KundenDAO {
 		}
 	}
 
-	// Prüft, ob für die angegebene Hausnummer bereits ein Kunde existiert
 	@Override
 	public boolean istHausnummerBesetzt(int hausnummer) throws SQLException {
 	    String sql = "SELECT 1 FROM Kunde WHERE Haus_Hausnr = ?";
@@ -41,7 +40,6 @@ public class KundeDaoImplementation implements KundenDAO {
 	        }
 	    }
 	}
-
 	
 	public Kunde findByHausnummer(int hausnummer) throws SQLException {
 	    String sql = "SELECT Haus_Hausnr, Vorname, Nachname, Telefon, email FROM Kunde WHERE Haus_Hausnr = ?";
@@ -62,4 +60,15 @@ public class KundeDaoImplementation implements KundenDAO {
 	    }
 	    return null; // kein Kunde gefunden
 	}
+	
+	// Löscht den Kunden mit der angegebenen Hausnummer
+	public boolean deleteKunde(int hausnummer) throws SQLException {
+	    String sql = "DELETE FROM Kunde WHERE Haus_Hausnr = ?";
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setInt(1, hausnummer);
+	        int rowsAffected = ps.executeUpdate();
+	        return rowsAffected > 0; // true, wenn ein Datensatz gelöscht wurde
+	    }
+	}
+
 }
