@@ -139,6 +139,11 @@ public class KundeView {
 	}
 
 	private void leseKunden() {
+	    Integer hausnummer = cmbBxNummerHaus.getValue();
+	    
+	    if (hausnummer != null) {
+	        kundeControl.ladeKundenZuHausnummer(hausnummer);
+	    }
 	}
 
 	private void legeKundenAn() {
@@ -148,9 +153,38 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
+		Kunde kunde = new Kunde(
+		        cmbBxNummerHaus.getValue(),
+		        txtVorname.getText(),
+		        txtNachname.getText(),
+		        txtNummer.getText(),
+		        txtEmail.getText()
+		    );
+		    kundeControl.updateKunde(kunde);
 	}
 
 	private void loescheKunden() {
+		Integer hausnummer = cmbBxNummerHaus.getValue();
+	    if (hausnummer != null) {
+	        kundeControl.loescheKunden(hausnummer);
+	    } else {
+	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
+	    }
+	}
+	
+	public void zeigeKundeAufGui(Kunde kunde) {
+	    if (kunde == null) {
+	        txtVorname.clear();
+	        txtNachname.clear();
+	        txtNummer.clear();
+	        txtEmail.clear();
+	        return;
+	    }
+
+	    txtVorname.setText(kunde.getVorname());
+	    txtNachname.setText(kunde.getNachname());
+	    txtNummer.setText(kunde.getTelefonnummer());
+	    txtEmail.setText(kunde.getEmail());
 	}
 
 	/**
@@ -165,5 +199,13 @@ public class KundeView {
 		alert.setHeaderText(ueberschrift);
 		alert.setContentText(meldung);
 		alert.show();
+	}
+	
+	public void zeigeErfolgsmeldung(String ueberschrift, String meldung) {
+	    Alert alert = new Alert(AlertType.INFORMATION);
+	    alert.setTitle("Erfolg");
+	    alert.setHeaderText(ueberschrift);
+	    alert.setContentText(meldung);
+	    alert.show();
 	}
 }
