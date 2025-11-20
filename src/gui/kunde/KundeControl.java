@@ -66,4 +66,20 @@ public class KundeControl {
                 "Unbekannter Fehler");
     	}
     }
+    
+    /**
+     * Lädt den Kunden zur angegebenen Hausnummer aus dem Model und zeigt ihn in der View an.
+     * Falls ein Datenbankfehler auftritt, wird eine Fehlermeldung in der View angezeigt.
+     *
+     * @param hausnummer die Hausnummer / Plannummer des Kunden, der geladen werden soll
+     */
+    public void ladeKundenZuHausnummer(int hausnummer) {
+        try {
+            Kunde kunde = kundeModel.ladeKunde(hausnummer);
+            kundeView.zeigeKundeAufGui(kunde);
+        } catch (SQLException e) {
+            kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
+        }
+    }
+   
 }

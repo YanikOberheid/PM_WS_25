@@ -139,6 +139,11 @@ public class KundeView {
 	}
 
 	private void leseKunden() {
+	    Integer hausnummer = cmbBxNummerHaus.getValue();
+	    
+	    if (hausnummer != null) {
+	        kundeControl.ladeKundenZuHausnummer(hausnummer);
+	    }
 	}
 
 	private void legeKundenAn() {
@@ -151,6 +156,21 @@ public class KundeView {
 	}
 
 	private void loescheKunden() {
+	}
+	
+	public void zeigeKundeAufGui(Kunde kunde) {
+	    if (kunde == null) {
+	        txtVorname.clear();
+	        txtNachname.clear();
+	        txtNummer.clear();
+	        txtEmail.clear();
+	        return;
+	    }
+
+	    txtVorname.setText(kunde.getVorname());
+	    txtNachname.setText(kunde.getNachname());
+	    txtNummer.setText(kunde.getTelefonnummer());
+	    txtEmail.setText(kunde.getEmail());
 	}
 
 	/**
