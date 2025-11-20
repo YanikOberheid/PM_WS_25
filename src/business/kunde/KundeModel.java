@@ -113,6 +113,11 @@ public final class KundeModel {
 	    }
 	    return geloescht;
 	}
+	
+	public void updateKunde (Kunde kunde) throws SQLException, Exception {
+	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+	    kundeDAO.updateKunde (kunde);
+	}
 
 	/**
 	 * Checks whether the given customer data is valid.
@@ -121,7 +126,7 @@ public final class KundeModel {
 	 * @return true if all required fields contain valid data; false otherwise
 	 * @throws SQLException 
 	 */
-	public boolean isValidCustomer(Kunde kunde) throws SQLException {
+	public boolean isValidCustomer(Kunde kunde, boolean isUpdate) throws SQLException {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		
 		if (kunde == null) {
@@ -153,7 +158,10 @@ public final class KundeModel {
 			System.err.println("❌ Validation failed: Invalid email address.");
 			return false;
 		}
-		if (kundeDAO.istHausnummerBesetzt(kunde.getHausnummer())) {
+		
+	    boolean hausnummerBesetzt = kundeDAO.istHausnummerBesetzt(kunde.getHausnummer());
+
+		if (!isUpdate && hausnummerBesetzt) {
 			System.err.println("Fehlgeschlagen: Die Hausnummer ist besetzt.");
 			return false;
 		}
