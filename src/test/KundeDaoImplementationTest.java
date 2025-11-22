@@ -85,8 +85,8 @@ class KundeDaoImplementationTest {
 			Kunde kunde = new Kunde(0, vorname, nachname, telefonNummer, eMail);
 			Kunde kunde2 = new Kunde(hausNummer, "", nachname, telefonNummer, eMail);
 			
-			assertFalse(kundeModel.isValidCustomer(kunde, false), "Kunde sollte ungültig sein");
-			assertFalse(kundeModel.isValidCustomer(kunde2, false), "Kunde sollte ungültig sein");
+			assertFalse(kundeModel.isValidCustomer(kunde), "Kunde sollte ungültig sein");
+			assertFalse(kundeModel.isValidCustomer(kunde2), "Kunde sollte ungültig sein");
 			
 			// Weitere Leere Dateneingabe Tests
 			/*
@@ -129,7 +129,7 @@ class KundeDaoImplementationTest {
 			
 			KundeModel kundeModel = KundeModel.getInstance();
 			
-			assertFalse(kundeModel.isValidCustomer(kunde2, false), "Hausnummer ist besetzt");
+			assertFalse(kundeModel.isValidCustomer(kunde2), "Hausnummer ist besetzt");
 		}
 
 }

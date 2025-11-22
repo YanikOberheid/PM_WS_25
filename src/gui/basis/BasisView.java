@@ -86,5 +86,3 @@ public abstract class BasisView {
   	
  	
 }
-
-
