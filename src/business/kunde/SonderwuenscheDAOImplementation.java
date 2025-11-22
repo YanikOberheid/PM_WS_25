@@ -62,7 +62,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 	}
 
 	@Override
-	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException {
+	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
 		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
 		String sql_del = "DELETE FROM \"Sonderwunsch_has_Haus\""
 				+ "WHERE \"Haus_Hausnr\" = ?";
@@ -72,7 +72,8 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 				+ "VALUES (?, ?)";
 		
 		try {
-			/*
+			/* 
+			 * Hinweis:
 			 * Connection-Objekte des JDBC sind standardmäßig im auto-commit Modus,
 			 * was hier verhindert, dass DELETE und INSERT nacheinander in einer
 			 * Transaktion durchgeführt werden können. Daher wird der Modus hier kurz-
@@ -83,6 +84,12 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			 * aufgerufen werden.
 			 * Für mehr, siehe Java Doc zu commit() und rollback().
 			 */
+			if (!con.getAutoCommit())
+				throw new Exception("Der Auto-Commit Modus sollte zu dem Zeitpunkt eines Updates"
+						+ "der Sonderwünsche eingeschaltet sein, war er aber nicht. Möglicherweise"
+						+ "wurde SonderwuenscheDAOImplementation.update() zu schnell"
+						+ "hintereinander aufgerufen oder der Modus an anderer Stelle deaktiviert"
+						+ "und nicht anschließend reaktiviert.");
 			con.setAutoCommit(false);
 			// DELETE
 			PreparedStatement pstmt = con.prepareStatement(sql_del);
@@ -109,6 +116,9 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			} catch (SQLException exc2) {
 				System.out.println("Fehler beim Setzen der DB-Verbindung in auto-commit während der Aktualisierung von Sonderwünschen");
 			}
+			exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
 			exc.printStackTrace();
 			throw exc;
 		}
