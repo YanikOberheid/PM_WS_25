@@ -2,6 +2,9 @@ package gui.grundriss;
 
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.util.Vector;
+
 import gui.basis.BasisView;
 
 /**
@@ -20,11 +23,11 @@ public class GrundrissView extends BasisView{
     private Label lblWandKuecheEuro 		= new Label("Euro");
     private CheckBox chckBxWandKueche 		= new CheckBox();
     
-    private CheckBox chckBxTuerKueche 		= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
-    private CheckBox chckBxGrossesZimmerOG 	= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
-    private CheckBox chckBxTreppenraumDG 	= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
-    private CheckBox chckBxVorrichtungBadOG	= new CheckBox(); // TODO: Absprache mit Yaman erforderlich
-    private CheckBox chckBxAusfuehrungBadDG = new CheckBox(); // TODO: Absprache mit Yaman erforderlich
+    private CheckBox chckBxTuerKueche 		= new CheckBox();
+    private CheckBox chckBxGrossesZimmerOG 	= new CheckBox();
+    private CheckBox chckBxTreppenraumDG 	= new CheckBox();
+    private CheckBox chckBxVorrichtungBadOG	= new CheckBox();
+    private CheckBox chckBxAusfuehrungBadDG = new CheckBox();
     //-------Ende Attribute der grafischen Oberflaeche-------
   
     /**
@@ -65,27 +68,30 @@ public class GrundrissView extends BasisView{
     }
     
     protected void updateGrundrissCheckboxen(int[] ausgewaehlteSw) {
+    	// Setze alle auf false
     	chckBxWandKueche.setSelected(false);
     	chckBxTuerKueche.setSelected(false);
     	chckBxGrossesZimmerOG.setSelected(false);
     	chckBxTreppenraumDG.setSelected(false);
     	chckBxVorrichtungBadOG.setSelected(false);
     	chckBxAusfuehrungBadDG.setSelected(false);
+    	
+    	// Setze diejenigen auf true, die in ausgewaehlteSw vorkommen 
     	for (int sw: ausgewaehlteSw) {
     		if (sw < 200 || sw >= 300) continue;
     		switch (sw) {
     			case 201:
     				chckBxWandKueche.setSelected(true);
     			case 202:
-    				chckBxTuerKueche.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    				chckBxTuerKueche.setSelected(true);
     			case 203:
-    				chckBxGrossesZimmerOG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    				chckBxGrossesZimmerOG.setSelected(true);
     			case 204:
-    				chckBxTreppenraumDG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    				chckBxTreppenraumDG.setSelected(true);
     			case 205:
-    				chckBxVorrichtungBadOG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    				chckBxVorrichtungBadOG.setSelected(true);
     			case 206:
-    				chckBxAusfuehrungBadDG.setSelected(true); // TODO: Absprache mit Yaman erforderlich
+    				chckBxAusfuehrungBadDG.setSelected(true);
     			default:
     				System.out.println("Konnte ID " + sw 
     						+ " keiner Sonderwunsch-Checkbox für Grunriss-Varianten zuordnen");
@@ -103,9 +109,30 @@ public class GrundrissView extends BasisView{
   	protected void speichereSonderwuensche(){
  		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
   		// aus dem Control aufgerufen, dann die Sonderwuensche gespeichert.
+  		
+  		// Sammle Sonderwunsch-IDs angekreuzter Checkboxen
+  		Vector<Integer> v = new Vector<Integer>();
+  		if (chckBxWandKueche.isSelected())
+  			v.add(201);
+  		if (chckBxTuerKueche.isSelected())
+  			v.add(202);
+  		if (chckBxGrossesZimmerOG.isSelected())
+  			v.add(203);
+  		if (chckBxTreppenraumDG.isSelected())
+  			v.add(204);
+  		if (chckBxVorrichtungBadOG.isSelected())
+  			v.add(205);
+  		if (chckBxAusfuehrungBadDG.isSelected())
+  			v.add(206);
+  		
+  		// Kopiere in int[]
+  		int[] grundrissSw = new int[v.size()];
+  		for (int i = 0; i < v.size(); i++)
+  			grundrissSw[i] = v.get(i);
+  		
+  		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
+  		this.grundrissControl.speichereSonderwuensche(grundrissSw);
   	}
-  	
- 	
  }
 
 

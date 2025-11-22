@@ -206,11 +206,11 @@ public final class KundeModel {
 			this.ausgewaehlteSw = ausgewaehlteSw;
 		} catch (SQLException exc) {
 			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche: SQL Fehler");
-			exc.printStackTrace();
+			// exc.printStackTrace();
 			throw exc;
 		} catch (Exception exc) {
 			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche");
-			exc.printStackTrace();
+			// exc.printStackTrace();
 			throw exc;
 		}
 	}
