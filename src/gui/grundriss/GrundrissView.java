@@ -197,5 +197,7 @@ public class GrundrissView extends BasisView {
 		}
 		return result;
 	}
+	
+	//Yamam
 
 }
