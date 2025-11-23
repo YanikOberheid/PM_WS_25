@@ -88,68 +88,44 @@ public final class KundeModel {
 	 *
 	 * @param kunde the customer object to validate
 	 * @return true if all required fields contain valid data; false otherwise
+	 * @throws SQLException
 	 */
-
-	// bearbeitet von Yamam
-	public boolean isValidCustomer(Kunde kunde) {
-		// alte Meldung löschen
-		lastValidationError = null;
+	public boolean isValidCustomer(Kunde kunde) throws SQLException {
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 
 		if (kunde == null) {
-			lastValidationError = "Interner Fehler: Kunde ist null.";
 			System.err.println("❌ Validation failed: Kunde object is null.");
 			return false;
 		}
-
-		// Hausnummer (1–24)
+		// Validate Hausnummer (must be between 1 and 24)
 		if (kunde.getHausnummer() < 1 || kunde.getHausnummer() > 24) {
-			lastValidationError = "Bitte wählen Sie eine gültige Plannummer (1–24).";
 			System.err.println("❌ Validation failed: Invalid house number.");
 			return false;
 		}
-
-		// Vorname
+		// Validate first name
 		if (isNullOrEmpty(kunde.getVorname())) {
-			lastValidationError = "Bitte geben Sie einen Vornamen ein.";
 			System.err.println("❌ Validation failed: First name is missing.");
 			return false;
 		}
-		if (!isValidName(kunde.getVorname())) {
-			lastValidationError = "Der Vorname darf nur aus Buchstaben bestehen.";
-			System.err.println("❌ Validation failed: First name contains invalid characters.");
-			return false;
-		}
-		// Name normalisieren (Trim + Großschreibung)
-		kunde.setVorname(normalizeName(kunde.getVorname()));
-
-		// Nachname
+		// Validate last name
 		if (isNullOrEmpty(kunde.getNachname())) {
-			lastValidationError = "Bitte geben Sie einen Nachnamen ein.";
 			System.err.println("❌ Validation failed: Last name is missing.");
 			return false;
 		}
-		if (!isValidName(kunde.getNachname())) {
-			lastValidationError = "Der Nachname darf nur aus Buchstaben bestehen.";
-			System.err.println("❌ Validation failed: Last name contains invalid characters.");
-			return false;
-		}
-		// Name normalisieren (Trim + Großschreibung)
-		kunde.setNachname(normalizeName(kunde.getNachname()));
-
-		// Telefonnummer: nur Ziffern
+		// Validate phone number (only digits)
 		if (isNullOrEmpty(kunde.getTelefonnummer()) || !kunde.getTelefonnummer().matches("\\d+")) {
-			lastValidationError = "Die Telefonnummer darf nur aus Ziffern bestehen.";
 			System.err.println("❌ Validation failed: Invalid phone number.");
 			return false;
 		}
-
-		// E-Mail: muss ein @ enthalten
+		// Validate email format (simple check)
 		if (isNullOrEmpty(kunde.getEmail()) || !kunde.getEmail().contains("@")) {
-			lastValidationError = "Bitte geben Sie eine gültige E-Mail-Adresse mit '@' ein.";
 			System.err.println("❌ Validation failed: Invalid email address.");
 			return false;
 		}
-
+		if (kundeDAO.istHausnummerBesetzt(kunde.getHausnummer())) {
+			System.err.println("Fehlgeschlagen: Die Hausnummer ist besetzt.");
+			return false;
+		}
 		return true;
 	}
 
@@ -187,4 +163,96 @@ public final class KundeModel {
 		return lastValidationError;
 	}
 
+	// ------------ Sonderwünsche ------------
+	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
+	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
+
+	public int[] gibAusgewaehlteSwLokal() {
+		if (kunde == null)
+			return null;
+		if (this.ausgewaehlteSw == null)
+			return null;
+		return this.ausgewaehlteSw.clone();
+	}
+
+	/**
+	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen
+	 * oder null.
+	 *
+	 * @return Klon von this.ausgewaehlteSw oder null
+	 */
+	public int[] gibAusgewaehlteSwAusDb() {
+		if (kunde == null)
+			return null;
+		// throw new Exception("Es konnte kein Kunde gefunden werden");
+		int hausnr = this.kunde.getHausnummer();
+
+		try {
+			this.ausgewaehlteSw = this.swDao.get(hausnr);
+			return this.ausgewaehlteSw.clone();
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche");
+			exc.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen
+	 * oder null.
+	 *
+	 * @param ID einer Sonderwunschkategorie als int
+	 * @return Klon von this.ausgewaehlteSw oder null
+	 */
+	public int[] gibAusgewaehlteSwAusDb(int kategorieId) {
+		if (this.kunde == null)
+			return null;
+		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte
+		// kein Kunde gefunden werden");
+		int hausnr = this.kunde.getHausnummer();
+
+		try {
+			this.ausgewaehlteSw = this.swDao.get(hausnr, kategorieId);
+			return this.ausgewaehlteSw.clone();
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche");
+			exc.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Holt Sonderwünsche zu einem Kunden Gibt ein Array an Sonderwunschoptionen
+	 * zurueck, wenn ausgewaehlteSw nicht null ist. Ansonsten wird
+	 * holeAusgewaehlteSwAusDb() aufgerufen.
+	 *
+	 * @param int[] mit IDs der ausgewaehlten Sonderwünsche
+	 * @throws SQLExceptio oder Exception
+	 */
+	public void updateAusgewaehlteSw(int[] ausgewaehlteSw) throws SQLException, Exception {
+		if (this.kunde == null)
+			throw new Exception(
+					"Fehler beim Aktualisieren ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");
+		;
+		int hausnr = this.kunde.getHausnummer();
+
+		try {
+			this.swDao.update(hausnr, ausgewaehlteSw);
+			this.ausgewaehlteSw = ausgewaehlteSw;
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche: SQL Fehler");
+			// exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche");
+			// exc.printStackTrace();
+			throw exc;
+		}
+	}
 }
