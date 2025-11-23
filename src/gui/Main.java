@@ -4,8 +4,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import gui.kunde.KundeControl;
 
-
-
 public class Main extends Application {
 	
 	@Override
