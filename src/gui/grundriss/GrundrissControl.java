@@ -2,6 +2,9 @@ package gui.grundriss;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Arrays;
+
 import business.kunde.KundeModel;
 
 /**
@@ -44,6 +47,33 @@ public final class GrundrissControl {
 		if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0)
 			this.grundrissView.updateGrundrissCheckboxen(ausgewaehlteSw);
     } 
+	
+	public void speichereSonderwuensche(int[] grundrissSw) {
+		// Hole Kopie der aktuell ausgewählten Sw aus der Datenbank
+		int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
+		// Filtere Sonderwünsche zu Grundriss-Varianten raus
+		ausgewaehlteSw = Arrays.stream(ausgewaehlteSw).filter(sw -> sw < 200 || sw >= 300).toArray();
+		
+		// Führe mit neuer Auswahl an Sonderwünschen zu Grundriss-Varianten zusammen
+		int[] zuPruefendeSwKonstellation = new int[ausgewaehlteSw.length + grundrissSw.length];
+		for (int i = 0; i < zuPruefendeSwKonstellation.length; i++) {
+			if (i < ausgewaehlteSw.length) {
+				zuPruefendeSwKonstellation[i] = ausgewaehlteSw[i];
+			} else {
+				zuPruefendeSwKonstellation[i] = grundrissSw[i];
+			}
+		}
+		
+		// Prüfe neue Konstellation
+		if (this.pruefeKonstellationSonderwuensche(zuPruefendeSwKonstellation)) {
+			try {
+				this.kundeModel.updateAusgewaehlteSw(zuPruefendeSwKonstellation);
+			} catch(Exception exc) {
+				System.out.println("Neue Auswahl an Sonderwünschen zu Grundriss-Varianten"
+						+ "konnte nicht gespeichert werden");
+			}
+		}
+	}
 	
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw){
 		return true;

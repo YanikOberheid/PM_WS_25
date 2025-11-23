@@ -2,9 +2,9 @@ package gui.kunde;
 
 import java.sql.SQLException;
 
-import javafx.stage.Stage;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
+import javafx.stage.Stage;
 import gui.grundriss.GrundrissControl;
 
 /**
@@ -54,7 +54,6 @@ public class KundeControl {
 			}
 			kundeModel.speichereKunden(kunde);
 			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
-			
 			// Kundennummer setzen nach dem Anlegen des Kunden
 			kundeView.zeigeKundeAufGui(kunde);
     	}
@@ -102,7 +101,6 @@ public class KundeControl {
             kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim löschen.");
         }
     }
-    
     
     public void updateKunde(Kunde kunde) {
         try {
