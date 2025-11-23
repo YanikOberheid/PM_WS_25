@@ -1,6 +1,9 @@
 package business.kunde;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Data Access Object (DAO) für Kunden. Beinhaltet alle Datenbankzugriffe für
