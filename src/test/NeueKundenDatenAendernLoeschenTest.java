@@ -27,8 +27,8 @@ class NeueKundenDatenAendernLoeschenTest {
 	@AfterEach 
 	void clearTable() throws SQLException{
 		con.createStatement().execute("DELETE FROM Kunde"); 
-	}
-	*/
+	}*/
+	
 
 	// Verbindung zur Datenbank trennen
 	@AfterAll
@@ -42,37 +42,48 @@ class NeueKundenDatenAendernLoeschenTest {
 	 */
 	@Test
 	void testAendereKundendaten() throws SQLException {
-		// AlteVariablen
 		
-		int hausNummer = 9;
+		// Fixe Hausnummer fuer Test
+		int hausNummer = 21;
 		
+		// AlteKundenDaten fuer INSERT
 		String vorname = "Max";
 		String nachname = "Mustermann";
 		String telefonNummer = "0123456789";
 		String eMail = "max@mustermann.com";
 		
-		// Neue Variablen
+		// Neue KundeDaten (fuer UPDATE)
 		String neuVorname = "Erika";
 		String neuNachname = "Musterfrau";
 		String neuTelefonNummer = "9876543210";
 		String neueMail = "erika@musterfrau.com";
 		
-		Kunde kunde = new Kunde(hausNummer, vorname, nachname, telefonNummer, eMail);
 		
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+		
+		//Falls ein Kunde mit der Hausnummer 21 existiert vorher löschen
+		PreparedStatement clear = con.prepareStatement("DELETE FROM Kunde WHERE Haus_Hausnr = ?");
+		clear.setInt(1, hausNummer);
+		clear.executeUpdate();
+		clear.close();
+		
+		// Kunden anlegen (fuer Insert)
+		Kunde kunde = new Kunde(hausNummer, vorname, nachname, telefonNummer, eMail);
 		kundeDAO.add(kunde);
 		
-		Kunde kunde2 = kundeDAO.findByHausnummer(hausNummer);
-		kunde2.setVorname(neuVorname);
-		kunde2.setNachname(neuNachname);
-		kunde2.setTelefonnummer(neuTelefonNummer);
-		kunde2.setEmail(neueMail);
+		// idKunde nach Insert aus DB holen
+		Kunde bestehenderKunde = kundeDAO.findByHausnummer(hausNummer);
+		assertNotNull(bestehenderKunde, "Kunde sollte nach INSERT existieren.");
 		
-		kundeDAO.updateKunde(kunde2);
+		bestehenderKunde.setVorname(neuVorname);
+		bestehenderKunde.setNachname(neuNachname);
+		bestehenderKunde.setTelefonnummer(neuTelefonNummer);
+		bestehenderKunde.setEmail(neueMail);
 		
-		/* Kunden mit der Hausnummer aus der Datenbank Kunden Tabelle aufgreifen
-		 * Platzhalter ? mit Hausnummer ersetzen
-		*/
+		kundeDAO.updateKunde(bestehenderKunde);
+		
+		
+		// DB prüfen. Kunde aus der DB holen und überprüfen ob die Namen übereinstimmen
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM Kunde WHERE Haus_Hausnr = ?");
 		ps.setInt(1, hausNummer);
 		ResultSet rs = ps.executeQuery();
@@ -85,8 +96,55 @@ class NeueKundenDatenAendernLoeschenTest {
 		assertEquals(neuNachname, rs.getString("Nachname"));
 		assertEquals(neuTelefonNummer, rs.getString("Telefon"));
 		assertEquals(neueMail, rs.getString("email"));
+		
 		rs.close();
 		ps.close();
+	}
+	
+	@Test
+	void testLoescheKundendaten() throws Exception{
+		// Fixe Hausnummer fuer Test
+		int hausNummer = 22;
+				
+		// AlteKundenDaten fuer INSERT
+		String vorname = "Max";
+		String nachname = "Mustermann";
+		String telefonNummer = "0123456789";
+		String eMail = "max@mustermann.com";
+		
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+		
+		//Falls ein Kunde mit der Hausnummer 22 existiert vorher löschen
+		PreparedStatement clear = con.prepareStatement("DELETE FROM Kunde WHERE Haus_Hausnr = ?");
+		clear.setInt(1, hausNummer);
+		clear.executeUpdate();
+		clear.close();
+		
+		Kunde kunde = new Kunde(hausNummer, vorname, nachname, telefonNummer, eMail);
+		kundeDAO.add(kunde);
+		
+		Kunde bestehenderKunde = kundeDAO.findByHausnummer(hausNummer);
+		assertNotNull(bestehenderKunde, "Kunde sollte vor DELETE existieren");
+		
+		kundeDAO.deleteKunde(bestehenderKunde.getIdKunde());
+		
+		PreparedStatement ps = con.prepareStatement(
+				"SELECT * FROM Kunde WHERE idKunde = ?");
+		
+		ps.setInt(1, bestehenderKunde.getIdKunde());
+		ResultSet rs = ps.executeQuery();
+		
+		assertTrue(rs.next());
+		
+		// Erwartete Werte nach Löschen
+		assertEquals("GELOESCHT", rs.getString("Vorname"));
+		assertEquals("GELOESCHT", rs.getString("Nachname"));
+		assertNull(rs.getString("Telefon"));
+		assertNull(rs.getString("email"));
+		
+		rs.close();
+		ps.close();
+		
 		
 	}
 

@@ -54,6 +54,9 @@ public class KundeControl {
 			}
 			kundeModel.speichereKunden(kunde);
 			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
+			
+			// Kundennummer setzen nach dem Anlegen des Kunden
+			kundeView.zeigeKundeAufGui(kunde);
     	}
     	catch(SQLException exc){
     		exc.printStackTrace();
@@ -79,12 +82,12 @@ public class KundeControl {
             kundeView.zeigeKundeAufGui(kunde);
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
-        }
+        } 
     }
     
-    public void loescheKunden(int hausnummer) {
+    public void loescheKunden(int kundenummer, int hausnummer) {
         try {
-            boolean erfolg = kundeModel.loescheKunden(hausnummer);
+            boolean erfolg = kundeModel.loescheKunden(kundenummer, hausnummer);
             if (erfolg) {
                 kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
                 kundeView.zeigeKundeAufGui(null); // GUI leeren
@@ -94,8 +97,12 @@ public class KundeControl {
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim löschen.");
         }
     }
+    
     
     public void updateKunde(Kunde kunde) {
         try {

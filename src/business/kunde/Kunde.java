@@ -2,6 +2,9 @@ package business.kunde;
 
 public class Kunde {
 	
+	// ---- Kundennummer -----
+	private int idKunde;
+	
 	private int hausnummer;
 	private String vorname;
 	private String nachname;
@@ -16,6 +19,27 @@ public class Kunde {
 		this.telefonnummer = telefonnummer;
 		this.nachname = nachname;
 	}
+	
+	// ---- mit Kundennummer -----
+	
+	public Kunde(int kundeID, int hausnummer, String vorname, String nachname, String telefonnummer, String email)
+	{
+		this.idKunde = kundeID;
+		this.hausnummer = hausnummer;
+		this.vorname = vorname;
+		this.email = email;
+		this.telefonnummer = telefonnummer;
+		this.nachname = nachname;
+	}
+	
+	public int getIdKunde() {
+		return idKunde;
+	}
+	
+	public void setIdKunde(int kundeID) {
+		this.idKunde = kundeID;
+	}
+	// ----------------------
 	
 	public int getHausnummer() {
 		return hausnummer;

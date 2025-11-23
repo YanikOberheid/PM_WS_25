@@ -44,3 +44,4 @@ lib/
 *.war
 /gui/
 /test/
+/business/

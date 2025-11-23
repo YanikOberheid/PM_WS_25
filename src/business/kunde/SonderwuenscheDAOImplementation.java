@@ -35,12 +35,13 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public int[] get(int hausnummer, int kategorieId) throws SQLException {
-		String sql = "SELECT \"Sonderwunsch_idSonderwunsch\""
-				+ "FROM \"Sonderwunsch_has_Haus\" swh"
-				+ "INNER JOIN Sonderwunsch sw"
-				+ "ON swh.\"Sonderwunsch_idSonderwunsch\" = sw.\"idSonderwunsch\""
-				+ "WHERE swh.\"Haus_Hausnr\" = ?"
-				+ "AND sw.\"Sonderwunschkategorie_idSonderwunschkategorie\" = ?;";
+		String sql = "SELECT \"Sonderwunsch_idSonderwunsch\" "
+		           + "FROM \"Sonderwunsch_has_Haus\" swh "
+		           + "INNER JOIN Sonderwunsch sw "
+		           + "ON swh.\"Sonderwunsch_idSonderwunsch\" = sw.\"idSonderwunsch\" "
+		           + "WHERE swh.\"Haus_Hausnr\" = ? "
+		           + "AND sw.\"Sonderwunschkategorie_idSonderwunschkategorie\" = ?;";
+
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setFetchSize(100);
 			pstmt.setInt(1, hausnummer);
@@ -64,12 +65,12 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException {
 		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
-		String sql_del = "DELETE FROM \"Sonderwunsch_has_Haus\""
-				+ "WHERE \"Haus_Hausnr\" = ?";
-		
-		String sql_ins = "INSERT INTO \"Sonderwunsch_has_Haus\""
-				+ "(\"Sonderwunsch_idSonderwunsch\",\"Haus_Hausnr\")"
-				+ "VALUES (?, ?)";
+		String sql_del = "DELETE FROM \"Sonderwunsch_has_Haus\" "
+	               + "WHERE \"Haus_Hausnr\" = ?";
+
+		String sql_ins = "INSERT INTO \"Sonderwunsch_has_Haus\" "
+	               + "(\"Sonderwunsch_idSonderwunsch\", \"Haus_Hausnr\") "
+	               + "VALUES (?, ?)";
 		
 		try {
 			/*
@@ -112,5 +113,40 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			exc.printStackTrace();
 			throw exc;
 		}
+	}
+
+	@Override
+	public void delete(int hausnummer) throws SQLException {
+		String sql_del = "DELETE FROM `Sonderwunsch_has_Haus` WHERE `Haus_Hausnr` = ?";
+
+		try (PreparedStatement pstmt = con.prepareStatement(sql_del)){
+			// DELETE
+			con.setAutoCommit(false);
+			pstmt.setInt(1, hausnummer);
+			pstmt.executeUpdate();
+			
+			// commit
+			con.commit();
+		} catch (SQLException exc) {
+			try {
+				con.rollback();
+			} catch (SQLException exc2) {
+				System.out.println("Fehler beim Rollback während der Aktualisierung von Sonderwünschen");
+			}
+			try {
+				con.setAutoCommit(true);
+			} catch (SQLException exc2) {
+				System.out.println("Fehler beim Setzen der DB-Verbindung in auto-commit während der Aktualisierung von Sonderwünschen");
+			}
+			exc.printStackTrace();
+			throw exc;
+		} finally {
+			try { 
+				con.setAutoCommit(false);
+			} catch (SQLException e) {
+				System.out.println("Fehler beim zurücksetzen von Auto Commit!");
+			}
+		}
+		
 	}
 }
