@@ -33,7 +33,7 @@ public final class GrundrissControl {
 	    // -> grundrissView ruft grundrissControl's leseGrundrissSonderwuensche auf
 	    // -> grundrissControl ruft grundrissView's updateCheckboxen auf (Checkboxen sind private)
 	}
-	    
+	
 	/**
 	 * macht das GrundrissView-Objekt sichtbar.
 	 */
