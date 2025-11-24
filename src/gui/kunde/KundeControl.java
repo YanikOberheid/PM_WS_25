@@ -26,8 +26,8 @@ public class KundeControl {
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum
 	 * Grundfenster mit den Kundendaten.
 	 * 
-	 * @param primaryStage, Stage fuer das View-Objekt zu dem Grundfenster mit den
-	 *                      Kundendaten
+	 * @param primaryStage Stage fuer das View-Objekt zu dem Grundfenster mit den
+	 *                     Kundendaten
 	 */
 	public KundeControl(Stage primaryStage) {
 		this.kundeModel = KundeModel.getInstance();
@@ -40,7 +40,7 @@ public class KundeControl {
 	 */
 	public void oeffneGrundrissControl() {
 		if (this.grundrissControl == null) {
-			this.grundrissControl = new GrundrissControl();
+			this.grundrissControl = new GrundrissControl(); // <<< hier angepasst
 		}
 		this.grundrissControl.oeffneGrundrissView();
 	}
@@ -48,63 +48,71 @@ public class KundeControl {
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank
 	 * 
-	 * @param kunde, Kunde-Objekt, welches zu speichern ist
+	 * @param kunde Kunde-Objekt, welches zu speichern ist
 	 */
-	// Von Yamam alles unten
 	public void speichereKunden(Kunde kunde) {
-
-		// 1. Validierung
-		if (!istKundeValide(kunde)) {
-			return; // bei Fehler NICHT speichern
-		}
-
-		// 2. Speichern mit Exception Handling
 		try {
-			kundeModel.speichereKunden(kunde);
-
-			// Info bei Erfolg (optional)
-			this.kundeView.zeigeInfo("Speichern erfolgreich", "Die Kundendaten wurden erfolgreich gespeichert.");
-		} catch (java.sql.SQLException e) {
-
-			// MySQL: 1062 = Duplicate entry (z. B. Kunde/Haus bereits vorhanden)
-			if (e.getErrorCode() == 1062) {
-				this.kundeView.zeigeFehlermeldung("Bereits vorhanden",
-						"Für diese Plannummer existiert bereits ein Kunde oder die Kundendaten sind schon gespeichert.");
-			} else {
-				this.kundeView.zeigeFehlermeldung("Datenbankfehler",
-						"Beim Speichern der Kundendaten ist ein Fehler aufgetreten.");
+			// Kundendaten validieren
+			// Falls dein Model nur isValidCustomer(Kunde) hat, nimm diese Variante:
+			// if (!kundeModel.isValidCustomer(kunde)) {
+			if (!kundeModel.isValidCustomer(kunde)) {
+				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
+				return;
 			}
+			kundeModel.speichereKunden(kunde);
+			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
+		} catch (SQLException exc) {
+			exc.printStackTrace();
+			this.kundeView.zeigeFehlermeldung("SQLException", "Fehler beim Speichern in die Datenbank");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+			this.kundeView.zeigeFehlermeldung("Exception", "Unbekannter Fehler");
+		}
+	}
+
+	/**
+	 * Lädt den Kunden zur angegebenen Hausnummer und zeigt ihn in der View an.
+	 */
+	public void ladeKundenZuHausnummer(int hausnummer) {
+		try {
+			Kunde kunde = kundeModel.ladeKunde(hausnummer);
+			kundeView.zeigeKundeAufGui(kunde);
+			kundeView.zeigeHausBildFuerHausnummer(hausnummer);
+		} catch (SQLException e) {
+			kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
+		}
+	}
+
+	public void loescheKunden(int hausnummer) {
+		try {
+			boolean erfolg = kundeModel.loescheKunden(hausnummer);
+			if (erfolg) {
+				kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
+				kundeView.zeigeKundeAufGui(null); // GUI leeren
+			} else {
+				kundeView.zeigeFehlermeldung("Fehler", "Kein Kunde unter dieser Hausnummer gefunden.");
+			}
+		} catch (SQLException e) {
+			kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
 			e.printStackTrace();
+		}
+	}
+
+	public void updateKunde(Kunde kunde) {
+		try {
+			// analoger Hinweis wie oben: ggf. isValidCustomer(kunde) verwenden
+			if (!kundeModel.isValidCustomer(kunde)) {
+				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
+				return;
+			}
+			kundeModel.updateKunde(kunde);
+			kundeView.zeigeErfolgsmeldung("Erfolg", "Kundendaten wurden erfolgreich aktualisiert.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			kundeView.zeigeFehlermeldung("Fehler", "Kundendaten konnten nicht aktualisiert werden.");
 		} catch (Exception e) {
-			this.kundeView.zeigeFehlermeldung("Unbekannter Fehler", "Es ist ein unerwarteter Fehler aufgetreten.");
 			e.printStackTrace();
+			kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
 		}
 	}
-
-	private boolean istKundeValide(Kunde kunde) {
-
-		// 1) Pflichtfelder
-		if (!kunde.isVollstaendig()) {
-			this.kundeView.zeigeFehlermeldung("Ungültige Eingabe",
-					"Bitte füllen Sie alle Felder aus (Plannummer, Vorname, Nachname, Telefonnummer und E-Mail).");
-			return false;
-		}
-
-		// 2) Telefonnummer prüfen
-		if (!kunde.isTelefonnummerValid()) {
-			this.kundeView.zeigeFehlermeldung("Ungültige Telefonnummer",
-					"Die Telefonnummer darf nur aus Ziffern bestehen.");
-			return false;
-		}
-
-		// 3) E-Mail prüfen
-		if (!kunde.isEmailValid()) {
-			this.kundeView.zeigeFehlermeldung("Ungültige E-Mail-Adresse", "Die E-Mail-Adresse muss ein '@' enthalten.");
-			return false;
-		}
-
-		// alles okay
-		return true;
-	}
-
 }
