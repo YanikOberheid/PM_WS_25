@@ -1,5 +1,6 @@
 package gui.kunde;
 
+import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 
 import business.kunde.Kunde;
@@ -127,5 +128,9 @@ public class KundeControl {
             kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
         }
     }
+
+	public BufferedImage ladeBildAusDB(int idBild) throws SQLException, Exception {
+		return kundeModel.holBildAusDB(idBild);
+	}
    
 }

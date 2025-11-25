@@ -1,7 +1,11 @@
 package gui.kunde;
 
+import java.awt.image.BufferedImage;
+import java.sql.SQLException;
+
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,6 +23,11 @@ public class KundeView {
 
 	// Pfad zur Platzhalter-Grafik im Klassenpfad
 	private static final String STANDARD_HAUS_BILD = "/gui/images/haus_placeholder.png";
+	
+	//private static final String DACHGESCHOSS_HAUS_BILD = "/gui/images/haus_placeholder.png";
+	private static final int DACHGESCHOSS_HAUS_BILD = 1;
+	private static final int STANDARD_HAUS_BILD_ = 2;
+	
 	// das Control-Objekt des Grundfensters mit den Kundendaten
 	private KundeControl kundeControl;
 	// das Model-Objekt des Grundfensters mit den Kundendaten
@@ -311,6 +320,51 @@ public class KundeView {
 	 * differenzieren.)
 	 */
 	public void zeigeHausBildFuerHausnummer(int hausnummer) {
-		zeigeHausBild(STANDARD_HAUS_BILD);
+		int[] keinDachgeschoss = {1, 6, 7 ,14, 15, 24};
+		boolean found = false;
+		
+		for(int n : keinDachgeschoss) {
+			if (hausnummer == n) {
+				found = true;
+				break;
+			}
+		}
+		
+		if (found) {
+			System.out.println("Haus hat keinen Dachgeschoss!");
+			try {
+				BufferedImage img = kundeControl.ladeBildAusDB(STANDARD_HAUS_BILD_);
+				displayImage(img);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//zeigeHausBild(STANDARD_HAUS_BILD);
+		} else {
+			System.out.println("Haus hat einen Dachgeschoss!");
+			try {
+				BufferedImage img = kundeControl.ladeBildAusDB(DACHGESCHOSS_HAUS_BILD);
+				displayImage(img);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
+	
+	public void displayImage(BufferedImage img) {
+		if (img != null) {
+			Image fxImage = SwingFXUtils.toFXImage(img, null);
+			hausImageView.setImage(fxImage);
+		} else {
+			hausImageView.setImage(null);
+		}
+	}
+	
 }

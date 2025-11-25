@@ -1,9 +1,13 @@
 package business.kunde;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javax.imageio.ImageIO;
 
 /**
  * Data Access Object (DAO) für Kunden. Beinhaltet alle Datenbankzugriffe für
@@ -124,4 +128,23 @@ public class KundeDaoImplementation implements KundenDAO {
 	        }
 	    }
 	}
+
+	@Override
+	public BufferedImage loadImage(int id) throws SQLException, Exception {
+		BufferedImage image = null;
+		
+		String sql = "SELECT data FROM images WHERE id = ?";
+		
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				InputStream is = rs.getBinaryStream("data");
+				image = ImageIO.read(is);
+			}
+		return image;
+		}
+	}
 }
+
