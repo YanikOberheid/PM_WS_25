@@ -1,14 +1,10 @@
 package business.kunde;
 
 public class Kunde {
-<<<<<<< HEAD
 	
 	// ---- Kundennummer -----
 	private int idKunde;
 	
-=======
-
->>>>>>> refs/remotes/origin/dev
 	private int hausnummer;
 	private String vorname;
 	private String nachname;
@@ -22,20 +18,17 @@ public class Kunde {
 		this.telefonnummer = telefonnummer;
 		this.nachname = nachname;
 	}
-<<<<<<< HEAD
-	
+
 	// ---- mit Kundennummer -----
-	
-	public Kunde(int kundeID, int hausnummer, String vorname, String nachname, String telefonnummer, String email)
-	{
-		this.idKunde = kundeID;
+	public Kunde(int idKunde, int hausnummer, String vorname, String nachname, String telefonnummer, String email) {
+		this.idKunde = idKunde;
 		this.hausnummer = hausnummer;
 		this.vorname = vorname;
 		this.email = email;
 		this.telefonnummer = telefonnummer;
 		this.nachname = nachname;
 	}
-	
+
 	public int getIdKunde() {
 		return idKunde;
 	}
@@ -44,14 +37,11 @@ public class Kunde {
 		this.idKunde = kundeID;
 	}
 	// ----------------------
-	
-=======
 
->>>>>>> refs/remotes/origin/dev
 	public int getHausnummer() {
 		return hausnummer;
 	}
-
+	
 	public void setHausnummer(int hausnummer) {
 		this.hausnummer = hausnummer;
 	}

@@ -98,7 +98,6 @@ public final class KundeModel {
 	 * @throws SQLException Fehler beim Datenbankzugriff
 	 */
 	public Kunde ladeKunde(int hausnummer) throws SQLException {
-<<<<<<< HEAD
 	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 	    
 	    if (kundeDAO.istHausnummerBesetzt(hausnummer)) {
@@ -110,23 +109,9 @@ public final class KundeModel {
 	        this.kunde = null;
 	    }
 	    return this.kunde;
-=======
-		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-
-		if (kundeDAO.istHausnummerBesetzt(hausnummer)) {
-			// Kunde existiert, lade das Objekt
-			this.kunde = kundeDAO.findByHausnummer(hausnummer);
-		} else {
-			// Kein Kunde unter dieser Hausnummer
-			this.kunde = null;
-		}
-
-		return this.kunde;
->>>>>>> refs/remotes/origin/dev
 	}
 
 	// Löscht den Kunden zur angegebenen Hausnummer.
-<<<<<<< HEAD
 	public boolean loescheKunden(int kundennummer, int hausnummer) throws Exception {
 	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 	    
@@ -141,19 +126,7 @@ public final class KundeModel {
 	        this.kunde = null;
 	    }
 	    return geloescht;
-=======
-	public boolean loescheKunden(int hausnummer) throws SQLException {
-		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-		boolean geloescht = kundeDAO.deleteKunde(hausnummer);
-
-		// Wenn gelöscht, auch aktuelles Kunde-Objekt im Model leeren
-		if (geloescht && this.kunde != null && this.kunde.getHausnummer() == hausnummer) {
-			this.kunde = null;
-		}
-		return geloescht;
->>>>>>> refs/remotes/origin/dev
 	}
-<<<<<<< HEAD
 	
 	public void updateKunde (Kunde kunde) throws SQLException, Exception {
 	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
@@ -161,12 +134,6 @@ public final class KundeModel {
 	    // ausversehen ein weitere Datensatz hinzugefügt wird
 	    //kunde.setIdKunde(this.kunde.getIdKunde());
 	    kundeDAO.updateKunde(kunde);
-=======
-
-	public void updateKunde(Kunde kunde) throws SQLException, Exception {
-		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-		kundeDAO.updateKunde(kunde);
->>>>>>> refs/remotes/origin/dev
 	}
 
 	/**
@@ -252,7 +219,6 @@ public final class KundeModel {
 	// ------------ Sonderwünsche ------------
 	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
 	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
-<<<<<<< HEAD
 	
 	public int[] gibAusgewaehlteSwLokal() {
 		if (kunde == null) return null;
@@ -260,17 +226,6 @@ public final class KundeModel {
 		return this.ausgewaehlteSw.clone();
 	}
 	
-=======
-
-	public int[] gibAusgewaehlteSwLokal() {
-		if (kunde == null)
-			return null;
-		if (this.ausgewaehlteSw == null)
-			return null;
-		return this.ausgewaehlteSw.clone();
-	}
-
->>>>>>> refs/remotes/origin/dev
 	/**
 	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen
 	 * oder null.
@@ -278,12 +233,7 @@ public final class KundeModel {
 	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
 	public int[] gibAusgewaehlteSwAusDb() {
-<<<<<<< HEAD
 		if (kunde == null) return null; 
-=======
-		if (kunde == null)
-			return null;
->>>>>>> refs/remotes/origin/dev
 		// throw new Exception("Es konnte kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
 
@@ -308,15 +258,8 @@ public final class KundeModel {
 	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
 	public int[] gibAusgewaehlteSwAusDb(int kategorieId) {
-<<<<<<< HEAD
 		if (this.kunde == null) return null;
 		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");
-=======
-		if (this.kunde == null)
-			return null;
-		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte
-		// kein Kunde gefunden werden");
->>>>>>> refs/remotes/origin/dev
 		int hausnr = this.kunde.getHausnummer();
 
 		try {
@@ -357,7 +300,6 @@ public final class KundeModel {
 		} catch (Exception exc) {
 			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche");
 			// exc.printStackTrace();
-<<<<<<< HEAD
 			throw exc;
 		}
 	}
@@ -372,8 +314,6 @@ public final class KundeModel {
 		} catch (Exception exc) {
 			System.out.println("Fehler beim Delete Sondderwunsch_has_Haus");
 			exc.printStackTrace();
-=======
->>>>>>> refs/remotes/origin/dev
 			throw exc;
 		}
 	}

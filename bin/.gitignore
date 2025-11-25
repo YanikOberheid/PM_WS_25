@@ -1,6 +1,3 @@
-/test/
-<<<<<<< HEAD
-=======
-/gui/
->>>>>>> refs/remotes/origin/dev
 /business/
+/gui/
+/test/

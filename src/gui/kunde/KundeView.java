@@ -32,7 +32,7 @@ public class KundeView {
 	private GridPane gridPane = new GridPane();
 	private Label lblKunde = new Label("Kunde");
 	private Label lblNummerHaus = new Label("Plannummer des Hauses");
-	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<Integer>();
+	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<>();
 
 	private Label lblKundennummer = new Label("Kundennummer");
 	private TextField txtKundennummer = new TextField();
@@ -131,12 +131,10 @@ public class KundeView {
 
 		// --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
-		/***
-		 * rightBox.setPadding(new Insets(25, 25, 25, 0));
-		 * hausImageView.setPreserveRatio(true); hausImageView.setFitWidth(300);
-		 * hausImageView.setFitHeight(220); rightBox.getChildren().add(hausImageView);
-		 * borderPane.setRight(rightBox);
-		 ***/
+		// rightBox.setPadding(new Insets(25, 25, 25, 0));
+		// hausImageView.setPreserveRatio(true); hausImageView.setFitWidth(300);
+		// hausImageView.setFitHeight(220); rightBox.getChildren().add(hausImageView);
+		// borderPane.setRight(rightBox);
 
 		rightBox.setAlignment(Pos.TOP_CENTER);
 		Label lblBild = new Label("Hausbild");
@@ -149,7 +147,7 @@ public class KundeView {
 		hausImageView.setImage(null);
 	}
 
-	/* initialisiert die Listener zu den Steuerelementen auf de Maske */
+	/* initialisiert die Listener zu den Steuerelementen auf der Maske */
 	private void initListener() {
 		cmbBxNummerHaus.setOnAction(aEvent -> {
 			holeInfoDachgeschoss();
@@ -187,8 +185,14 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
-<<<<<<< HEAD
-		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		String kundenNummerText = txtKundennummer.getText();
+		Integer kundenummer = null;
+		try {
+			kundenummer = Integer.parseInt(kundenNummerText);
+		} catch (NumberFormatException e) {
+			zeigeFehlermeldung("Fehler", "Ungültige Kundennummer.");
+			return;
+		}
 		
 		Kunde kunde = new Kunde(
 				kundenummer,
@@ -199,31 +203,24 @@ public class KundeView {
 		        txtEmail.getText()
 		    );
 		    kundeControl.updateKunde(kunde);
-=======
-		Kunde kunde = new Kunde(cmbBxNummerHaus.getValue(), txtVorname.getText(), txtNachname.getText(),
-				txtNummer.getText(), txtEmail.getText());
-		kundeControl.updateKunde(kunde);
->>>>>>> refs/remotes/origin/dev
 	}
 
 	private void loescheKunden() {
 		Integer hausnummer = cmbBxNummerHaus.getValue();
-<<<<<<< HEAD
-		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
-	    if (kundenummer != null & hausnummer != null) {
+		String kundenNummerText = txtKundennummer.getText();
+	    Integer kundenummer = null;
+	    try {
+	        kundenummer = Integer.parseInt(kundenNummerText);
+	    } catch (NumberFormatException e) {
+	        zeigeFehlermeldung("Fehler", "Bitte eine gültige Kundennummer eingeben.");
+	        return;
+	    }
+	    if (kundenummer != null && hausnummer != null) {
 	        kundeControl.loescheKunden(kundenummer, hausnummer);
 	    } else {
 	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
 	    }
-=======
-		if (hausnummer != null) {
-			kundeControl.loescheKunden(hausnummer);
-		} else {
-			zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
-		}
->>>>>>> refs/remotes/origin/dev
 	}
-<<<<<<< HEAD
 	
 	public void zeigeKundeAufGui(Kunde kunde) {
 	    if (kunde == null) {
@@ -239,22 +236,6 @@ public class KundeView {
 	    txtNachname.setText(kunde.getNachname());
 	    txtNummer.setText(kunde.getTelefonnummer());
 	    txtEmail.setText(kunde.getEmail());
-=======
-
-	public void zeigeKundeAufGui(Kunde kunde) {
-		if (kunde == null) {
-			txtVorname.clear();
-			txtNachname.clear();
-			txtNummer.clear();
-			txtEmail.clear();
-			return;
-		}
-
-		txtVorname.setText(kunde.getVorname());
-		txtNachname.setText(kunde.getNachname());
-		txtNummer.setText(kunde.getTelefonnummer());
-		txtEmail.setText(kunde.getEmail());
->>>>>>> refs/remotes/origin/dev
 	}
 
 	/**
