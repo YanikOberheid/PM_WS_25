@@ -6,6 +6,8 @@ import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
@@ -15,10 +17,15 @@ import javafx.stage.Stage;
  */
 public class KundeView {
 
+	// Pfad zur Platzhalter-Grafik im Klassenpfad
+	private static final String STANDARD_HAUS_BILD = "/gui/images/haus_placeholder.png";
 	// das Control-Objekt des Grundfensters mit den Kundendaten
 	private KundeControl kundeControl;
 	// das Model-Objekt des Grundfensters mit den Kundendaten
 	private KundeModel kundeModel;
+
+	// --- Bildanzeige (neu für Task [3]) ---
+	private final ImageView hausImageView = new ImageView();
 
 	// ---Anfang Attribute der grafischen Oberflaeche---
 	private BorderPane borderPane = new BorderPane();
@@ -52,7 +59,7 @@ public class KundeView {
 
 	/**
 	 * erzeugt ein KundeView-Objekt und initialisiert die Steuerelemente der Maske
-	 * 
+	 *
 	 * @param kundeControl KundeControl, enthaelt das zugehoerige Control
 	 * @param primaryStage Stage, enthaelt das Stage-Objekt fuer diese View
 	 * @param kundeModel   KundeModel, enthaelt das zugehoerige Model
@@ -62,7 +69,7 @@ public class KundeView {
 		this.kundeModel = kundeModel;
 
 		primaryStage.setTitle(this.kundeModel.getUeberschrift());
-		Scene scene = new Scene(borderPane, 550, 400);
+		Scene scene = new Scene(borderPane, 750, 420); // etwas breiter, damit das Bild rechts Platz hat
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -72,6 +79,7 @@ public class KundeView {
 
 	/* initialisiert die Steuerelemente auf der Maske */
 	private void initKomponenten() {
+		// Zentrum: Formular
 		borderPane.setCenter(gridPane);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
@@ -120,6 +128,25 @@ public class KundeView {
 		borderPane.setTop(mnBar);
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
+
+		// --- Rechts: Bildbereich (neu) ---
+		VBox rightBox = new VBox(10);
+		/***
+		 * rightBox.setPadding(new Insets(25, 25, 25, 0));
+		 * hausImageView.setPreserveRatio(true); hausImageView.setFitWidth(300);
+		 * hausImageView.setFitHeight(220); rightBox.getChildren().add(hausImageView);
+		 * borderPane.setRight(rightBox);
+		 ***/
+
+		rightBox.setAlignment(Pos.TOP_CENTER);
+		Label lblBild = new Label("Hausbild");
+		initialisiereHausBild(); // Größe/Platzhalter konfigurieren
+		rightBox.getChildren().addAll(lblBild, hausImageView);
+		borderPane.setRight(rightBox);
+
+		// Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
+		// Noch kein Bild laden – erst wenn Kundendaten/Plannummer gewählt wurden
+		hausImageView.setImage(null);
 	}
 
 	/* initialisiert die Listener zu den Steuerelementen auf de Maske */
@@ -146,11 +173,11 @@ public class KundeView {
 	}
 
 	private void leseKunden() {
-	    Integer hausnummer = cmbBxNummerHaus.getValue();
-	    
-	    if (hausnummer != null) {
-	        kundeControl.ladeKundenZuHausnummer(hausnummer);
-	    }
+		Integer hausnummer = cmbBxNummerHaus.getValue();
+
+		if (hausnummer != null) {
+			kundeControl.ladeKundenZuHausnummer(hausnummer);
+		}
 	}
 
 	private void legeKundenAn() {
@@ -160,6 +187,7 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
+<<<<<<< HEAD
 		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
 		
 		Kunde kunde = new Kunde(
@@ -171,17 +199,31 @@ public class KundeView {
 		        txtEmail.getText()
 		    );
 		    kundeControl.updateKunde(kunde);
+=======
+		Kunde kunde = new Kunde(cmbBxNummerHaus.getValue(), txtVorname.getText(), txtNachname.getText(),
+				txtNummer.getText(), txtEmail.getText());
+		kundeControl.updateKunde(kunde);
+>>>>>>> refs/remotes/origin/dev
 	}
 
 	private void loescheKunden() {
 		Integer hausnummer = cmbBxNummerHaus.getValue();
+<<<<<<< HEAD
 		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
 	    if (kundenummer != null & hausnummer != null) {
 	        kundeControl.loescheKunden(kundenummer, hausnummer);
 	    } else {
 	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
 	    }
+=======
+		if (hausnummer != null) {
+			kundeControl.loescheKunden(hausnummer);
+		} else {
+			zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
+		}
+>>>>>>> refs/remotes/origin/dev
 	}
+<<<<<<< HEAD
 	
 	public void zeigeKundeAufGui(Kunde kunde) {
 	    if (kunde == null) {
@@ -197,11 +239,27 @@ public class KundeView {
 	    txtNachname.setText(kunde.getNachname());
 	    txtNummer.setText(kunde.getTelefonnummer());
 	    txtEmail.setText(kunde.getEmail());
+=======
+
+	public void zeigeKundeAufGui(Kunde kunde) {
+		if (kunde == null) {
+			txtVorname.clear();
+			txtNachname.clear();
+			txtNummer.clear();
+			txtEmail.clear();
+			return;
+		}
+
+		txtVorname.setText(kunde.getVorname());
+		txtNachname.setText(kunde.getNachname());
+		txtNummer.setText(kunde.getTelefonnummer());
+		txtEmail.setText(kunde.getEmail());
+>>>>>>> refs/remotes/origin/dev
 	}
 
 	/**
 	 * zeigt ein Fehlermeldungsfenster an
-	 * 
+	 *
 	 * @param ueberschrift, Ueberschrift fuer das Fehlermeldungsfenster
 	 * @param meldung,      String, welcher die Fehlermeldung enthaelt
 	 */
@@ -212,12 +270,77 @@ public class KundeView {
 		alert.setContentText(meldung);
 		alert.show();
 	}
-	
+
 	public void zeigeErfolgsmeldung(String ueberschrift, String meldung) {
-	    Alert alert = new Alert(AlertType.INFORMATION);
-	    alert.setTitle("Erfolg");
-	    alert.setHeaderText(ueberschrift);
-	    alert.setContentText(meldung);
-	    alert.show();
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Erfolg");
+		alert.setHeaderText(ueberschrift);
+		alert.setContentText(meldung);
+		alert.show();
+	}
+
+	// === Neu: Methoden für Task [3] – Bildanzeige nach dem Laden ===
+
+	/**
+	 * Wird vom Control aufgerufen, sobald Kundendaten geladen wurden. Lädt das
+	 * Standardbild aus dem Klassenpfad und zeigt es im rechten Bereich.
+	 */
+	public void zeigeHausBildNachLaden() {
+		try {
+			var url = getClass().getResource(STANDARD_HAUS_BILD);
+			if (url != null) {
+				hausImageView.setImage(new Image(url.toExternalForm()));
+			} else {
+				System.err.println("Hausbild nicht gefunden: " + STANDARD_HAUS_BILD);
+				hausImageView.setImage(null);
+			}
+		} catch (Exception ex) {
+			System.err.println("Fehler beim Laden des Hausbildes: " + ex.getMessage());
+			hausImageView.setImage(null);
+		}
+	}
+
+	/**
+	 * Blendet das Hausbild aus (z. B. wenn kein Kunde vorhanden ist).
+	 */
+	public void entferneHausBild() {
+		hausImageView.setImage(null);
+	}
+
+	private void initialisiereHausBild() {
+		hausImageView.setFitWidth(260);
+		hausImageView.setFitHeight(180);
+		hausImageView.setPreserveRatio(true);
+		// Noch kein Bild zeigen – erst nach dem Laden der Kundendaten:
+		hausImageView.setImage(null);
+	}
+
+	public void zeigeHausBild(String resourcePath) {
+		try (var in = getClass().getResourceAsStream(resourcePath)) {
+			if (in == null) {
+				throw new IllegalArgumentException("Resource not found: " + resourcePath);
+			}
+			hausImageView.setImage(new Image(in));
+		} catch (Exception ex) {
+			// Fallback auf Standardbild
+			try (var fallback = getClass().getResourceAsStream(STANDARD_HAUS_BILD)) {
+				if (fallback != null) {
+					hausImageView.setImage(new Image(fallback));
+				} else {
+					hausImageView.setImage(null); // letzter Ausweg
+				}
+			} catch (Exception ignore) {
+				hausImageView.setImage(null);
+			}
+		}
+	}
+
+	/**
+	 * Wird nach dem Laden der Kundendaten aufgerufen. Momentan zeigen wir für alle
+	 * Häuser ein Platzhalterbild. (Später kannst du hier nach Haustyp/DG
+	 * differenzieren.)
+	 */
+	public void zeigeHausBildFuerHausnummer(int hausnummer) {
+		zeigeHausBild(STANDARD_HAUS_BILD);
 	}
 }
