@@ -2,6 +2,13 @@ package business.kunde;
 
 import java.sql.SQLException;
 import javafx.collections.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+
 
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.
@@ -295,5 +302,79 @@ public final class KundeModel {
 			// exc.printStackTrace();
 			throw exc;
 		}
+		
+		
 	}
+	
+	
+	
+	
+	
+	/**
+     * [3] Speichert Sonderwünsche einer spezifischen Kategorie (z.B. Fliesen),
+     * ohne die Sonderwünsche anderer Kategorien (z.B. Grundriss) zu löschen.
+     * * @param neueAuswahlIDs Ein Array mit den IDs der neu gewählten Sonderwünsche.
+     * @param kategorieId    Die ID der Kategorie (z.B. 1 für Fliesen), deren Daten ersetzt werden sollen.
+     */
+    public void speichereSonderwuenscheFuerKategorie(int[] neueAuswahlIDs, int kategorieId) throws Exception {
+        if (this.kunde == null) {
+            throw new Exception("Fehler: Kein Kunde ausgewählt.");
+        }
+        int hausnr = this.kunde.getHausnummer();
+
+        // 1. Hole ALLE aktuellen Sonderwünsche des Kunden aus der DB (z.B. Grundriss + alte Fliesen)
+        int[] alleVorhandenen = swDao.get(hausnr);
+        
+        // 2. Hole nur die alten Sonderwünsche dieser speziellen Kategorie (z.B. alte Fliesen)
+        int[] alteKategorieDaten = swDao.get(hausnr, kategorieId);
+
+        // Hilfsliste zum Bearbeiten erstellen
+        ArrayList<Integer> neueGesamtListe = new ArrayList<>();
+
+        // Füge zunächst alle vorhandenen Einträge der Liste hinzu
+        if (alleVorhandenen != null) {
+            for (int id : alleVorhandenen) {
+                neueGesamtListe.add(id);
+            }
+        }
+
+        // 3. Entferne die "alten" Einträge der angegebenen Kategorie aus der Liste
+        // (Wir löschen den alten Stand der Fliesen, um den neuen zu setzen)
+        if (alteKategorieDaten != null) {
+            for (int altId : alteKategorieDaten) {
+                // Wichtig: Integer.valueOf nutzen, damit das Objekt (die ID) entfernt wird, nicht der Index
+                neueGesamtListe.remove(Integer.valueOf(altId));
+            }
+        }
+
+        // 4. Füge die NEUE Auswahl hinzu
+        if (neueAuswahlIDs != null) {
+            for (int neuId : neueAuswahlIDs) {
+                // Nur hinzufügen, wenn noch nicht vorhanden (Vermeidung von Duplikaten)
+                if (!neueGesamtListe.contains(neuId)) {
+                    neueGesamtListe.add(neuId);
+                }
+            }
+        }
+
+        // 5. Konvertiere die Liste zurück in ein int-Array
+        int[] updateArray = neueGesamtListe.stream().mapToInt(i -> i).toArray();
+
+        // 6. Rufe die sichere Update-Methode auf
+        // Da updateArray jetzt ALLES enthält (Grundriss + NEUE Fliesen), ist das Löschen im DAO sicher.
+        this.updateAusgewaehlteSw(updateArray);
+        
+        System.out.println("✅ Sonderwünsche für Kategorie " + kategorieId + " erfolgreich gespeichert.");
+    }
+    
+    /**
+     * Gibt das aktuelle Kunde-Objekt zurück.
+     * Wird benötigt, um zu prüfen, ob ein Kunde ausgewählt ist.
+     */
+    public Kunde getKunde() {
+        return this.kunde;
+    }
+    
+    
+
 }

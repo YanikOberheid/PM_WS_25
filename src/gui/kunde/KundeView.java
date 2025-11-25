@@ -26,6 +26,8 @@ public class KundeView {
 
 	// --- Bildanzeige (neu für Task [3]) ---
 	private final ImageView hausImageView = new ImageView();
+	
+	
 
 	// ---Anfang Attribute der grafischen Oberflaeche---
 	private BorderPane borderPane = new BorderPane();
@@ -52,6 +54,9 @@ public class KundeView {
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
+	
+	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
+	
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
 	/**
@@ -121,7 +126,8 @@ public class KundeView {
 		borderPane.setTop(mnBar);
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
-
+		
+		mnSonderwuensche.getItems().add(mnItmFliesen);
 		// --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
 		/***
@@ -159,6 +165,10 @@ public class KundeView {
 		});
 		mnItmGrundriss.setOnAction(aEvent -> {
 			kundeControl.oeffneGrundrissControl();
+		});
+		
+		mnItmFliesen.setOnAction(ae -> {
+		    new gui.fliesen.FliesenControl(kundeModel).oeffneFliesenView();
 		});
 	}
 

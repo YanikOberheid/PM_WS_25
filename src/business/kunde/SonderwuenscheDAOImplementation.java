@@ -7,138 +7,201 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
-	
-    static Connection con = DatabaseConnection.getInstance().getConnection();
-	
-    @Override
-    public int[] get(int hausnummer) throws SQLException {
-        // MySQL: keine "..." um Tabellen-/Spaltennamen
-        String sql = "SELECT Sonderwunsch_idSonderwunsch " +
-                     "FROM Sonderwunsch_has_Haus " +
-                     "WHERE Haus_Hausnr = ?";
 
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setFetchSize(100);
-            pstmt.setInt(1, hausnummer);
-            ResultSet result = pstmt.executeQuery();
-			
-            ArrayList<Integer> ausgewaehlteSw = new ArrayList<>();
-            while (result.next()) {
-                ausgewaehlteSw.add(result.getInt(1));
-            }
-			
-            int[] arr = new int[ausgewaehlteSw.size()];
-            for (int i = 0; i < arr.length; i++) {
-                arr[i] = ausgewaehlteSw.get(i);
-            }
-            return arr;
-        } catch (SQLException exc) {
-            exc.printStackTrace();
-            throw exc;
-        }
-    }
+	static Connection con = DatabaseConnection.getInstance().getConnection();
 
-    @Override
-    public int[] get(int hausnummer, int kategorieId) throws SQLException {
-        // Achtung: überall Leerzeichen zwischen den Teilen!
-        String sql = "SELECT swh.Sonderwunsch_idSonderwunsch " +
-                     "FROM Sonderwunsch_has_Haus swh " +
-                     "INNER JOIN Sonderwunsch sw " +
-                     "ON swh.Sonderwunsch_idSonderwunsch = sw.idSonderwunsch " +
-                     "WHERE swh.Haus_Hausnr = ? " +
-                     "AND sw.Sonderwunschkategorie_idSonderwunschkategorie = ?";
+	private static final int[] FLIESEN_IDS = { 71, 72, 73, 74, 75, 76 };
 
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setFetchSize(100);
-            pstmt.setInt(1, hausnummer);
-            pstmt.setInt(2, kategorieId);
-            ResultSet result = pstmt.executeQuery();
-			
-            ArrayList<Integer> ausgewaehlteSw = new ArrayList<>();
-            while (result.next()) {
-                ausgewaehlteSw.add(result.getInt(1));
-            }
-			
-            int[] arr = new int[ausgewaehlteSw.size()];
-            for (int i = 0; i < arr.length; i++) {
-                arr[i] = ausgewaehlteSw.get(i);
-            }
-            return arr;
-        } catch (SQLException exc) {
-            exc.printStackTrace();
-            throw exc;
-        }
-    }
+	@Override
+	public int[] get(int hausnummer) throws SQLException {
+		// MySQL: keine "..." um Tabellen-/Spaltennamen
+		// String sql = "SELECT Sonderwunsch_idSonderwunsch " + "FROM
+		// Sonderwunsch_has_Haus " + "WHERE Haus_Hausnr = ?";
+		// [FIX] Removed quotes
+		String sql = "SELECT Sonderwunsch_idSonderwunsch FROM Sonderwunsch_has_Haus WHERE Haus_Hausnr = ?;";
 
-    @Override
-    public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
-        // UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setFetchSize(100);
+			pstmt.setInt(1, hausnummer);
+			ResultSet result = pstmt.executeQuery();
 
-        String sql_del = "DELETE FROM Sonderwunsch_has_Haus " +
-                         "WHERE Haus_Hausnr = ?";
-		
-        String sql_ins = "INSERT INTO Sonderwunsch_has_Haus " +
-                         "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) " +
-                         "VALUES (?, ?)";
+			ArrayList<Integer> ausgewaehlteSw = new ArrayList<>();
+			while (result.next()) {
+				ausgewaehlteSw.add(result.getInt(1));
+			}
 
-        try {
-            /*
-             * Hinweis:
-             * Connection-Objekte des JDBC sind standardmäßig im auto-commit Modus,
-             * was hier verhindert, dass DELETE und INSERT nacheinander in einer
-             * Transaktion durchgeführt werden können. Daher wird der Modus hier kurz-
-             * zeitig verlassen.
-             * Dies könnte an anderen Stellen zu Problemen führen, wenn zeitgleich Trans-
-             * aktionen gestartet werden, da sich bspw. in KundeDaoImplementation auf
-             * auto-commit verlassen wird und commit() und dort rollback() nicht manuell
-             * aufgerufen werden.
-             * Für mehr, siehe Java Doc zu commit() und rollback().
-             */
-            if (!con.getAutoCommit()) {
-                throw new Exception(
-                    "Der Auto-Commit Modus sollte zu dem Zeitpunkt eines Updates " +
-                    "der Sonderwünsche eingeschaltet sein, war er aber nicht. " +
-                    "Möglicherweise wurde SonderwuenscheDAOImplementation.update() " +
-                    "zu schnell hintereinander aufgerufen oder der Modus an anderer " +
-                    "Stelle deaktiviert und nicht anschließend reaktiviert."
-                );
-            }
+			int[] arr = new int[ausgewaehlteSw.size()];
+			for (int i = 0; i < arr.length; i++) {
+				arr[i] = ausgewaehlteSw.get(i);
+			}
+			return arr;
+		} catch (SQLException exc) {
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
 
-            con.setAutoCommit(false);
+	@Override
+	public int[] get(int hausnummer, int kategorieId) throws SQLException {
+		// Achtung: überall Leerzeichen zwischen den Teilen!
+		/***
+		 * String sql = "SELECT swh.Sonderwunsch_idSonderwunsch " + "FROM
+		 * Sonderwunsch_has_Haus swh " + "INNER JOIN Sonderwunsch sw " + "ON
+		 * swh.Sonderwunsch_idSonderwunsch = sw.idSonderwunsch " + "WHERE
+		 * swh.Haus_Hausnr = ? " + "AND sw.Sonderwunschkategorie_idSonderwunschkategorie
+		 * = ?";
+		 ***/
+		// [FIX] Removed quotes and added spaces to ends of lines
+		String sql = "SELECT swh.Sonderwunsch_idSonderwunsch " + "FROM Sonderwunsch_has_Haus swh "
+				+ "INNER JOIN Sonderwunsch sw " + "ON swh.Sonderwunsch_idSonderwunsch = sw.idSonderwunsch "
+				+ "WHERE swh.Haus_Hausnr = ? " + "AND sw.Sonderwunschkategorie_idSonderwunschkategorie = ?;";
 
-            // DELETE
-            PreparedStatement pstmt = con.prepareStatement(sql_del);
-            pstmt.setInt(1, hausnummer);
-            pstmt.execute();
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setFetchSize(100);
+			pstmt.setInt(1, hausnummer);
+			pstmt.setInt(2, kategorieId);
+			ResultSet result = pstmt.executeQuery();
 
-            // INSERT
-            pstmt = con.prepareStatement(sql_ins);
-            for (int id : ausgewaehlteSw) {
-                pstmt.setInt(1, id);
-                pstmt.setInt(2, hausnummer);
-                pstmt.execute();
-            }
+			ArrayList<Integer> ausgewaehlteSw = new ArrayList<>();
+			while (result.next()) {
+				ausgewaehlteSw.add(result.getInt(1));
+			}
 
-            // commit
-            con.commit();
-            con.setAutoCommit(true);
+			int[] arr = new int[ausgewaehlteSw.size()];
+			for (int i = 0; i < arr.length; i++) {
+				arr[i] = ausgewaehlteSw.get(i);
+			}
+			return arr;
+		} catch (SQLException exc) {
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
 
-        } catch (SQLException exc) {
-            try {
-                con.rollback();
-            } catch (SQLException exc2) {
-                System.out.println("Fehler beim Rollback während der Aktualisierung von Sonderwünschen");
-            }
-            try {
-                con.setAutoCommit(true);
-            } catch (SQLException exc2) {
-                System.out.println("Fehler beim Setzen der DB-Verbindung in auto-commit während der Aktualisierung von Sonderwünschen");
-            }
-            exc.printStackTrace();
-            throw exc;
-        } catch (Exception exc) {
-            exc.printStackTrace();
-            throw exc;
-        }
-    }
+	@Override
+	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
+		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
+
+		/***
+		 * String sql_del = "DELETE FROM Sonderwunsch_has_Haus " + "WHERE Haus_Hausnr =
+		 * ?";
+		 * 
+		 * String sql_ins = "INSERT INTO Sonderwunsch_has_Haus " +
+		 * "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) " + "VALUES (?, ?)";
+		 ***/
+
+		// [FIX] Removed quotes and added space before WHERE
+		String sql_del = "DELETE FROM Sonderwunsch_has_Haus " + "WHERE Haus_Hausnr = ?";
+
+		// [FIX] Removed quotes and added space
+		String sql_ins = "INSERT INTO Sonderwunsch_has_Haus " + "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) "
+				+ "VALUES (?, ?)";
+
+		try {
+			/*
+			 * Hinweis: Connection-Objekte des JDBC sind standardmäßig im auto-commit Modus,
+			 * was hier verhindert, dass DELETE und INSERT nacheinander in einer Transaktion
+			 * durchgeführt werden können. Daher wird der Modus hier kurz- zeitig verlassen.
+			 * Dies könnte an anderen Stellen zu Problemen führen, wenn zeitgleich Trans-
+			 * aktionen gestartet werden, da sich bspw. in KundeDaoImplementation auf
+			 * auto-commit verlassen wird und commit() und dort rollback() nicht manuell
+			 * aufgerufen werden. Für mehr, siehe Java Doc zu commit() und rollback().
+			 */
+			if (!con.getAutoCommit()) {
+				throw new Exception("Der Auto-Commit Modus sollte zu dem Zeitpunkt eines Updates "
+						+ "der Sonderwünsche eingeschaltet sein, war er aber nicht. "
+						+ "Möglicherweise wurde SonderwuenscheDAOImplementation.update() "
+						+ "zu schnell hintereinander aufgerufen oder der Modus an anderer "
+						+ "Stelle deaktiviert und nicht anschließend reaktiviert.");
+			}
+
+			con.setAutoCommit(false);
+
+			// DELETE
+			PreparedStatement pstmt = con.prepareStatement(sql_del);
+			pstmt.setInt(1, hausnummer);
+			pstmt.execute();
+
+			// INSERT
+			pstmt = con.prepareStatement(sql_ins);
+			for (int id : ausgewaehlteSw) {
+				pstmt.setInt(1, id);
+				pstmt.setInt(2, hausnummer);
+				pstmt.execute();
+			}
+
+			// commit
+			con.commit();
+			con.setAutoCommit(true);
+
+		} catch (SQLException exc) {
+			try {
+				con.rollback();
+			} catch (SQLException exc2) {
+				System.out.println("Fehler beim Rollback während der Aktualisierung von Sonderwünschen");
+			}
+			try {
+				con.setAutoCommit(true);
+			} catch (SQLException exc2) {
+				System.out.println(
+						"Fehler beim Setzen der DB-Verbindung in auto-commit während der Aktualisierung von Sonderwünschen");
+			}
+			exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
+
+	public boolean[] ladeFliesenAuswahl(int hausnummer) throws SQLException {
+		boolean[] selected = new boolean[FLIESEN_IDS.length];
+		String sql = """
+				    SELECT sw.idSonderwunsch
+				    FROM Sonderwunsch_has_Haus sh
+				    JOIN Sonderwunsch sw ON sw.idSonderwunsch = sh.idSonderwunsch
+				    WHERE sh.hausnummer = ?
+				      AND sw.idSonderwunsch IN (71,72,73,74,75,76)
+				""";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, hausnummer);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					int id = rs.getInt(1);
+					for (int i = 0; i < FLIESEN_IDS.length; i++) {
+						if (FLIESEN_IDS[i] == id) {
+							selected[i] = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return selected;
+	}
+
+	public void speichereFliesenAuswahl(int hausnummer, boolean[] sel) throws SQLException {
+		// 1) Alte Einträge für 71..76 dieses Hauses löschen
+		String del = """
+				    DELETE FROM Sonderwunsch_has_Haus
+				    WHERE hausnummer = ? AND idSonderwunsch IN (71,72,73,74,75,76)
+				""";
+		try (PreparedStatement ps = con.prepareStatement(del)) {
+			ps.setInt(1, hausnummer);
+			ps.executeUpdate();
+		}
+
+		// 2) Gewählte neu eintragen
+		String ins = "INSERT INTO Sonderwunsch_has_Haus (hausnummer, idSonderwunsch) VALUES (?, ?)";
+		try (PreparedStatement ps = con.prepareStatement(ins)) {
+			for (int i = 0; i < FLIESEN_IDS.length; i++) {
+				if (sel[i]) {
+					ps.setInt(1, hausnummer);
+					ps.setInt(2, FLIESEN_IDS[i]);
+					ps.addBatch();
+				}
+			}
+			ps.executeBatch();
+		}
+	}
 }
