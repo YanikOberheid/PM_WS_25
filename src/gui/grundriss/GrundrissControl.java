@@ -20,7 +20,6 @@ public final class GrundrissControl {
 	/**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
 	 * Fenster fuer die Sonderwuensche zum Grundriss.
-	 * @param grundrissStage, Stage fuer das View-Objekt zu den Sonderwuenschen zum Grundriss
 	 */
 	public GrundrissControl(){  
 	   	Stage stageGrundriss = new Stage();
@@ -51,6 +50,9 @@ public final class GrundrissControl {
 	public void speichereSonderwuensche(int[] grundrissSw) {
 		// Hole Kopie der aktuell ausgewählten Sw aus der Datenbank
 		int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
+		if (ausgewaehlteSw == null) {
+			ausgewaehlteSw = new int[0];
+		}
 		// Filtere Sonderwünsche zu Grundriss-Varianten raus
 		ausgewaehlteSw = Arrays.stream(ausgewaehlteSw).filter(sw -> sw < 200 || sw >= 300).toArray();
 		
@@ -76,6 +78,8 @@ public final class GrundrissControl {
 	}
 	
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw){
+		// Hier kommen später eure komplexen Regeln.
+		// Für Task 2 kann das (falls vom Dozenten erlaubt) erstmal true bleiben.
 		return true;
 	}
 }

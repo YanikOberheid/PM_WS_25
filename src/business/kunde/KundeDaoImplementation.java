@@ -10,9 +10,9 @@ import java.sql.SQLException;
  * Kundenobjekte.
  */
 public class KundeDaoImplementation implements KundenDAO {
-	
+
 	static Connection con = DatabaseConnection.getInstance().getConnection();
-	
+
 	@Override
 	public int add(Kunde kunde) throws SQLException {
 		String sql = "INSERT INTO Kunde (Haus_Hausnr, Vorname, Nachname, Telefon, email) VALUES (?, ?, ?, ?, ?)";
@@ -33,24 +33,24 @@ public class KundeDaoImplementation implements KundenDAO {
 		}
 	}
 
+	// Auf Dopplung prüfen
 	@Override
 	public boolean istHausnummerBesetzt(int hausnummer) throws SQLException {
-	    String sql = "SELECT 1 FROM Kunde WHERE Haus_Hausnr = ?";
-	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setInt(1, hausnummer);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            return rs.next(); // true, wenn ein Eintrag existiert
-	        }
-	    }
+		PreparedStatement ps = null;
+		ps = con.prepareStatement("SELECT * FROM Kunde WHERE Haus_Hausnr = ?");
+		ps.setInt(1, hausnummer);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			return true;
+		}
+		return false;
 	}
-	
 	// Zudem noch die idKunde laden
 	@Override
 	public Kunde findByHausnummer(int hausnummer) throws SQLException {
 	    String sql = "SELECT idKunde, Haus_Hausnr, Vorname, Nachname, Telefon, email FROM Kunde WHERE Haus_Hausnr = ?";
 	    try (PreparedStatement ps = con.prepareStatement(sql)) {
 	        ps.setInt(1, hausnummer);
-
 	        try (ResultSet rs = ps.executeQuery()) {
 	            if (rs.next()) {
 	                Kunde k = new Kunde(
@@ -102,9 +102,6 @@ public class KundeDaoImplementation implements KundenDAO {
 	        int rowsAffected = ps.executeUpdate();
 	        return rowsAffected > 0;
 	    }
-	    
-	    //deleteSonderwunsch_has_Haus();
-	    
 	}
 	
 	// Der Kunde wird nach idKunde geändert, nicht nach Kunde mit jeweilige Hausnummer

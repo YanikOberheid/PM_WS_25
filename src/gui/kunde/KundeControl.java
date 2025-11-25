@@ -11,43 +11,50 @@ import gui.grundriss.GrundrissControl;
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
 public class KundeControl {
-	
-    // das View-Objekt des Grundfensters mit den Kundendaten
+
+	// das View-Objekt des Grundfensters mit den Kundendaten
 	private KundeView kundeView;
-    // das Model-Objekt des Grundfensters mit den Kundendaten
-    private KundeModel kundeModel;
-    /* das GrundrissControl-Objekt fuer die Sonderwuensche
-       zum Grundriss zu dem Kunden */
-    private GrundrissControl grundrissControl;
-    
-    /**
-	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
-	 * Grundfenster mit den Kundendaten.
-	 * @param primaryStage, Stage fuer das View-Objekt zu dem Grundfenster mit den Kundendaten
+	// das Model-Objekt des Grundfensters mit den Kundendaten
+	private KundeModel kundeModel;
+	/*
+	 * das GrundrissControl-Objekt fuer die Sonderwuensche zum Grundriss zu dem
+	 * Kunden
 	 */
-    public KundeControl(Stage primaryStage) { 
-        this.kundeModel = KundeModel.getInstance(); 
-        this.kundeView = new KundeView(this, primaryStage, kundeModel);
-    }
-    
-    /*
-     * erstellt, falls nicht vorhanden, ein Grundriss-Control-Objekt.
-     * Das GrundrissView wird sichtbar gemacht.
-     */
-    public void oeffneGrundrissControl(){
-    	if (this.grundrissControl == null){
-    		this.grundrissControl = new GrundrissControl();
-      	}
-    	this.grundrissControl.oeffneGrundrissView();
-    }
-    
+	private GrundrissControl grundrissControl;
+
+	/**
+	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum
+	 * Grundfenster mit den Kundendaten.
+	 * 
+	 * @param primaryStage Stage fuer das View-Objekt zu dem Grundfenster mit den
+	 *                     Kundendaten
+	 */
+	public KundeControl(Stage primaryStage) {
+		this.kundeModel = KundeModel.getInstance();
+		this.kundeView = new KundeView(this, primaryStage, kundeModel);
+	}
+
+	/*
+	 * erstellt, falls nicht vorhanden, ein Grundriss-Control-Objekt. Das
+	 * GrundrissView wird sichtbar gemacht.
+	 */
+	public void oeffneGrundrissControl() {
+		if (this.grundrissControl == null) {
+			this.grundrissControl = new GrundrissControl(); // <<< hier angepasst
+		}
+		this.grundrissControl.oeffneGrundrissView();
+	}
+
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank
-	 * @param kunde, Kunde-Objekt, welches zu speichern ist
+	 * 
+	 * @param kunde Kunde-Objekt, welches zu speichern ist
 	 */
-    public void speichereKunden(Kunde kunde){
-      	try{
-      		// Kundendaten Validieren auf Korrektheit
+	public void speichereKunden(Kunde kunde) {
+		try {
+			// Kundendaten validieren
+			// Falls dein Model nur isValidCustomer(Kunde) hat, nimm diese Variante:
+			// if (!kundeModel.isValidCustomer(kunde)) {
 			if (!kundeModel.isValidCustomer(kunde, false)) {
 				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
 				return;
@@ -79,6 +86,7 @@ public class KundeControl {
         try {
             Kunde kunde = kundeModel.ladeKunde(hausnummer);
             kundeView.zeigeKundeAufGui(kunde);
+			kundeView.zeigeHausBildFuerHausnummer(hausnummer);
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
         } 

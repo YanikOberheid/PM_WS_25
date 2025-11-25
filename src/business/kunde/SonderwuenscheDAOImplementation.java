@@ -5,14 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 	
-	static Connection con = DatabaseConnection.getInstance().getConnection();
+    static Connection con = DatabaseConnection.getInstance().getConnection();
 	
-	@Override
-	public int[] get(int hausnummer) throws SQLException {
+    @Override
+    public int[] get(int hausnummer) throws SQLException {
 		String sql = "SELECT \"Sonderwunsch_idSonderwunsch\" FROM \"Sonderwunsch_has_Haus\" WHERE \"Haus_Hausnr\" = ?;";
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setFetchSize(100);
@@ -32,7 +31,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
-
+    
 	@Override
 	public int[] get(int hausnummer, int kategorieId) throws SQLException {
 		String sql = "SELECT \"Sonderwunsch_idSonderwunsch\" "
@@ -48,19 +47,21 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			pstmt.setInt(2, kategorieId);
 			ResultSet result = pstmt.executeQuery();
 			
-			ArrayList<Integer> ausgewaehlteSw = new ArrayList<Integer>();
-			while (result.next()) {
-				ausgewaehlteSw.add(result.getInt(1));
-			}
+            ArrayList<Integer> ausgewaehlteSw = new ArrayList<>();
+            while (result.next()) {
+                ausgewaehlteSw.add(result.getInt(1));
+            }
 			
-			int[] arr = new int[ausgewaehlteSw.size()];
-			for (int i = 0; i < arr.length; i++) arr[i] = (int) ausgewaehlteSw.get(i);
-			return arr;
-		} catch (SQLException exc) {
-			exc.printStackTrace();
-			throw exc;
-		}
-	}
+            int[] arr = new int[ausgewaehlteSw.size()];
+            for (int i = 0; i < arr.length; i++) {
+                arr[i] = ausgewaehlteSw.get(i);
+            }
+            return arr;
+        } catch (SQLException exc) {
+            exc.printStackTrace();
+            throw exc;
+        }
+    }
 
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {

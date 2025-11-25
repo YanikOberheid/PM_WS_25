@@ -4,15 +4,13 @@ public class Kunde {
 	
 	// ---- Kundennummer -----
 	private int idKunde;
-	
 	private int hausnummer;
 	private String vorname;
 	private String nachname;
 	private String telefonnummer;
 	private String email;
-		  
-	public Kunde(int hausnummer, String vorname, String nachname, String telefonnummer, String email)
-	{
+
+	public Kunde(int hausnummer, String vorname, String nachname, String telefonnummer, String email) {
 		this.hausnummer = hausnummer;
 		this.vorname = vorname;
 		this.email = email;
@@ -20,10 +18,7 @@ public class Kunde {
 		this.nachname = nachname;
 	}
 	
-	// ---- mit Kundennummer -----
-	
-	public Kunde(int kundeID, int hausnummer, String vorname, String nachname, String telefonnummer, String email)
-	{
+	public Kunde(int kundeID, int hausnummer, String vorname, String nachname, String telefonnummer, String email){
 		this.idKunde = kundeID;
 		this.hausnummer = hausnummer;
 		this.vorname = vorname;
@@ -40,7 +35,6 @@ public class Kunde {
 		this.idKunde = kundeID;
 	}
 	// ----------------------
-	
 	public int getHausnummer() {
 		return hausnummer;
 	}
@@ -56,15 +50,15 @@ public class Kunde {
 	public void setVorname(String vorname) {
 		this.vorname = vorname;
 	}
-	
+
 	public String getNachname() {
 		return nachname;
 	}
-	
+
 	public void setNachname(String nachname) {
 		this.nachname = nachname;
 	}
-	
+
 	public String getTelefonnummer() {
 		return telefonnummer;
 	}
@@ -81,4 +75,23 @@ public class Kunde {
 		this.email = email;
 	}
 	
+
+	// VON Yamam
+	// --- Validierung ---
+
+	public boolean isVollstaendig() {
+		return vorname != null && !vorname.isBlank() && nachname != null && !nachname.isBlank() && telefonnummer != null
+				&& !telefonnummer.isBlank() && email != null && !email.isBlank() && hausnummer > 0;
+	}
+
+	public boolean isTelefonnummerValid() {
+		// nur Ziffern erlaubt
+		return telefonnummer != null && telefonnummer.matches("\\d+");
+	}
+
+	public boolean isEmailValid() {
+		// Minimalregel aus eurer User Story: muss ein '@' enthalten
+		return email != null && email.contains("@");
+	}
+
 }
