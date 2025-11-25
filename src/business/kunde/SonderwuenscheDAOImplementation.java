@@ -13,7 +13,8 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 	
 	@Override
 	public int[] get(int hausnummer) throws SQLException {
-		String sql = "SELECT \"Sonderwunsch_idSonderwunsch\" FROM \"Sonderwunsch_has_Haus\" WHERE \"Haus_Hausnr\" = ?;";
+		// [FIX] Removed quotes
+		String sql = "SELECT Sonderwunsch_idSonderwunsch FROM Sonderwunsch_has_Haus WHERE Haus_Hausnr = ?;";
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setFetchSize(100);
 			pstmt.setInt(1, hausnummer);
@@ -35,12 +36,13 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public int[] get(int hausnummer, int kategorieId) throws SQLException {
-		String sql = "SELECT \"Sonderwunsch_idSonderwunsch\""
-				+ "FROM \"Sonderwunsch_has_Haus\" swh"
-				+ "INNER JOIN Sonderwunsch sw"
-				+ "ON swh.\"Sonderwunsch_idSonderwunsch\" = sw.\"idSonderwunsch\""
-				+ "WHERE swh.\"Haus_Hausnr\" = ?"
-				+ "AND sw.\"Sonderwunschkategorie_idSonderwunschkategorie\" = ?;";
+		// [FIX] Removed quotes and added spaces to ends of lines
+				String sql = "SELECT swh.Sonderwunsch_idSonderwunsch "
+						+ "FROM Sonderwunsch_has_Haus swh "
+						+ "INNER JOIN Sonderwunsch sw " 
+						+ "ON swh.Sonderwunsch_idSonderwunsch = sw.idSonderwunsch "
+						+ "WHERE swh.Haus_Hausnr = ? "
+						+ "AND sw.Sonderwunschkategorie_idSonderwunschkategorie = ?;";
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setFetchSize(100);
 			pstmt.setInt(1, hausnummer);
@@ -64,12 +66,14 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
 		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
-		String sql_del = "DELETE FROM \"Sonderwunsch_has_Haus\""
-				+ "WHERE \"Haus_Hausnr\" = ?";
-		
-		String sql_ins = "INSERT INTO \"Sonderwunsch_has_Haus\""
-				+ "(\"Sonderwunsch_idSonderwunsch\",\"Haus_Hausnr\")"
-				+ "VALUES (?, ?)";
+		// [FIX] Removed quotes and added space before WHERE
+		String sql_del = "DELETE FROM Sonderwunsch_has_Haus "
+						+ "WHERE Haus_Hausnr = ?";
+				
+		// [FIX] Removed quotes and added space
+		String sql_ins = "INSERT INTO Sonderwunsch_has_Haus "
+						+ "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) "
+						+ "VALUES (?, ?)";
 		
 		try {
 			/* 
