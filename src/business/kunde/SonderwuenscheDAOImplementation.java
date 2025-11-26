@@ -12,9 +12,14 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public int[] get(int hausnummer) throws SQLException {
+<<<<<<< HEAD
 		String sql = "SELECT `Sonderwunsch_idSonderwunsch` " + "FROM `Sonderwunsch_has_Haus` "
 				+ "WHERE `Haus_Hausnr` = ?";
 
+=======
+		// [FIX] Removed quotes
+		String sql = "SELECT Sonderwunsch_idSonderwunsch FROM Sonderwunsch_has_Haus WHERE Haus_Hausnr = ?;";
+>>>>>>> refs/heads/main
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 			pstmt.setInt(1, hausnummer);
 			ResultSet result = pstmt.executeQuery();
@@ -38,11 +43,21 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public int[] get(int hausnummer, int kategorieId) throws SQLException {
+<<<<<<< HEAD
 
 		String sql = "SELECT swh.`Sonderwunsch_idSonderwunsch` " + "FROM `Sonderwunsch_has_Haus` swh "
 				+ "INNER JOIN `Sonderwunsch` sw " + "ON swh.`Sonderwunsch_idSonderwunsch` = sw.`idSonderwunsch` "
 				+ "WHERE swh.`Haus_Hausnr` = ? " + "AND sw.`Sonderwunschkategorie_idSonderwunschkategorie` = ?";
 
+=======
+		// [FIX] Removed quotes and added spaces to ends of lines
+				String sql = "SELECT swh.Sonderwunsch_idSonderwunsch "
+						+ "FROM Sonderwunsch_has_Haus swh "
+						+ "INNER JOIN Sonderwunsch sw " 
+						+ "ON swh.Sonderwunsch_idSonderwunsch = sw.idSonderwunsch "
+						+ "WHERE swh.Haus_Hausnr = ? "
+						+ "AND sw.Sonderwunschkategorie_idSonderwunschkategorie = ?;";
+>>>>>>> refs/heads/main
 		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
 
 			pstmt.setInt(1, hausnummer);
@@ -68,10 +83,23 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
+<<<<<<< HEAD
 
 		String sql_del = "DELETE FROM `Sonderwunsch_has_Haus` WHERE `Haus_Hausnr` = ?";
 		String sql_ins = "INSERT INTO `Sonderwunsch_has_Haus` (`Sonderwunsch_idSonderwunsch`, `Haus_Hausnr`) VALUES (?, ?)";
 
+=======
+		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
+		// [FIX] Removed quotes and added space before WHERE
+		String sql_del = "DELETE FROM Sonderwunsch_has_Haus "
+						+ "WHERE Haus_Hausnr = ?";
+				
+		// [FIX] Removed quotes and added space
+		String sql_ins = "INSERT INTO Sonderwunsch_has_Haus "
+						+ "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) "
+						+ "VALUES (?, ?)";
+		
+>>>>>>> refs/heads/main
 		try {
 			if (!con.getAutoCommit())
 				throw new Exception("AutoCommit muss für Update aktiv sein!");

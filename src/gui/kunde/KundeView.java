@@ -63,6 +63,7 @@ public class KundeView {
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
+	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
 	/**
@@ -136,6 +137,7 @@ public class KundeView {
 		borderPane.setTop(mnBar);
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
+<<<<<<< HEAD
 
 		// --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
@@ -163,6 +165,9 @@ public class KundeView {
 			hausImageView.setImage(null);
 		}*/
 		hausImageView.setImage(null);
+=======
+		mnSonderwuensche.getItems().add(mnItmFliesen);
+>>>>>>> refs/heads/main
 	}
 
 	/* initialisiert die Listener zu den Steuerelementen auf der Maske */
@@ -183,6 +188,9 @@ public class KundeView {
 		mnItmGrundriss.setOnAction(aEvent -> {
 			kundeControl.oeffneGrundrissControl();
 		});
+		mnItmFliesen.setOnAction(aEvent -> {
+	        kundeControl.oeffneFliesenControl();
+	    });
 	}
 
 	private void holeInfoDachgeschoss() {
