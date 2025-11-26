@@ -11,15 +11,12 @@ public class FliesenView extends BasisView {
 
 	private final FliesenControl fliesenControl;
 
-	private static final int SW_FLIESEN_IM_BAD = 9; // idSonderwunsch=9, Kategorie=70
-
-	private static final int SW_7_5 = SW_FLIESEN_IM_BAD;
-
-	private static final int SW_7_1 = -1;
-	private static final int SW_7_2 = -1;
-	private static final int SW_7_3 = -1;
-	private static final int SW_7_4 = -1;
-	private static final int SW_7_6 = -1;
+	private static final int SW_7_1 = 701;
+	private static final int SW_7_2 = 702;
+	private static final int SW_7_3 = 703;
+	private static final int SW_7_4 = 704;
+	private static final int SW_7_5 = 705;
+	private static final int SW_7_6 = 706;
 
 	// GUI-Elemente
 	private final Label lbl71 = new Label("7.1 Keine Fliesen im Küchenbereich des EG");
@@ -47,14 +44,6 @@ public class FliesenView extends BasisView {
 		initKomponenten();
 	}
 
-	private void hideIfMissing(Label l, CheckBox cb, int id) {
-		boolean missing = id < 0;
-		l.setManaged(!missing);
-		l.setVisible(!missing);
-		cb.setManaged(!missing);
-		cb.setVisible(!missing);
-	}
-
 	// Basis-Layout aufbauen
 
 	@Override
@@ -75,13 +64,6 @@ public class FliesenView extends BasisView {
 		getGridPaneSonderwunsch().add(cb75, 3, row++);
 		getGridPaneSonderwunsch().add(lbl76, 0, row);
 		getGridPaneSonderwunsch().add(cb76, 3, row++);
-
-		// Ausblenden, solange keine DB-IDs existieren
-		hideIfMissing(lbl71, cb71, SW_7_1);
-		hideIfMissing(lbl72, cb72, SW_7_2);
-		hideIfMissing(lbl73, cb73, SW_7_3);
-		hideIfMissing(lbl74, cb74, SW_7_4);
-		hideIfMissing(lbl76, cb76, SW_7_6);
 	}
 
 	/** Öffnet das Fenster (Hilfsmethode, optional). */
@@ -112,10 +94,21 @@ public class FliesenView extends BasisView {
 			else if (id == SW_7_4)
 				cb74.setSelected(true);
 			else if (id == SW_7_5)
-				cb75.setSelected(true); // <- ID 9 wird hier sichtbar
+				cb75.setSelected(true);
 			else if (id == SW_7_6)
 				cb76.setSelected(true);
 		}
+	}
+	
+	public boolean[] holeFliesenCheckboxenIsSelected() {
+		return new boolean[] {
+				cb71.isSelected(),
+				cb72.isSelected(),
+				cb73.isSelected(),
+				cb74.isSelected(),
+				cb75.isSelected(),
+				cb76.isSelected(),
+				};
 	}
 
 	// Öffnen aus Control heraus:

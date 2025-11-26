@@ -57,7 +57,7 @@ public class FliesenControl {
 				view.updateFliesenCheckboxen(ausgewaehlteIds);
 			} else {
 				// nichts gesetzt -> alles abwählen
-				view.updateFliesenCheckboxen(new int[0]);
+				view.updateFliesenCheckboxen(null);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
