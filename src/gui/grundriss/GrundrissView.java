@@ -149,6 +149,17 @@ public class GrundrissView extends BasisView {
 			}
 		}
 	}
+	
+	public boolean[] holeGrundrissCheckboxenIsSelected() {
+		return new boolean[] {
+				chckBxWandKueche.isSelected(),
+				chckBxTuerKueche.isSelected(),
+				chckBxGrossesZimmerOG.isSelected(),
+				chckBxTreppenraumDG.isSelected(),
+				chckBxVorrichtungBadOG.isSelected(),
+				chckBxAusfuehrungBadDG.isSelected(),
+				};
+	}
 
 	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
 	@Override
