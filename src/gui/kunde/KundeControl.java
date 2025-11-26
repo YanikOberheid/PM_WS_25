@@ -1,31 +1,20 @@
 package gui.kunde;
 
-import java.io.InputStream;
 import java.sql.SQLException;
 
+import javafx.stage.Stage;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
-<<<<<<< HEAD
-import javafx.stage.Stage;
-=======
 import gui.fliesen.FliesenControl;
->>>>>>> refs/heads/main
 import gui.grundriss.GrundrissControl;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
 public class KundeControl {
-
-	// das View-Objekt des Grundfensters mit den Kundendaten
+	
+    // das View-Objekt des Grundfensters mit den Kundendaten
 	private KundeView kundeView;
-<<<<<<< HEAD
-	// das Model-Objekt des Grundfensters mit den Kundendaten
-	private KundeModel kundeModel;
-	/*
-	 * das GrundrissControl-Objekt fuer die Sonderwuensche zum Grundriss zu dem
-	 * Kunden
-=======
     // das Model-Objekt des Grundfensters mit den Kundendaten
     private KundeModel kundeModel;
     /* das GrundrissControl-Objekt fuer die Sonderwuensche
@@ -38,10 +27,7 @@ public class KundeControl {
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
 	 * Grundfenster mit den Kundendaten.
 	 * @param primaryStage, Stage fuer das View-Objekt zu dem Grundfenster mit den Kundendaten
->>>>>>> refs/heads/main
 	 */
-	private Object grundrissControl;
-
     public KundeControl(Stage primaryStage) { 
         this.kundeModel = KundeModel.getInstance(); 
         this.kundeView = new KundeView(this, primaryStage, kundeModel);
@@ -53,27 +39,24 @@ public class KundeControl {
      */
     public void oeffneGrundrissControl(){
     	if (this.grundrissControl == null){
-    		this.grundrissControl = new GrundrissControl();
+    		this.grundrissControl = new GrundrissControl(kundeModel);
       	}
-    	((GrundrissControl)this.grundrissControl).oeffneGrundrissView();
+    	this.grundrissControl.oeffneGrundrissView();
     }
     
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank
-	 * 
-	 * @param kunde Kunde-Objekt, welches zu speichern ist
+	 * @param kunde, Kunde-Objekt, welches zu speichern ist
 	 */
-	public void speichereKunden(Kunde kunde) {
-		try {
-			// Kundendaten validieren
+    public void speichereKunden(Kunde kunde){
+      	try{
+      		// Kundendaten Validieren auf Korrektheit
 			if (!kundeModel.isValidCustomer(kunde, false)) {
 				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
 				return;
 			}
 			kundeModel.speichereKunden(kunde);
 			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
-			// Kundennummer setzen nach dem Anlegen des Kunden
-			kundeView.zeigeKundeAufGui(kunde);
     	}
     	catch(SQLException exc){
     		exc.printStackTrace();
@@ -108,15 +91,14 @@ public class KundeControl {
         try {
             Kunde kunde = kundeModel.ladeKunde(hausnummer);
             kundeView.zeigeKundeAufGui(kunde);
-            kundeView.zeigeHausBildFuerHausnummer(hausnummer);
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
-        } 
+        }
     }
     
-    public void loescheKunden(int kundenummer, int hausnummer) {
+    public void loescheKunden(int hausnummer) {
         try {
-            boolean erfolg = kundeModel.loescheKunden(kundenummer, hausnummer);
+            boolean erfolg = kundeModel.loescheKunden(hausnummer);
             if (erfolg) {
                 kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
                 kundeView.zeigeKundeAufGui(null); // GUI leeren
@@ -126,9 +108,6 @@ public class KundeControl {
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-            kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim löschen.");
         }
     }
     
@@ -149,9 +128,5 @@ public class KundeControl {
             kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
         }
     }
-
-    public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
-		return kundeModel.holBildAusDB(idBild);
-	}
    
 }
