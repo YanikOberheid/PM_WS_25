@@ -2,9 +2,13 @@ package gui.kunde;
 
 import java.sql.SQLException;
 
+import javax.print.FlavorException;
+
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
+import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
+import business.kunde.*;
 import javafx.stage.Stage;
 
 /**
@@ -19,6 +23,8 @@ public class KundeControl {
     /* das GrundrissControl-Objekt fuer die Sonderwuensche
        zum Grundriss zu dem Kunden */
     private GrundrissControl grundrissControl;
+	private FliesenControl fliesenControl;
+	private DatabaseConnection connection= DatabaseConnection.getInstance();
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -39,7 +45,19 @@ public class KundeControl {
     		this.grundrissControl = new GrundrissControl(kundeModel);
       	}
     	this.grundrissControl.oeffneGrundrissView();
+		
     }
+	 public void oeffneFliesenControl(){
+
+		if (this.fliesenControl == null){
+	
+    		this.fliesenControl = new FliesenControl(kundeModel, connection);
+      	}
+    	this.fliesenControl.oeffneFliesenView();
+
+		
+    }
+    
     
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank

@@ -63,37 +63,6 @@ public class DatabaseConnection {
 		return connection;
 	}
 
-	public List<Map<String, Object>> getSonderwunschData(int hausnummer, String kategorie) throws SQLException {
-        String query = """
-            SELECT sw.name AS Sonderwunsch_Name, 
-                   wo.name AS Wunschoption_Name, 
-                   wo.preis AS Preis
-            FROM Wunschoption wo
-            JOIN Wunschoption_haus wh ON wo.wunschoption_id = wh.wunschoption_id
-            JOIN Haus h ON wh.hausnummer = h.hausnummer
-            JOIN Kunde k ON k.hausnummer = h.hausnummer
-            JOIN Sonderwunschkategorie sw ON wo.wunsch_id = sw.wunsch_id
-            WHERE k.hausnummer = ? AND sw.name = ?;
-        """;
-
-        List<Map<String, Object>> results = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, hausnummer);
-            stmt.setString(2, kategorie);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Map<String, Object> row = new HashMap<>();
-                    row.put("Sonderwunsch_Name", rs.getString("Sonderwunsch_Name"));
-                    row.put("Wunschoption_Name", rs.getString("Wunschoption_Name"));
-                    row.put("Preis", rs.getDouble("Preis"));
-                    results.add(row);
-                }
-            }
-        }
-        return results;
-    }
-
     // Methode zum Ausführen eines SELECT-Statements
 	public void executeSelect(String sql) {
 	    try (PreparedStatement stmt = connection.prepareStatement(sql);
@@ -121,27 +90,7 @@ public class DatabaseConnection {
 	        System.err.println("Fehler beim SELECT: " + e.getMessage());
 	    }
 	}
-    // Methode zum Ausführen von INSERT/UPDATE/DELETE-Statements
-    public void executeUpdate(String sql) {
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " Zeilen betroffen.");
-        } catch (SQLException e) {
-            System.err.println("Fehler beim Update: " + e.getMessage());
-        }
-    }
-    // Prepared Statements (z. B. mit Parametern)
-    public void executePreparedUpdate(String sql, Object... params) {
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (int i = 0; i < params.length; i++) {
-                stmt.setObject(i + 1, params[i]);
-            }
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " Zeilen betroffen.");
-        } catch (SQLException e) {
-            System.err.println("Fehler beim Prepared Update: " + e.getMessage());
-        }
-    }
+
 
     public String[][] executeSelect(String sql, String... columns) {
         try (PreparedStatement stmt = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -177,9 +126,34 @@ public class DatabaseConnection {
     }
 
     public String[][] executeSelectNameAndPrice(String tableName, int filter) {
-        String sql = "SELECT name, preis, wunschoption_id FROM " + tableName + " where wunsch_id = "+filter;
-        return executeSelect(sql, "name", "preis", "wunschoption_id");
+        String sql = "SELECT Beschreibung, Preis, idSonderwunsch  FROM " + tableName + " where idSonderwunsch = "+filter;
+        return executeSelect(sql, "Beschreibung", "preis", "idSonderwunsch");
     }
+
+    public String[][] loadSonderwunschNameAndPrice(int sonderwunschId) {
+
+    String sql = "SELECT Beschreibung, Preis FROM Sonderwunsch WHERE idSonderwunsch = ?";
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, sonderwunschId);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return new String[][] {
+                        {
+                                rs.getString("Beschreibung"),
+                                String.valueOf(rs.getInt("Preis"))
+                        }
+                };
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return new String[0][0]; // Leeres 2D-Array wenn nichts gefunden
+}
+
 
     /**
      * Liest die Extrawünsche eines gegebenen Kunden für eine gegebene Kategorie
@@ -190,12 +164,13 @@ public class DatabaseConnection {
      */
     public int[] executeSelectCustomerWishes(int customerNumber, int wishCategory) {
         // SQL query to fetch the IDs of Wunschoption
-        String sql = "SELECT w.wunschoption_id " +
-                "FROM Kunde k " +
-                "JOIN Haus h ON k.hausnummer = h.hausnummer " +
-                "JOIN Wunschoption_haus wh ON h.hausnummer = wh.hausnummer " +
-                "JOIN Wunschoption w ON wh.wunschoption_id = w.wunschoption_id " +
-                "WHERE k.kundennummer = ? AND w.wunsch_id = ?";
+            String sql =
+        "SELECT s.idSonderwunsch " +
+        "FROM Kunde k " +
+        "JOIN Haus h ON k.Haus_Hausnr = h.Hausnr " +
+        "JOIN Sonderwunsch_has_Haus sh ON h.Hausnr = sh.Haus_Hausnr " +
+        "JOIN Sonderwunsch s ON sh.Sonderwunsch_idSonderwunsch = s.idSonderwunsch " +
+        "WHERE k.idKunde = ?";
 
         List<Integer> ids = new ArrayList<>();
 
@@ -211,7 +186,7 @@ public class DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Fehler beim Abrufen der Wunschoptionen: " + e.getMessage());
+            System.err.println("Fehler beim Abrufen der Sonderwunschkategorie: " + e.getMessage());
         }
         // Convert the list of IDs to an int array
         return ids.stream().mapToInt(i -> i).toArray();

@@ -1,4 +1,4 @@
-package gui.kunde;
+package gui.kunde; 
 
 import business.kunde.*;
 
@@ -35,6 +35,7 @@ public class KundeView{
     private MenuBar mnBar 			  	= new MenuBar();
     private Menu mnSonderwuensche    	= new Menu("Sonderwuensche");
     private MenuItem mnItmGrundriss  	= new MenuItem("Grundrissvarianten");
+	private MenuItem mnItmFliessItem  	= new MenuItem("Fliessvarianten");
     //-------Ende Attribute der grafischen Oberflaeche-------
   
     /**
@@ -85,6 +86,7 @@ public class KundeView{
 	    borderPane.setTop(mnBar);
 	    mnBar.getMenus().add(mnSonderwuensche);
 	    mnSonderwuensche.getItems().add(mnItmGrundriss);
+		mnSonderwuensche.getItems().add( mnItmFliessItem);
     }
 
     /* initialisiert die Listener zu den Steuerelementen auf de Maske */
@@ -105,6 +107,9 @@ public class KundeView{
       	mnItmGrundriss.setOnAction(aEvent-> {
  	        kundeControl.oeffneGrundrissControl(); 
 	    });
+		mnItmFliessItem.setOnAction(aEvent-> {
+			kundeControl.oeffneFliesenControl();;
+		});
     }
     
     private void holeInfoDachgeschoss(){ 

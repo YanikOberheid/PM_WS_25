@@ -44,23 +44,25 @@ public class FliesenView extends BasisView{
         super.initKomponenten();
         super.getLblSonderwunsch().setText("Fliesen-Varianten");
 
-        // Initialisieren der Arrays mit den entsprechenden Elementen
-        for (int i = 0; i < 6; i++) {
-            lblPlatzhalter[i] = new Label(sonderwuensche[i][0]);
-            txtPreisPlatzhalter[i] = new TextField();
-            lblPlatzhalterEuro[i] = new Label("Euro");
-            chckBxPlatzhalter[i] = new CheckBox();
-            txtPreisPlatzhalter[i].setText(sonderwuensche[i][1]);
+        for (int i = 0; i < sonderwuensche.length; i++) {
 
-            // Setze Textfelder auf nicht editierbar
-            txtPreisPlatzhalter[i].setEditable(false);
+        String beschreibung = sonderwuensche[i].length > 0 ? sonderwuensche[i][0] : "";
+        String preis        = sonderwuensche[i].length > 1 ? sonderwuensche[i][1] : "";
 
-            // Füge alle Komponenten zum GridPane hinzu
-            super.getGridPaneSonderwunsch().add(lblPlatzhalter[i], 0, i + 1);
-            super.getGridPaneSonderwunsch().add(txtPreisPlatzhalter[i], 1, i + 1);
-            super.getGridPaneSonderwunsch().add(lblPlatzhalterEuro[i], 2, i + 1);
-            super.getGridPaneSonderwunsch().add(chckBxPlatzhalter[i], 3, i + 1);
+        lblPlatzhalter[i] = new Label(beschreibung);
+        txtPreisPlatzhalter[i] = new TextField(preis);
+
+        lblPlatzhalterEuro[i] = new Label("Euro");
+        chckBxPlatzhalter[i] = new CheckBox();
+
+        txtPreisPlatzhalter[i].setEditable(false);
+
+        super.getGridPaneSonderwunsch().add(lblPlatzhalter[i], 0, i + 1);
+        super.getGridPaneSonderwunsch().add(txtPreisPlatzhalter[i], 1, i + 1);
+        super.getGridPaneSonderwunsch().add(lblPlatzhalterEuro[i], 2, i + 1);
+        super.getGridPaneSonderwunsch().add(chckBxPlatzhalter[i], 3, i + 1);
         }
+
     }
     /**
      * macht das FliesenView-Objekt sichtbar.

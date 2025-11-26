@@ -44,7 +44,7 @@ public final class FliesenControl {
     //Fliesen aus Datenbankladen
     public String[][] leseFliesenSonderwuensche(){
     	this.connection = DatabaseConnection.getInstance();
-    	return connection.executeSelectNameAndPrice("Wunschoption", 6);
+    	return connection.loadSonderwunschNameAndPrice(2);
     }
 
 }
