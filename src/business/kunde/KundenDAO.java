@@ -1,5 +1,6 @@
 package business.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 
 /*
@@ -24,4 +25,7 @@ public interface KundenDAO {
 	
 	public void updateKunde(Kunde kunde)
 			throws SQLException;
+	
+			public InputStream loadImage(int id)
+			throws SQLException, Exception;
 }

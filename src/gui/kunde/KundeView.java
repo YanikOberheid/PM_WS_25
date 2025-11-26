@@ -1,5 +1,8 @@
 package gui.kunde;
 
+import java.io.InputStream;
+import java.sql.SQLException;
+
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
 import javafx.geometry.*;
@@ -19,6 +22,11 @@ public class KundeView {
 
 	// Pfad zur Platzhalter-Grafik im Klassenpfad
 	private static final String STANDARD_HAUS_BILD = "/gui/images/haus_placeholder.png";
+
+	//private static final String DACHGESCHOSS_HAUS_BILD = "/gui/images/haus_placeholder.png";
+	private static final int DACHGESCHOSS_HAUS_BILD = 1;
+	private static final int STANDARD_HAUS_BILD_ = 2;
+
 	// das Control-Objekt des Grundfensters mit den Kundendaten
 	private KundeControl kundeControl;
 	// das Model-Objekt des Grundfensters mit den Kundendaten
@@ -80,7 +88,7 @@ public class KundeView {
 	/* initialisiert die Steuerelemente auf der Maske */
 	private void initKomponenten() {
 		// Zentrum: Formular
-		borderPane.setCenter(gridPane);
+		borderPane.setLeft(gridPane);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPadding(new Insets(25, 25, 25, 25));
@@ -131,22 +139,30 @@ public class KundeView {
 
 		// --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
-
 		rightBox.setAlignment(Pos.TOP_CENTER);
+		
 		Label lblBild = new Label("Hausbild");
 		initialisiereHausBild(); // Größe/Platzhalter konfigurieren
+		
 		rightBox.getChildren().addAll(lblBild, hausImageView);
-		borderPane.setRight(rightBox);
+		
+		HBox mainContent = new HBox(30);
+		mainContent.setPadding(new Insets(20));
+		mainContent.getChildren().addAll(gridPane, rightBox);
+		gridPane.setPrefHeight(400);
+		
+		borderPane.setCenter(mainContent);
 
 		// Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
 		// Noch kein Bild laden – erst wenn Kundendaten/Plannummer gewählt wurden
 		// Bild aber anzeigen, sonst ist ImageView zu klein oder leer!
-		var url = getClass().getResource(STANDARD_HAUS_BILD);
+		/*var url = getClass().getResource(STANDARD_HAUS_BILD);
 		if (url != null) {
 			hausImageView.setImage(new Image(url.toExternalForm()));
 		} else {
 			hausImageView.setImage(null);
-		}
+		}*/
+		hausImageView.setImage(null);
 	}
 
 	/* initialisiert die Listener zu den Steuerelementen auf der Maske */
@@ -294,26 +310,15 @@ public class KundeView {
 		hausImageView.setFitWidth(260);
 		hausImageView.setFitHeight(180);
 		hausImageView.setPreserveRatio(true);
-		// Entferne Initialisieren des Bildes hier (wird direkt in initKomponenten gesetzt)
+		// Noch kein Bild zeigen – erst nach dem Laden der Kundendaten:
+		hausImageView.setImage(null);
 	}
 
-	public void zeigeHausBild(String resourcePath) {
-		try (var in = getClass().getResourceAsStream(resourcePath)) {
-			if (in == null) {
-				throw new IllegalArgumentException("Resource not found: " + resourcePath);
-			}
-			hausImageView.setImage(new Image(in));
-		} catch (Exception ex) {
-			// Fallback auf Standardbild
-			try (var fallback = getClass().getResourceAsStream(STANDARD_HAUS_BILD)) {
-				if (fallback != null) {
-					hausImageView.setImage(new Image(fallback));
-				} else {
-					hausImageView.setImage(null); // letzter Ausweg
-				}
-			} catch (Exception ignore) {
-				hausImageView.setImage(null);
-			}
+	public void zeigeHausBild(InputStream inputStream) {
+		if (inputStream != null) {
+			hausImageView.setImage(new Image(inputStream));
+		} else {
+			hausImageView.setImage(null);
 		}
 	}
 
@@ -323,6 +328,47 @@ public class KundeView {
 	 * differenzieren.)
 	 */
 	public void zeigeHausBildFuerHausnummer(int hausnummer) {
-		zeigeHausBild(STANDARD_HAUS_BILD);
+		
+		if (hausnummer == 0) {
+			zeigeHausBild(null);
+		} else {
+		
+			int[] keinDachgeschoss = {1, 6, 7 ,14, 15, 24};
+			boolean found = false;
+			
+			for(int n : keinDachgeschoss) {
+				if (hausnummer == n) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (found) {
+				System.out.println("Haus hat keinen Dachgeschoss!");
+				try {
+					InputStream img = kundeControl.ladeBildAusDB(STANDARD_HAUS_BILD_);
+					zeigeHausBild(img);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//zeigeHausBild(STANDARD_HAUS_BILD);
+			} else {
+				System.out.println("Haus hat einen Dachgeschoss!");
+				try {
+					InputStream img = kundeControl.ladeBildAusDB(DACHGESCHOSS_HAUS_BILD);
+					zeigeHausBild(img);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

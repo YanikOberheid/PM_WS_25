@@ -25,8 +25,8 @@ class KundenDatenPruefenTest {
 		
 		KundeModel kundeModel = KundeModel.getInstance();                         
         
-		assertFalse(kundeModel.isValidCustomer(kunde), "Ungültige E-Mail Adresse!"); // Kein @-enthalten
-		assertFalse(kundeModel.isValidCustomer(kunde2), "Ungültige E-Mail Adresse!"); // Leere Daten
+		assertFalse(kundeModel.isValidCustomer(kunde, false), "Ungültige E-Mail Adresse!"); // Kein @-enthalten
+		assertFalse(kundeModel.isValidCustomer(kunde2, false), "Ungültige E-Mail Adresse!"); // Leere Daten
 	}
 	
 	@Test
@@ -46,9 +46,9 @@ class KundenDatenPruefenTest {
 		
 		KundeModel kundeModel = KundeModel.getInstance();                         
         
-		assertFalse(kundeModel.isValidCustomer(kunde), "Ungültige Telefonnummer!"); // Nur Buchstaben
-		assertFalse(kundeModel.isValidCustomer(kunde2), "Ungültige Telefonnummer!"); // Sonderzeichen enthalten
-		assertFalse(kundeModel.isValidCustomer(kunde3), "Ungültige Telefonnummer!"); // Leere Daten
+		assertFalse(kundeModel.isValidCustomer(kunde, false), "Ungültige Telefonnummer!"); // Nur Buchstaben
+		assertFalse(kundeModel.isValidCustomer(kunde2, false), "Ungültige Telefonnummer!"); // Sonderzeichen enthalten
+		assertFalse(kundeModel.isValidCustomer(kunde3, false), "Ungültige Telefonnummer!"); // Leere Daten
 	}
 
 }

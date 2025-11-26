@@ -1,8 +1,8 @@
 package business.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import javafx.collections.*;
-
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.
  */
@@ -143,9 +143,9 @@ public final class KundeModel {
 	 * @return true if all required fields contain valid data; false otherwise
 	 * @throws SQLException
 	 */
-	public boolean isValidCustomer(Kunde kunde) throws SQLException {
+	public boolean isValidCustomer(Kunde kunde, boolean isUpdate) throws SQLException {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-
+		
 		if (kunde == null) {
 			System.err.println("❌ Validation failed: Kunde object is null.");
 			return false;
@@ -175,7 +175,10 @@ public final class KundeModel {
 			System.err.println("❌ Validation failed: Invalid email address.");
 			return false;
 		}
-		if (kundeDAO.istHausnummerBesetzt(kunde.getHausnummer())) {
+		
+	    boolean hausnummerBesetzt = kundeDAO.istHausnummerBesetzt(kunde.getHausnummer());
+
+		if (!isUpdate && hausnummerBesetzt) {
 			System.err.println("Fehlgeschlagen: Die Hausnummer ist besetzt.");
 			return false;
 		}
@@ -316,5 +319,10 @@ public final class KundeModel {
 			exc.printStackTrace();
 			throw exc;
 		}
+	}
+
+	public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+		return kundeDAO.loadImage(idBild);
 	}
 }
