@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import javafx.stage.Stage;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
+import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
 
 /**
@@ -19,6 +20,8 @@ public class KundeControl {
     /* das GrundrissControl-Objekt fuer die Sonderwuensche
        zum Grundriss zu dem Kunden */
     private GrundrissControl grundrissControl;
+ // Referenz auf das neue Control-Objekt für Fliesen
+    private FliesenControl fliesenControl;
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -65,6 +68,17 @@ public class KundeControl {
     		this.kundeView.zeigeFehlermeldung("Exception",
                 "Unbekannter Fehler");
     	}
+    }
+    
+    /**
+     * Erstellt, falls nicht vorhanden, ein Fliesen-Control-Objekt.
+     * Das FliesenView wird sichtbar gemacht.
+     */
+    public void oeffneFliesenControl(){
+        if (this.fliesenControl == null){
+            this.fliesenControl = new FliesenControl(kundeModel);
+        }
+        this.fliesenControl.oeffneFliesenView();
     }
     
     /**
