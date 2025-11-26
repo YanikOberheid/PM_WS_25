@@ -131,10 +131,6 @@ public class KundeView {
 
 		// --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
-		// rightBox.setPadding(new Insets(25, 25, 25, 0));
-		// hausImageView.setPreserveRatio(true); hausImageView.setFitWidth(300);
-		// hausImageView.setFitHeight(220); rightBox.getChildren().add(hausImageView);
-		// borderPane.setRight(rightBox);
 
 		rightBox.setAlignment(Pos.TOP_CENTER);
 		Label lblBild = new Label("Hausbild");
@@ -144,7 +140,13 @@ public class KundeView {
 
 		// Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
 		// Noch kein Bild laden – erst wenn Kundendaten/Plannummer gewählt wurden
-		hausImageView.setImage(null);
+		// Bild aber anzeigen, sonst ist ImageView zu klein oder leer!
+		var url = getClass().getResource(STANDARD_HAUS_BILD);
+		if (url != null) {
+			hausImageView.setImage(new Image(url.toExternalForm()));
+		} else {
+			hausImageView.setImage(null);
+		}
 	}
 
 	/* initialisiert die Listener zu den Steuerelementen auf der Maske */
@@ -292,8 +294,7 @@ public class KundeView {
 		hausImageView.setFitWidth(260);
 		hausImageView.setFitHeight(180);
 		hausImageView.setPreserveRatio(true);
-		// Noch kein Bild zeigen – erst nach dem Laden der Kundendaten:
-		hausImageView.setImage(null);
+		// Entferne Initialisieren des Bildes hier (wird direkt in initKomponenten gesetzt)
 	}
 
 	public void zeigeHausBild(String resourcePath) {
