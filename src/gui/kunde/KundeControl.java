@@ -6,7 +6,9 @@ import javafx.stage.Stage;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
 import gui.grundriss.GrundrissControl;
+import gui.innentueren.InnentuerenControl;
 import gui.fliesen.FliesenControl;
+
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
@@ -21,10 +23,12 @@ public class KundeControl {
 	 * Kunden
 	 */
 	private GrundrissControl grundrissControl;
-	
+
 	private FliesenControl fliesenControl;
-	
-	
+
+	// ...InnentuerenControl
+	private InnentuerenControl innentuerenControl; // NEU
+
 	/**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum
 	 * Grundfenster mit den Kundendaten.
@@ -118,15 +122,24 @@ public class KundeControl {
 			kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
 		}
 	}
-	
+
 	/**
-     * Erstellt, falls nicht vorhanden, ein Fliesen-Control-Objekt.
-     * Das FliesenView wird sichtbar gemacht.
-     */
-    public void oeffneFliesenControl(){
-        if (this.fliesenControl == null){
-            this.fliesenControl = new FliesenControl(kundeModel);
-        }
-        this.fliesenControl.oeffneFliesenView();
-    }
+	 * Erstellt, falls nicht vorhanden, ein Fliesen-Control-Objekt. Das FliesenView
+	 * wird sichtbar gemacht.
+	 */
+	public void oeffneFliesenControl() {
+		if (this.fliesenControl == null) {
+			this.fliesenControl = new FliesenControl(kundeModel);
+		}
+		this.fliesenControl.oeffneFliesenView();
+	}
+
+	// InnentuerenControl
+	public void oeffneInnentuerenControl() {
+		if (this.innentuerenControl == null) {
+			this.innentuerenControl = new InnentuerenControl(kundeModel);
+		}
+		this.innentuerenControl.oeffneView();
+	}
+	// ...
 }

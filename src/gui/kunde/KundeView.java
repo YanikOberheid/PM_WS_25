@@ -57,6 +57,14 @@ public class KundeView {
 	
 	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
 	
+	// ...
+	private MenuItem mnItmInnentueren = new MenuItem("Innentüren"); // NEU
+	
+	// Guard, damit initKomponenten nur einmal läuft
+	private boolean uiInitialized = false;
+	// ...
+
+	
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
 	/**
@@ -81,6 +89,12 @@ public class KundeView {
 
 	/* initialisiert die Steuerelemente auf der Maske */
 	private void initKomponenten() {
+		
+		if (uiInitialized) return;   // <<< verhindert Doppel-Initialisierung
+	    uiInitialized = true;
+		
+		
+		
 		// Zentrum: Formular
 		borderPane.setCenter(gridPane);
 		gridPane.setHgap(10);
@@ -124,10 +138,28 @@ public class KundeView {
 
 		// MenuBar und Menu
 		borderPane.setTop(mnBar);
-		mnBar.getMenus().add(mnSonderwuensche);
+		
+		
+		/***mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
 		
 		mnSonderwuensche.getItems().add(mnItmFliesen);
+		
+		mnSonderwuensche.getItems().addAll(mnItmGrundriss, mnItmInnentueren); // NEU: Innentüren anhängen
+		***/
+		
+		if (!mnBar.getMenus().contains(mnSonderwuensche)) {
+	        mnBar.getMenus().add(mnSonderwuensche);
+	    }
+
+	    // Doppelte Items vermeiden: Liste definiert setzen
+	    mnSonderwuensche.getItems().setAll(
+	        mnItmGrundriss,
+	        mnItmFliesen,
+	        mnItmInnentueren
+	    );
+	
+		
 		// --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
 		/***
@@ -170,6 +202,11 @@ public class KundeView {
 		mnItmFliesen.setOnAction(ae -> {
 		    new gui.fliesen.FliesenControl(kundeModel).oeffneFliesenView();
 		});
+		
+		mnItmInnentueren.setOnAction(aEvent -> {
+		    kundeControl.oeffneInnentuerenControl();
+		});
+
 	}
 
 	private void holeInfoDachgeschoss() {
