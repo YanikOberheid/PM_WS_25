@@ -1,5 +1,6 @@
 package business.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 
 /*
@@ -10,7 +11,21 @@ public interface KundenDAO {
 	public int add(Kunde kunde)
 	        throws SQLException;
 	
-	// Weitere Funktionen entprechend hinzufügen
-	// Beispiel: GetInfo, Löschen usw. von Kunden
-	// usw.
+	public boolean istHausnummerBesetzt(int hausnummer)
+			throws SQLException;
+	
+	public Kunde findByHausnummer(int hausnummer)
+			throws SQLException;
+	
+	public Kunde findByKundennummer(int idKunde)
+			throws SQLException;
+	
+	public boolean deleteKunde(int kundennummer)
+			throws SQLException;
+	
+	public void updateKunde(Kunde kunde)
+			throws SQLException;
+	
+			public InputStream loadImage(int id)
+			throws SQLException, Exception;
 }
