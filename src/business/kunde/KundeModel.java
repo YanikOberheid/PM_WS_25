@@ -2,7 +2,8 @@ package business.kunde;
 
 import java.sql.SQLException;
 
-import java.awt.image.BufferedImage;
+import java.io.InputStream;
+
 import javafx.collections.*;
 
 /**
@@ -322,7 +323,7 @@ public final class KundeModel {
 		}
 	}
 
-	public BufferedImage holBildAusDB(int idBild) throws SQLException, Exception {
+	public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		return kundeDAO.loadImage(idBild);
 	}

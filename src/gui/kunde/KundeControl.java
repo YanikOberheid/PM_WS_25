@@ -1,6 +1,6 @@
 package gui.kunde;
 
-import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 import business.kunde.Kunde;
@@ -129,7 +129,7 @@ public class KundeControl {
         }
     }
 
-	public BufferedImage ladeBildAusDB(int idBild) throws SQLException, Exception {
+	public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		return kundeModel.holBildAusDB(idBild);
 	}
    

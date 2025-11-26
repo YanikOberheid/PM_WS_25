@@ -1,11 +1,10 @@
 package gui.kunde;
 
-import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -294,23 +293,11 @@ public class KundeView {
 		hausImageView.setImage(null);
 	}
 
-	public void zeigeHausBild(String resourcePath) {
-		try (var in = getClass().getResourceAsStream(resourcePath)) {
-			if (in == null) {
-				throw new IllegalArgumentException("Resource not found: " + resourcePath);
-			}
-			hausImageView.setImage(new Image(in));
-		} catch (Exception ex) {
-			// Fallback auf Standardbild
-			try (var fallback = getClass().getResourceAsStream(STANDARD_HAUS_BILD)) {
-				if (fallback != null) {
-					hausImageView.setImage(new Image(fallback));
-				} else {
-					hausImageView.setImage(null); // letzter Ausweg
-				}
-			} catch (Exception ignore) {
-				hausImageView.setImage(null);
-			}
+	public void zeigeHausBild(InputStream inputStream) {
+		if (inputStream != null) {
+			hausImageView.setImage(new Image(inputStream));
+		} else {
+			hausImageView.setImage(null);
 		}
 	}
 
@@ -320,51 +307,47 @@ public class KundeView {
 	 * differenzieren.)
 	 */
 	public void zeigeHausBildFuerHausnummer(int hausnummer) {
-		int[] keinDachgeschoss = {1, 6, 7 ,14, 15, 24};
-		boolean found = false;
 		
-		for(int n : keinDachgeschoss) {
-			if (hausnummer == n) {
-				found = true;
-				break;
-			}
-		}
-		
-		if (found) {
-			System.out.println("Haus hat keinen Dachgeschoss!");
-			try {
-				BufferedImage img = kundeControl.ladeBildAusDB(STANDARD_HAUS_BILD_);
-				displayImage(img);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//zeigeHausBild(STANDARD_HAUS_BILD);
+		if (hausnummer == 0) {
+			zeigeHausBild(null);
 		} else {
-			System.out.println("Haus hat einen Dachgeschoss!");
-			try {
-				BufferedImage img = kundeControl.ladeBildAusDB(DACHGESCHOSS_HAUS_BILD);
-				displayImage(img);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		
+			int[] keinDachgeschoss = {1, 6, 7 ,14, 15, 24};
+			boolean found = false;
+			
+			for(int n : keinDachgeschoss) {
+				if (hausnummer == n) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (found) {
+				System.out.println("Haus hat keinen Dachgeschoss!");
+				try {
+					InputStream img = kundeControl.ladeBildAusDB(STANDARD_HAUS_BILD_);
+					zeigeHausBild(img);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//zeigeHausBild(STANDARD_HAUS_BILD);
+			} else {
+				System.out.println("Haus hat einen Dachgeschoss!");
+				try {
+					InputStream img = kundeControl.ladeBildAusDB(DACHGESCHOSS_HAUS_BILD);
+					zeigeHausBild(img);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
-	
-	public void displayImage(BufferedImage img) {
-		if (img != null) {
-			Image fxImage = SwingFXUtils.toFXImage(img, null);
-			hausImageView.setImage(fxImage);
-		} else {
-			hausImageView.setImage(null);
-		}
-	}
-	
 }
