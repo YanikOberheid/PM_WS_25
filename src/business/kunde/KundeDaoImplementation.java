@@ -1,5 +1,6 @@
 package business.kunde;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -123,5 +124,22 @@ public class KundeDaoImplementation implements KundenDAO {
 	            System.out.println("ℹ Kein Kunde unter dieser Hausnummer gefunden.");
 	        }
 	    }
+	}
+
+	@Override
+	public InputStream loadImage(int id) throws SQLException, Exception {
+		InputStream is = null;
+		
+		String sql = "SELECT data FROM images WHERE id = ?";
+		
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				is = rs.getBinaryStream("data");
+			}
+		return is;
+		}
 	}
 }

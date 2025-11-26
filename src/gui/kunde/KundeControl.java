@@ -1,5 +1,6 @@
 package gui.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 
 import business.kunde.Kunde;
@@ -46,7 +47,7 @@ public class KundeControl {
 	public void speichereKunden(Kunde kunde) {
 		try {
 			// Kundendaten validieren
-			if (!kundeModel.isValidCustomer(kunde)) {
+			if (!kundeModel.isValidCustomer(kunde, false)) {
 				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
 				return;
 			}
@@ -77,6 +78,7 @@ public class KundeControl {
         try {
             Kunde kunde = kundeModel.ladeKunde(hausnummer);
             kundeView.zeigeKundeAufGui(kunde);
+            kundeView.zeigeHausBildFuerHausnummer(hausnummer);
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
         } 
@@ -102,7 +104,7 @@ public class KundeControl {
     
     public void updateKunde(Kunde kunde) {
         try {
-            if (!kundeModel.isValidCustomer(kunde)) {
+            if (!kundeModel.isValidCustomer(kunde, true)) {
                 kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
                 return;
             }
@@ -117,5 +119,9 @@ public class KundeControl {
             kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
         }
     }
+
+    public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
+		return kundeModel.holBildAusDB(idBild);
+	}
    
 }
