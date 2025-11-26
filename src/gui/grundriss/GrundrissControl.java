@@ -20,7 +20,6 @@ public final class GrundrissControl {
 	/**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
 	 * Fenster fuer die Sonderwuensche zum Grundriss.
-	 * @param grundrissStage, Stage fuer das View-Objekt zu den Sonderwuenschen zum Grundriss
 	 */
 	public GrundrissControl(){  
 	   	Stage stageGrundriss = new Stage();
@@ -33,7 +32,7 @@ public final class GrundrissControl {
 	    // -> grundrissView ruft grundrissControl's leseGrundrissSonderwuensche auf
 	    // -> grundrissControl ruft grundrissView's updateCheckboxen auf (Checkboxen sind private)
 	}
-	    
+	
 	/**
 	 * macht das GrundrissView-Objekt sichtbar.
 	 */
@@ -60,7 +59,7 @@ public final class GrundrissControl {
 			if (i < ausgewaehlteSw.length) {
 				zuPruefendeSwKonstellation[i] = ausgewaehlteSw[i];
 			} else {
-				zuPruefendeSwKonstellation[i] = grundrissSw[i];
+				zuPruefendeSwKonstellation[i] = grundrissSw[i - ausgewaehlteSw.length];
 			}
 		}
 		
@@ -76,6 +75,8 @@ public final class GrundrissControl {
 	}
 	
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw){
+		// Hier kommen später eure komplexen Regeln.
+		// Für Task 2 kann das (falls vom Dozenten erlaubt) erstmal true bleiben.
 		return true;
 	}
 }

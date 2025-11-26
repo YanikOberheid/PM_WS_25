@@ -1,15 +1,19 @@
 package business.kunde;
 
-import java.sql.*;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Data Access Object (DAO) für Kunden. Beinhaltet alle Datenbankzugriffe für
  * Kundenobjekte.
  */
 public class KundeDaoImplementation implements KundenDAO {
-	
+
 	static Connection con = DatabaseConnection.getInstance().getConnection();
-	
+
 	@Override
 	public int add(Kunde kunde) throws SQLException {
 		String sql = "INSERT INTO Kunde (Haus_Hausnr, Vorname, Nachname, Telefon, email) VALUES (?, ?, ?, ?, ?)";
@@ -30,56 +34,89 @@ public class KundeDaoImplementation implements KundenDAO {
 		}
 	}
 
+	// Auf Dopplung prüfen
 	@Override
 	public boolean istHausnummerBesetzt(int hausnummer) throws SQLException {
-	    String sql = "SELECT 1 FROM Kunde WHERE Haus_Hausnr = ?";
-	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setInt(1, hausnummer);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            return rs.next(); // true, wenn ein Eintrag existiert
-	        }
-	    }
+		try (PreparedStatement ps = con.prepareStatement("SELECT * FROM Kunde WHERE Haus_Hausnr = ?")) {
+			ps.setInt(1, hausnummer);
+			try (ResultSet rs = ps.executeQuery()) {
+				return rs.next();
+			}
+		}
 	}
 	
+	// Zudem noch die idKunde laden
+	@Override
 	public Kunde findByHausnummer(int hausnummer) throws SQLException {
-	    String sql = "SELECT Haus_Hausnr, Vorname, Nachname, Telefon, email FROM Kunde WHERE Haus_Hausnr = ?";
+	    String sql = "SELECT idKunde, Haus_Hausnr, Vorname, Nachname, Telefon, email FROM Kunde WHERE Haus_Hausnr = ?";
 	    try (PreparedStatement ps = con.prepareStatement(sql)) {
 	        ps.setInt(1, hausnummer);
 
 	        try (ResultSet rs = ps.executeQuery()) {
 	            if (rs.next()) {
-	                return new Kunde(
+	                Kunde k = new Kunde(
+	                	rs.getInt("idKunde"),
 	                    rs.getInt("Haus_Hausnr"),
 	                    rs.getString("Vorname"),
 	                    rs.getString("Nachname"),
 	                    rs.getString("Telefon"),
 	                    rs.getString("email")
 	                );
+	                return k;
 	            }
 	        }
 	    }
 	    return null; // kein Kunde gefunden
 	}
 	
-	// Löscht den Kunden mit der angegebenen Hausnummer
-	public boolean deleteKunde(int hausnummer) throws SQLException {
-	    String sql = "DELETE FROM Kunde WHERE Haus_Hausnr = ?";
+	@Override
+	public Kunde findByKundennummer(int idKunde) throws SQLException {
+	    String sql = "SELECT idKunde, Haus_Hausnr, Vorname, Nachname, Telefon, email FROM Kunde WHERE idKunde = ?";
 	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setInt(1, hausnummer);
+	        ps.setInt(1, idKunde);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                Kunde k = new Kunde(
+	                	rs.getInt("idKunde"),
+	                    rs.getInt("Haus_Hausnr"),
+	                    rs.getString("Vorname"),
+	                    rs.getString("Nachname"),
+	                    rs.getString("Telefon"),
+	                    rs.getString("email")
+	                );
+	                return k;
+	            }
+	        }
+	    }
+	    return null; // kein Kunde gefunden
+	}
+	
+	// Delte und Update Kunde Methode geaendert!
+	// Der Kunde wird nach idKunde geändert, nicht nach Kunde mit jeweilige Hausnummer
+	@Override
+	public boolean deleteKunde(int kundennummer) throws SQLException {
+		String sql = "UPDATE Kunde SET Vorname = 'GELOESCHT', Nachname = 'GELOESCHT', Telefon = NULL, email = NULL, Haus_Hausnr = NULL " +
+                "WHERE idKunde = ?";
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setInt(1, kundennummer);
 	        int rowsAffected = ps.executeUpdate();
-	        return rowsAffected > 0; // true, wenn ein Datensatz gelöscht wurde
+	        return rowsAffected > 0;
 	    }
 	}
 	
-	public void updateKunde (Kunde kunde) throws SQLException {
-	    String sql = "UPDATE Kunde SET Vorname = ?, Nachname = ?, Telefon = ?, email = ? WHERE Haus_Hausnr = ?";
+	// Der Kunde wird nach idKunde geändert, nicht nach Kunde mit jeweilige Hausnummer
+	@Override
+	public void updateKunde(Kunde kunde) throws SQLException {
+		System.out.println(kunde.getIdKunde());
+		String sql = "UPDATE Kunde SET Vorname = ?, Nachname = ?, Telefon = ?, email = ? WHERE idKunde = ?";
 	    try (PreparedStatement ps = con.prepareStatement(sql)) {
 	        ps.setString(1, kunde.getVorname());
 	        ps.setString(2, kunde.getNachname());
 	        ps.setString(3, kunde.getTelefonnummer());
 	        ps.setString(4, kunde.getEmail());
-	        ps.setInt(5, kunde.getHausnummer());
-
+	        ps.setInt(5, kunde.getIdKunde());
+	        System.out.println("idKunde: " + kunde.getIdKunde());
 	        int rows = ps.executeUpdate();
 	        if (rows > 0) {
 	            System.out.println("✅ Kunde erfolgreich aktualisiert.");
@@ -89,6 +126,20 @@ public class KundeDaoImplementation implements KundenDAO {
 	    }
 	}
 
-	
-
+	@Override
+	public InputStream loadImage(int id) throws SQLException, Exception {
+		InputStream is = null;
+		
+		String sql = "SELECT data FROM images WHERE id = ?";
+		
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				is = rs.getBinaryStream("data");
+			}
+		return is;
+		}
+	}
 }
