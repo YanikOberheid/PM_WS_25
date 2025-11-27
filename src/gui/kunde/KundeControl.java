@@ -39,7 +39,7 @@ public class KundeControl {
      */
     public void oeffneGrundrissControl(){
     	if (this.grundrissControl == null){
-    		this.grundrissControl = new GrundrissControl(kundeModel);
+    		this.grundrissControl = new GrundrissControl();
       	}
     	this.grundrissControl.oeffneGrundrissView();
     }
