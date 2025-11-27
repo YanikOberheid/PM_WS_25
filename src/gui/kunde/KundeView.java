@@ -66,6 +66,8 @@ public class KundeView {
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
 	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
+	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
+
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
 	/**
@@ -139,7 +141,7 @@ public class KundeView {
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
 		mnSonderwuensche.getItems().add(mnItmFliesen);
-    
+		mnSonderwuensche.getItems().add(mnItmHeizung);
     
     // --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
@@ -191,6 +193,9 @@ public class KundeView {
 		mnItmFliesen.setOnAction(aEvent -> {
 	        kundeControl.oeffneFliesenControl();
 	    });
+		mnItmHeizung.setOnAction(aEvent -> {
+		    kundeControl.oeffneHeizungControl();        
+		});
 	}
 
 	private void holeInfoDachgeschoss() {
