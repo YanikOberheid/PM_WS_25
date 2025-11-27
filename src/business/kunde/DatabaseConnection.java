@@ -1,5 +1,6 @@
 package business.kunde;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,10 +14,6 @@ import java.util.Map;
 /**
  * Verwaltet die Verbindung zur Datenbank.
  */
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class DatabaseConnection {
 	private static DatabaseConnection instance;
