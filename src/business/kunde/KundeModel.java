@@ -1,5 +1,6 @@
 package business.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import javafx.collections.*;
 import java.util.ArrayList;
@@ -80,6 +81,10 @@ public final class KundeModel {
 		// Datenbank speichern
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		kundeDAO.add(kunde);
+		
+		// Die ID, die von der DB gegeben wurde laden und speichern lokal in Kunde.idKunde
+		int idKunde = (kundeDAO.findByHausnummer(this.kunde.getHausnummer())).getIdKunde();
+		this.kunde.setIdKunde(idKunde);
 	}
 
 	/**
@@ -106,20 +111,25 @@ public final class KundeModel {
 	}
 	
 	// Löscht den Kunden zur angegebenen Hausnummer.
-	public boolean loescheKunden(int hausnummer) throws SQLException {
+	public boolean loescheKunden(int kundennummer, int hausnummer) throws Exception {
 	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-	    boolean geloescht = kundeDAO.deleteKunde(hausnummer);
-
+	    
+	    // Damit der Kunde mit der jeweiligen ID geändert wird und nicht 
+	    // ausversehen ein weitere Datensatz hinzugefügt wird
+	    //kunde.setIdKunde(this.kunde.getIdKunde());
+	    boolean geloescht = kundeDAO.deleteKunde(kundennummer);
+	    
 	    // Wenn gelöscht, auch aktuelles Kunde-Objekt im Model leeren
 	    if (geloescht && this.kunde != null && this.kunde.getHausnummer() == hausnummer) {
+	    	deleteSonderwunschHasHaus(hausnummer);
 	        this.kunde = null;
 	    }
 	    return geloescht;
 	}
-	
+
 	public void updateKunde (Kunde kunde) throws SQLException, Exception {
 	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-	    kundeDAO.updateKunde (kunde);
+	    kundeDAO.updateKunde(kunde);
 	}
 
 	/**
@@ -325,6 +335,20 @@ public final class KundeModel {
     public Kunde getKunde() {
         return this.kunde;
     }
+    
+    public void deleteSonderwunschHasHaus(int hausnummer) throws SQLException, Exception {
+		try {
+			this.swDao.delete(hausnummer);
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Delete Sondderwunsch_has_Haus: SQL Fehler");
+			exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Delete Sondderwunsch_has_Haus");
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
     
   	// Bild aus der DB bekommen
 	  public InputStream holBildAusDB(int idBild) throws SQLException, Exception {

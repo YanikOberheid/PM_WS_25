@@ -1,5 +1,6 @@
 package gui.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 
 import javafx.stage.Stage;
@@ -97,9 +98,9 @@ public class KundeControl {
         }
     }
     
-    public void loescheKunden(int hausnummer) {
+    public void loescheKunden(int kundenummer, int hausnummer) {
         try {
-            boolean erfolg = kundeModel.loescheKunden(hausnummer);
+            boolean erfolg = kundeModel.loescheKunden(kundenummer, hausnummer);
             if (erfolg) {
                 kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
                 kundeView.zeigeKundeAufGui(null); // GUI leeren
@@ -109,6 +110,9 @@ public class KundeControl {
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim löschen.");
         }
     }
     

@@ -4,9 +4,15 @@ import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+
+import java.io.InputStream;
+import java.sql.SQLException;
+
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
 
@@ -37,7 +43,10 @@ public class KundeView {
 	private Label lblKunde = new Label("Kunde");
 	private Label lblNummerHaus = new Label("Plannummer des Hauses");
 	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<Integer>();
-
+	
+	private Label lblKundennummer = new Label("Kundennummer");
+	private TextField txtKundennummer = new TextField();
+	
 	private Label lblVorname = new Label("Vorname");
 	private TextField txtVorname = new TextField();
 
@@ -71,7 +80,7 @@ public class KundeView {
 		this.kundeModel = kundeModel;
 
 		primaryStage.setTitle(this.kundeModel.getUeberschrift());
-		Scene scene = new Scene(borderPane, 550, 400);
+		Scene scene = new Scene(borderPane, 750, 420);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -96,29 +105,33 @@ public class KundeView {
 		gridPane.add(cmbBxNummerHaus, 1, 2);
 		cmbBxNummerHaus.setMinSize(150, 25);
 		cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
-
+		
+		// Kundennummer
+		gridPane.add(lblKundennummer, 0, 3);
+		gridPane.add(txtKundennummer, 1, 3);
+		
 		// Vorname
-		gridPane.add(lblVorname, 0, 3);
-		gridPane.add(txtVorname, 1, 3);
+		gridPane.add(lblVorname, 0, 4);
+		gridPane.add(txtVorname, 1, 4);
 
 		// Nachname
-		gridPane.add(lblNachname, 0, 4);
-		gridPane.add(txtNachname, 1, 4);
+		gridPane.add(lblNachname, 0, 5);
+		gridPane.add(txtNachname, 1, 5);
 
 		// Telefonnummer
-		gridPane.add(lblNummer, 0, 5);
-		gridPane.add(txtNummer, 1, 5);
+		gridPane.add(lblNummer, 0, 6);
+		gridPane.add(txtNummer, 1, 6);
 
 		// E-Mail
-		gridPane.add(lblEmail, 0, 6);
-		gridPane.add(txtEmail, 1, 6);
+		gridPane.add(lblEmail, 0, 7);
+		gridPane.add(txtEmail, 1, 7);
 
 		// Buttons
-		gridPane.add(btnAnlegen, 0, 7);
+		gridPane.add(btnAnlegen, 0, 8);
 		btnAnlegen.setMinSize(150, 25);
-		gridPane.add(btnAendern, 1, 7);
+		gridPane.add(btnAendern, 1, 8);
 		btnAendern.setMinSize(150, 25);
-		gridPane.add(btnLoeschen, 2, 7);
+		gridPane.add(btnLoeschen, 2, 8);
 		btnLoeschen.setMinSize(150, 25);
 
 		// MenuBar und Menu
@@ -136,8 +149,15 @@ public class KundeView {
 		initialisiereHausBild(); // Größe/Platzhalter konfigurieren
 		
 		rightBox.getChildren().addAll(lblBild, hausImageView);
-    borderPane.setRight(rightBox);
     
+		
+		 // --- Beide Seiten in eine HBox ---
+	    HBox mainContent = new HBox(30);
+	    mainContent.setPadding(new Insets(20));
+	    mainContent.getChildren().addAll(gridPane, rightBox);
+		
+	    borderPane.setCenter(mainContent);
+	    
     // Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
 		// Noch kein Bild laden – erst wenn Kundendaten/Plannummer gewählt wurden
 		// Bild aber anzeigen, sonst ist ImageView zu klein oder leer!
@@ -191,7 +211,10 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
+		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		
 		Kunde kunde = new Kunde(
+				kundenummer,
 		        cmbBxNummerHaus.getValue(),
 		        txtVorname.getText(),
 		        txtNachname.getText(),
@@ -203,8 +226,10 @@ public class KundeView {
 
 	private void loescheKunden() {
 		Integer hausnummer = cmbBxNummerHaus.getValue();
-	    if (hausnummer != null) {
-	        kundeControl.loescheKunden(hausnummer);
+		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		// Aktuell kann man selber die Kundennummer ändern!!!
+	    if (kundenummer != null & hausnummer != null) {
+	        kundeControl.loescheKunden(kundenummer, hausnummer);
 	    } else {
 	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
 	    }
@@ -212,13 +237,14 @@ public class KundeView {
 	
 	public void zeigeKundeAufGui(Kunde kunde) {
 	    if (kunde == null) {
+	    	txtKundennummer.clear();
 	        txtVorname.clear();
 	        txtNachname.clear();
 	        txtNummer.clear();
 	        txtEmail.clear();
 	        return;
 	    }
-
+	    txtKundennummer.setText(Integer.toString(kunde.getIdKunde()));
 	    txtVorname.setText(kunde.getVorname());
 	    txtNachname.setText(kunde.getNachname());
 	    txtNummer.setText(kunde.getTelefonnummer());

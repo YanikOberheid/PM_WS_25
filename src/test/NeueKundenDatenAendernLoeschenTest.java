@@ -2,7 +2,17 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+
+import business.kunde.DatabaseConnection;
+import business.kunde.Kunde;
+import business.kunde.KundeDaoImplementation;
 
 class NeueKundenDatenAendernLoeschenTest {
 	
@@ -75,4 +85,5 @@ class NeueKundenDatenAendernLoeschenTest {
 		ps.setInt(1, hausNummer);
 		ResultSet rs = ps.executeQuery();
 
+	}
 }
