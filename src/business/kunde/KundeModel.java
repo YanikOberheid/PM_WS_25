@@ -189,6 +189,7 @@ public final class KundeModel {
 	}
 	
 	// ------------ Sonderwünsche ------------ 
+	public static final int KATEGORIE_HEIZUNG = 50;
 	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
 	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
 	
