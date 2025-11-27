@@ -1,5 +1,8 @@
 package gui.grundriss;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gui.basis.BasisView;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -13,6 +16,7 @@ public class GrundrissView extends BasisView{
  	// das Control-Objekt des Grundriss-Fensters
 	private GrundrissControl grundrissControl;
    
+     private String[][] sonderwuensche;
     //---Anfang Attribute der grafischen Oberflaeche---
     private Label lblWandKueche    	     
         = new Label("Wand zur Abtrennung der Kueche von dem Essbereich");
@@ -20,6 +24,8 @@ public class GrundrissView extends BasisView{
     private Label lblWandKuecheEuro 		= new Label("Euro");
     private CheckBox chckBxWandKueche 		= new CheckBox();
     //-------Ende Attribute der grafischen Oberflaeche-------
+    private Label[] lblPlatzhalterEuro = new Label[6]; // Array für Euro Labels
+    private CheckBox[] chckBxPlatzhalter = new CheckBox[6]; // Array für Checkboxes
   
     /**
      * erzeugt ein GrundrissView-Objekt, belegt das zugehoerige Control
@@ -36,6 +42,13 @@ public class GrundrissView extends BasisView{
 	    this.leseGrundrissSonderwuensche();
     }
   
+    public String [][] getsonderwuensche(){
+        return sonderwuensche;
+    }
+    public CheckBox[] getChckBxPlatzhalter() {
+        return chckBxPlatzhalter;
+
+    }
     /* initialisiert die Steuerelemente auf der Maske */
     protected void initKomponenten(){
     	super.initKomponenten(); 
@@ -59,10 +72,49 @@ public class GrundrissView extends BasisView{
     }
     
  	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
-  	protected void berechneUndZeigePreisSonderwuensche(){
+  	/*protected void berechneUndZeigePreisSonderwuensche(){
   		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
   		// aus dem Control aufgerufen, dann der Preis berechnet.
-  	}
+  	}*/
+	
+	public void berechneUndZeigePreisSonderwuensche() {
+
+    // 1. Alle ausgewählten Sonderwünsche sammeln
+    List<Integer> ausgewaehltListe = new ArrayList<>();
+
+    for (int i = 0; i < chckBxPlatzhalter.length; i++) {
+        if (chckBxPlatzhalter[i].isSelected()) {
+            ausgewaehltListe.add(i);
+        }
+    }
+
+    // In Array umwandeln wie gefordert
+    int[] ausgewaehlteSw = ausgewaehltListe.stream().mapToInt(Integer::intValue).toArray();
+
+    // 2. Konstellation prüfen
+    boolean erlaubt = grundrissControl.pruefeKonstellationSonderwuensche(ausgewaehlteSw);
+
+    if (!erlaubt) {
+        System.out.println("Die Kombination der Sonderwünsche ist nicht erlaubt.");
+        return;
+    }
+
+    // 3. Preis berechnen
+    double gesamtpreis = 0.0;
+
+    for (int i : ausgewaehlteSw) {
+        try {
+            double preis = Double.parseDouble(sonderwuensche[i][1]);
+            gesamtpreis += preis;
+        } catch (NumberFormatException e) {
+            System.err.println("Ungültiger Preis für Sonderwunsch " + i);
+        }
+    }
+
+    // 4. GUI-Fenster anzeigen
+    //zeigePreisFenster(gesamtpreis);
+}
+
   	
    	/* speichert die ausgesuchten Sonderwuensche in der Datenbank ab */
   	protected void speichereSonderwuensche(){
