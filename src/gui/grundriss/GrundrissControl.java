@@ -78,4 +78,10 @@ public final class GrundrissControl {
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw){
 		return true;
 	}
+	
+	public GrundrissView getGrundrissView() {
+		return grundrissView;
+
+
+	}
 }
