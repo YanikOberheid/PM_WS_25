@@ -126,6 +126,7 @@ public class KundeDaoImplementation implements KundenDAO {
 	    }
 	}
 
+	// Fürs Laden des Bild aus der Datenbank
 	@Override
 	public InputStream loadImage(int id) throws SQLException, Exception {
 		InputStream is = null;
