@@ -4,7 +4,7 @@ public class Kunde {
 	
 	// ---- Kundennummer -----
 	private int idKunde;
-	
+	// ---- Kundennummer -----
 	private int hausnummer;
 	private String vorname;
 	private String nachname;
