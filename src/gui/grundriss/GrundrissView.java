@@ -161,6 +161,14 @@ public class GrundrissView extends BasisView{
   		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
   		this.grundrissControl.speichereSonderwuensche(grundrissSw);
   	}
+  	
+  	public CheckBox getChckBxWandKueche() {
+
+
+		return chckBxWandKueche;
+
+
+	}
  }
 
 
