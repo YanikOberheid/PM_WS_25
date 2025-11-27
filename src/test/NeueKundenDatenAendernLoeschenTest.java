@@ -21,7 +21,7 @@ class NeueKundenDatenAendernLoeschenTest {
 	
 	static Connection con = DatabaseConnection.getInstance().getConnection();
 	
-	// Daten in Kunden Löschen nach jeden Test
+	// Daten in Kunden Löschen nach jeden Test //
 	
 	/*
 	@AfterEach 
