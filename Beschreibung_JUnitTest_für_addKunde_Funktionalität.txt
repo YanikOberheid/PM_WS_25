@@ -1,0 +1,27 @@
+2. Branch/Task die erstellt wurde - JUnitTest für addKunde() Funktionalität
+Ein Package test mit der Klasse KundeDaoImplementationTest als inhalt erstellt
+
+################################################################################
+
+// Ueberpruefen ob tatsächlich der uebergebene Kunde hinzugefuegt wurde
+// Es wird unter der Hausnummer geschaut 
+// ob Vornamen, Nachnamen etc. übereinstimmen
+testAddKundeErfolgreich()
+
+// Testen ob die KundenDaten
+// Leer sind (mind. eine Davon)
+testAddKundeLeereDaten()
+
+// Testen ob es eine Dopplung gibt.
+// quasi ob die Hausnummer schon besetzt ist.
+testAddKundeHausnummerDopplung()
+
+################################################################################
+Ansonsten:
+KundeModel.isValidCustomer()
+um eine If-Anweisung istHausnummerBesetzt erweitert
+
+In KundeControl
+den Aufruf/zugriff der KundeModel.isValidCustomer() Methode unter KundenView in KundenControl.speichereKunden verschoben
+
+################################################################################

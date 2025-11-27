@@ -1,6 +1,5 @@
 package business.kunde;
 
-import java.io.InputStream;
 import java.sql.SQLException;
 
 /*

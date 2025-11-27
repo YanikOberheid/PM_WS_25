@@ -14,30 +14,30 @@ import business.kunde.DatabaseConnection;
 import business.kunde.SonderwuenscheDAO;
 import business.kunde.SonderwuenscheDAOImplementation;
 
-public class SonderwuenscheDAOImplementationTest {
+public class SonderwuenscheFliesenTest {
 
 	private SonderwuenscheDAO dao;
-	private final int TEST_HAUSNUMMER = 1;
+	private final int TEST_HAUSNUMMER = 2; // Hausnummer für Test
+	private final int FLIESEN_KATEGORIE = 70;
+	private final int FLIESEN_ID = 9; // fliesen im bad sonderwunsch
 
 	@BeforeEach
 	public void setUp() throws Exception {
 		dao = new SonderwuenscheDAOImplementation();
 
-		// GLOBAL AutoCommit fix im gesamten Testlauf
+		// AutoCommit aktivieren
 		DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
 
+		// Test Daten löschen
 		try {
 			dao.delete(TEST_HAUSNUMMER);
-		} catch (SQLException e) {
+		} catch (SQLException ignored) {
 		}
 	}
 
 	@Test
-	public void testSpeichernUndLaden() throws Exception {
-		int[] expected = { 1, 2, 3 };
-
-		// WICHTIG: Hier AutoCommit erneut einschalten
-		DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
+	public void testSpeichernUndLadenFliesen() throws Exception {
+		int[] expected = { FLIESEN_ID };
 
 		dao.update(TEST_HAUSNUMMER, expected);
 
@@ -50,11 +50,21 @@ public class SonderwuenscheDAOImplementationTest {
 	}
 
 	@Test
-	public void testDelete() throws Exception {
-		int[] daten = { 1, 2 };
+	public void testLadenMitKategorieFliesen() throws Exception {
+		int[] daten = { FLIESEN_ID };
 
-		// WICHTIG
-		DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
+		dao.update(TEST_HAUSNUMMER, daten);
+
+		int[] result = dao.get(TEST_HAUSNUMMER, FLIESEN_KATEGORIE);
+
+		assertNotNull(result, "Ergebnis darf nicht null sein");
+		assertEquals(1, result.length, "Es sollte genau 1 Fliesen-Sonderwunsch geben");
+		assertEquals(FLIESEN_ID, result[0], "Die ID muss 9 sein");
+	}
+
+	@Test
+	public void testDeleteFliesen() throws Exception {
+		int[] daten = { FLIESEN_ID };
 
 		dao.update(TEST_HAUSNUMMER, daten);
 
@@ -62,20 +72,6 @@ public class SonderwuenscheDAOImplementationTest {
 
 		int[] result = dao.get(TEST_HAUSNUMMER);
 
-		assertEquals(0, result.length);
-	}
-
-	@Test
-	public void testLadenMitKategorie() throws Exception {
-		int[] daten = { 1, 2, 3 };
-
-		// WICHTIG
-		DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
-
-		dao.update(TEST_HAUSNUMMER, daten);
-
-		int[] result = dao.get(TEST_HAUSNUMMER, 1);
-
-		assertNotNull(result);
+		assertEquals(0, result.length, "Nach dem Löschen muss die Liste leer sein");
 	}
 }

@@ -10,38 +10,20 @@ public class Kunde {
 	private String nachname;
 	private String telefonnummer;
 	private String email;
-
-	public Kunde(int hausnummer, String vorname, String nachname, String telefonnummer, String email) {
+		  
+	public Kunde(int hausnummer, String vorname, String nachname, String telefonnummer, String email)
+	{
 		this.hausnummer = hausnummer;
 		this.vorname = vorname;
 		this.email = email;
 		this.telefonnummer = telefonnummer;
 		this.nachname = nachname;
-	}
-
-	// ---- mit Kundennummer -----
-	public Kunde(int idKunde, int hausnummer, String vorname, String nachname, String telefonnummer, String email) {
-		this.idKunde = idKunde;
-		this.hausnummer = hausnummer;
-		this.vorname = vorname;
-		this.email = email;
-		this.telefonnummer = telefonnummer;
-		this.nachname = nachname;
-	}
-
-	public int getIdKunde() {
-		return idKunde;
 	}
 	
-	public void setIdKunde(int kundeID) {
-		this.idKunde = kundeID;
-	}
-	// ----------------------
-
 	public int getHausnummer() {
 		return hausnummer;
 	}
-	
+
 	public void setHausnummer(int hausnummer) {
 		this.hausnummer = hausnummer;
 	}
@@ -53,15 +35,15 @@ public class Kunde {
 	public void setVorname(String vorname) {
 		this.vorname = vorname;
 	}
-
+	
 	public String getNachname() {
 		return nachname;
 	}
-
+	
 	public void setNachname(String nachname) {
 		this.nachname = nachname;
 	}
-
+	
 	public String getTelefonnummer() {
 		return telefonnummer;
 	}

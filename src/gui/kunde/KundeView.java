@@ -1,50 +1,43 @@
 package gui.kunde;
 
-import java.io.InputStream;
-import java.sql.SQLException;
-
-import business.kunde.Kunde;
-import business.kunde.KundeModel;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import business.kunde.Kunde;
+import business.kunde.KundeModel;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten bereitstellt.
  */
 public class KundeView {
 
-	// Pfad zur Platzhalter-Grafik im Klassenpfad
+	// das Control-Objekt des Grundfensters mit den Kundendaten
+	private KundeControl kundeControl;
+	// das Model-Objekt des Grundfensters mit den Kundendaten
+	private KundeModel kundeModel;
+  
+  // Pfad zur Platzhalter-Grafik im Klassenpfad
 	private static final String STANDARD_HAUS_BILD = "/gui/images/haus_placeholder.png";
 
 	//private static final String DACHGESCHOSS_HAUS_BILD = "/gui/images/haus_placeholder.png";
 	private static final int DACHGESCHOSS_HAUS_BILD = 1;
 	private static final int STANDARD_HAUS_BILD_ = 2;
-
-	// das Control-Objekt des Grundfensters mit den Kundendaten
-	private KundeControl kundeControl;
-	// das Model-Objekt des Grundfensters mit den Kundendaten
-	private KundeModel kundeModel;
-
-	// --- Bildanzeige (neu für Task [3]) ---
-	private final ImageView hausImageView = new ImageView();
-
+  
 	// ---Anfang Attribute der grafischen Oberflaeche---
+  
+  // --- Bildanzeige (neu für Task [3]) ---
+	private final ImageView hausImageView = new ImageView();
+  
 	private BorderPane borderPane = new BorderPane();
 	private GridPane gridPane = new GridPane();
 	private Label lblKunde = new Label("Kunde");
 	private Label lblNummerHaus = new Label("Plannummer des Hauses");
-	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<>();
+	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<Integer>();
 
-	private Label lblKundennummer = new Label("Kundennummer");
-	private TextField txtKundennummer = new TextField();
-	
 	private Label lblVorname = new Label("Vorname");
 	private TextField txtVorname = new TextField();
 
@@ -63,11 +56,12 @@ public class KundeView {
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
+	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
 	/**
 	 * erzeugt ein KundeView-Objekt und initialisiert die Steuerelemente der Maske
-	 *
+	 * 
 	 * @param kundeControl KundeControl, enthaelt das zugehoerige Control
 	 * @param primaryStage Stage, enthaelt das Stage-Objekt fuer diese View
 	 * @param kundeModel   KundeModel, enthaelt das zugehoerige Model
@@ -77,7 +71,7 @@ public class KundeView {
 		this.kundeModel = kundeModel;
 
 		primaryStage.setTitle(this.kundeModel.getUeberschrift());
-		Scene scene = new Scene(borderPane, 750, 420); // etwas breiter, damit das Bild rechts Platz hat
+		Scene scene = new Scene(borderPane, 550, 400);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -87,8 +81,7 @@ public class KundeView {
 
 	/* initialisiert die Steuerelemente auf der Maske */
 	private void initKomponenten() {
-		// Zentrum: Formular
-		borderPane.setLeft(gridPane);
+		borderPane.setCenter(gridPane);
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
 		gridPane.setPadding(new Insets(25, 25, 25, 25));
@@ -103,41 +96,39 @@ public class KundeView {
 		gridPane.add(cmbBxNummerHaus, 1, 2);
 		cmbBxNummerHaus.setMinSize(150, 25);
 		cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
-		
-		// Kundennummer
-		gridPane.add(lblKundennummer, 0, 3);
-		gridPane.add(txtKundennummer, 1, 3);
-		
+
 		// Vorname
-		gridPane.add(lblVorname, 0, 4);
-		gridPane.add(txtVorname, 1, 4);
+		gridPane.add(lblVorname, 0, 3);
+		gridPane.add(txtVorname, 1, 3);
 
 		// Nachname
-		gridPane.add(lblNachname, 0, 5);
-		gridPane.add(txtNachname, 1, 5);
+		gridPane.add(lblNachname, 0, 4);
+		gridPane.add(txtNachname, 1, 4);
 
 		// Telefonnummer
-		gridPane.add(lblNummer, 0, 6);
-		gridPane.add(txtNummer, 1, 6);
+		gridPane.add(lblNummer, 0, 5);
+		gridPane.add(txtNummer, 1, 5);
 
 		// E-Mail
-		gridPane.add(lblEmail, 0, 7);
-		gridPane.add(txtEmail, 1, 7);
+		gridPane.add(lblEmail, 0, 6);
+		gridPane.add(txtEmail, 1, 6);
 
 		// Buttons
-		gridPane.add(btnAnlegen, 0, 8);
+		gridPane.add(btnAnlegen, 0, 7);
 		btnAnlegen.setMinSize(150, 25);
-		gridPane.add(btnAendern, 1, 8);
+		gridPane.add(btnAendern, 1, 7);
 		btnAendern.setMinSize(150, 25);
-		gridPane.add(btnLoeschen, 2, 8);
+		gridPane.add(btnLoeschen, 2, 7);
 		btnLoeschen.setMinSize(150, 25);
 
 		// MenuBar und Menu
 		borderPane.setTop(mnBar);
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
-
-		// --- Rechts: Bildbereich (neu) ---
+		mnSonderwuensche.getItems().add(mnItmFliesen);
+    
+    
+    // --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
 		rightBox.setAlignment(Pos.TOP_CENTER);
 		
@@ -145,15 +136,9 @@ public class KundeView {
 		initialisiereHausBild(); // Größe/Platzhalter konfigurieren
 		
 		rightBox.getChildren().addAll(lblBild, hausImageView);
-		
-		HBox mainContent = new HBox(30);
-		mainContent.setPadding(new Insets(20));
-		mainContent.getChildren().addAll(gridPane, rightBox);
-		gridPane.setPrefHeight(400);
-		
-		borderPane.setCenter(mainContent);
-
-		// Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
+    borderPane.setRight(rightBox);
+    
+    // Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
 		// Noch kein Bild laden – erst wenn Kundendaten/Plannummer gewählt wurden
 		// Bild aber anzeigen, sonst ist ImageView zu klein oder leer!
 		/*var url = getClass().getResource(STANDARD_HAUS_BILD);
@@ -165,7 +150,7 @@ public class KundeView {
 		hausImageView.setImage(null);
 	}
 
-	/* initialisiert die Listener zu den Steuerelementen auf der Maske */
+	/* initialisiert die Listener zu den Steuerelementen auf de Maske */
 	private void initListener() {
 		cmbBxNummerHaus.setOnAction(aEvent -> {
 			holeInfoDachgeschoss();
@@ -183,17 +168,20 @@ public class KundeView {
 		mnItmGrundriss.setOnAction(aEvent -> {
 			kundeControl.oeffneGrundrissControl();
 		});
+		mnItmFliesen.setOnAction(aEvent -> {
+	        kundeControl.oeffneFliesenControl();
+	    });
 	}
 
 	private void holeInfoDachgeschoss() {
 	}
 
 	private void leseKunden() {
-		Integer hausnummer = cmbBxNummerHaus.getValue();
-
-		if (hausnummer != null) {
-			kundeControl.ladeKundenZuHausnummer(hausnummer);
-		}
+	    Integer hausnummer = cmbBxNummerHaus.getValue();
+	    
+	    if (hausnummer != null) {
+	        kundeControl.ladeKundenZuHausnummer(hausnummer);
+	    }
 	}
 
 	private void legeKundenAn() {
@@ -203,17 +191,7 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
-		String kundenNummerText = txtKundennummer.getText();
-		Integer kundenummer = null;
-		try {
-			kundenummer = Integer.parseInt(kundenNummerText);
-		} catch (NumberFormatException e) {
-			zeigeFehlermeldung("Fehler", "Ungültige Kundennummer.");
-			return;
-		}
-		
 		Kunde kunde = new Kunde(
-				kundenummer,
 		        cmbBxNummerHaus.getValue(),
 		        txtVorname.getText(),
 		        txtNachname.getText(),
@@ -225,16 +203,8 @@ public class KundeView {
 
 	private void loescheKunden() {
 		Integer hausnummer = cmbBxNummerHaus.getValue();
-		String kundenNummerText = txtKundennummer.getText();
-	    Integer kundenummer = null;
-	    try {
-	        kundenummer = Integer.parseInt(kundenNummerText);
-	    } catch (NumberFormatException e) {
-	        zeigeFehlermeldung("Fehler", "Bitte eine gültige Kundennummer eingeben.");
-	        return;
-	    }
-	    if (kundenummer != null && hausnummer != null) {
-	        kundeControl.loescheKunden(kundenummer, hausnummer);
+	    if (hausnummer != null) {
+	        kundeControl.loescheKunden(hausnummer);
 	    } else {
 	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
 	    }
@@ -242,14 +212,13 @@ public class KundeView {
 	
 	public void zeigeKundeAufGui(Kunde kunde) {
 	    if (kunde == null) {
-	    	txtKundennummer.clear();
 	        txtVorname.clear();
 	        txtNachname.clear();
 	        txtNummer.clear();
 	        txtEmail.clear();
 	        return;
 	    }
-	    txtKundennummer.setText(Integer.toString(kunde.getIdKunde()));
+
 	    txtVorname.setText(kunde.getVorname());
 	    txtNachname.setText(kunde.getNachname());
 	    txtNummer.setText(kunde.getTelefonnummer());
@@ -258,7 +227,7 @@ public class KundeView {
 
 	/**
 	 * zeigt ein Fehlermeldungsfenster an
-	 *
+	 * 
 	 * @param ueberschrift, Ueberschrift fuer das Fehlermeldungsfenster
 	 * @param meldung,      String, welcher die Fehlermeldung enthaelt
 	 */
@@ -269,7 +238,7 @@ public class KundeView {
 		alert.setContentText(meldung);
 		alert.show();
 	}
-
+	
 	public void zeigeErfolgsmeldung(String ueberschrift, String meldung) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Erfolg");

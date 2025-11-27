@@ -7,12 +7,9 @@ import java.util.Vector;
 
 import gui.basis.BasisView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Klasse, welche das Fenster mit den Sonderwuenschen zu den Grundrissvarianten
- * bereitstellt.
+ * Klasse, welche das Fenster mit den Sonderwuenschen zu 
+ * den Grundrissvarianten bereitstellt.
  */
 public class GrundrissView extends BasisView{
 
@@ -42,7 +39,7 @@ public class GrundrissView extends BasisView{
     public GrundrissView (GrundrissControl grundrissControl, Stage grundrissStage){
     	super(grundrissStage);
         this.grundrissControl = grundrissControl;
-        grundrissStage.setTitle("Sonderw\u00fcnsche zu Grundriss-Varianten");
+        grundrissStage.setTitle("Sonderw�nsche zu Grundriss-Varianten");
                 
 	    this.initKomponenten();
 	    this.leseGrundrissSonderwuensche();
@@ -62,7 +59,7 @@ public class GrundrissView extends BasisView{
     /**
 	 * macht das GrundrissView-Objekt sichtbar.
 	 */
-	public void oeffneGrundrissView() {
+	public void oeffneGrundrissView(){ 
 		super.oeffneBasisView();
 	}
     
@@ -80,85 +77,90 @@ public class GrundrissView extends BasisView{
     	chckBxAusfuehrungBadDG.setSelected(false);
     	
     	// Setze diejenigen auf true, die in ausgewaehlteSw vorkommen 
-    	if (ausgewaehlteSw == null) {
-    		return;
-    	}
     	for (int sw: ausgewaehlteSw) {
     		if (sw < 200 || sw >= 300) continue;
     		switch (sw) {
     			case 201:
     				chckBxWandKueche.setSelected(true);
-    				break;
     			case 202:
     				chckBxTuerKueche.setSelected(true);
-    				break;
     			case 203:
     				chckBxGrossesZimmerOG.setSelected(true);
-    				break;
     			case 204:
     				chckBxTreppenraumDG.setSelected(true);
-    				break;
     			case 205:
     				chckBxVorrichtungBadOG.setSelected(true);
-    				break;
     			case 206:
     				chckBxAusfuehrungBadDG.setSelected(true);
-    				break;
     			default:
     				System.out.println("Konnte ID " + sw 
-    						+ " keiner Sonderwunsch-Checkbox fuer Grundriss-Varianten zuordnen");
+    						+ " keiner Sonderwunsch-Checkbox für Grunriss-Varianten zuordnen");
     		}
     	}
     }
     
  	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
-    @Override
   	protected void berechneUndZeigePreisSonderwuensche(){
-		// Preislogik ist (laut Aufgabenstand) noch ein eigener Task.
-		// Hier nur Platzhalter, damit der Button keine Exception wirft.
-		System.out.println("Preisberechnung fuer Grundriss-Sonderwuensche ist noch nicht implementiert.");
+		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
+        // aus dem Control aufgerufen, dann der Preis berechnet.
+  		// Beispielhaft: Wir simulieren, dass ein Konfliktfall vorliegt.
+  		// Normalerweise: ausgewaehlteSonderwuensche auslesen und an Control geben.
+  		int[] ausgewaehlteSw = new int[] {1}; // Platzhalter, normalerweise aus UI gelesen
+
+  		boolean konstellationOk = grundrissControl.pruefeKonstellationSonderwuensche(ausgewaehlteSw);
+  		if (!konstellationOk) {
+  			// Mock-Konflikt: Fenster anzeigen
+  			Alert alert = new Alert(Alert.AlertType.ERROR);
+  			alert.setTitle("Konflikt");
+  			alert.setHeaderText("Fehler bei der Auswahl der Sonderwünsche");
+  			alert.setContentText("Dieser Test schlägt fehl.");
+  			alert.showAndWait();
+  			return;
+  		}
+
+  		// Annahme: Preisberechnung, falls keine Konflikte (hier: Platzhalterwert)
+  		double preis = 0.0;
+  		for (int sw : ausgewaehlteSw) {
+  			// Beispielsweise könnte jeder Sonderwunsch 100 Euro kosten (nur als Demo)
+  			// sw wird hier benutzt, um zu zeigen, dass er individuell getestet werden kann
+  			// Man könnte z.B. abhängig von sw verschiedene Preise berechnen
+  			if (sw == 1) {
+  				preis += 150.0; // Für sw == 1, z.B. Wand zur Küche, 150 Euro
+  			} else {
+  				preis += 100.0; // Standardpreis für andere Sonderwünsche
+  			}
+  		}
+  		txtPreisWandKueche.setText(String.format("%.2f", preis));
   	}
   	
    	/* speichert die ausgesuchten Sonderwuensche in der Datenbank ab */
-    @Override
   	protected void speichereSonderwuensche(){
-		int[] grundrissSw = ermittleAusgewaehlteGrundrissSonderwuensche();
-		grundrissControl.speichereSonderwuensche(grundrissSw);
+ 		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
+  		// aus dem Control aufgerufen, dann die Sonderwuensche gespeichert.
+  		
+  		// Sammle Sonderwunsch-IDs angekreuzter Checkboxen
+  		Vector<Integer> v = new Vector<Integer>();
+  		if (chckBxWandKueche.isSelected())
+  			v.add(201);
+  		if (chckBxTuerKueche.isSelected())
+  			v.add(202);
+  		if (chckBxGrossesZimmerOG.isSelected())
+  			v.add(203);
+  		if (chckBxTreppenraumDG.isSelected())
+  			v.add(204);
+  		if (chckBxVorrichtungBadOG.isSelected())
+  			v.add(205);
+  		if (chckBxAusfuehrungBadDG.isSelected())
+  			v.add(206);
+  		
+  		// Kopiere in int[]
+  		int[] grundrissSw = new int[v.size()];
+  		for (int i = 0; i < v.size(); i++)
+  			grundrissSw[i] = v.get(i);
+  		
+  		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
+  		this.grundrissControl.speichereSonderwuensche(grundrissSw);
   	}
+ }
 
-	/**
-	 * Liest alle gesetzten Checkboxen aus und liefert die entsprechenden
-	 * Sonderwunsch-IDs (201-206) als int-Array zurueck.
-	 */
-	private int[] ermittleAusgewaehlteGrundrissSonderwuensche() {
-		List<Integer> ids = new ArrayList<>();
 
-		if (chckBxWandKueche.isSelected()) {
-			ids.add(201);
-		}
-		if (chckBxTuerKueche.isSelected()) {
-			ids.add(202);
-		}
-		if (chckBxGrossesZimmerOG.isSelected()) {
-			ids.add(203);
-		}
-		if (chckBxTreppenraumDG.isSelected()) {
-			ids.add(204);
-		}
-		if (chckBxVorrichtungBadOG.isSelected()) {
-			ids.add(205);
-		}
-		if (chckBxAusfuehrungBadDG.isSelected()) {
-			ids.add(206);
-		}
-
-		int[] result = new int[ids.size()];
-		for (int i = 0; i < ids.size(); i++) {
-			result[i] = ids.get(i);
-		}
-		return result;
-	}
-	
-	//Yamam
-
-}

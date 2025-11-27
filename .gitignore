@@ -1,0 +1,11 @@
+# Eclipse / Java ignores
+.classpath
+.project
+.settings/
+bin/
+target/
+*.class
+
+# OS files
+.DS_Store
+Thumbs.db
