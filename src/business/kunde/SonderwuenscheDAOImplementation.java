@@ -127,4 +127,40 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
+	// Delete benoetigt für wenn der Kunde selbst gelöscht wird
+	@Override
+	public void delete(int hausnummer) throws SQLException {
+
+		String sql_del = "DELETE FROM `Sonderwunsch_has_Haus` WHERE `Haus_Hausnr` = ?";
+
+		try (PreparedStatement pstmt = con.prepareStatement(sql_del)) {
+
+			con.setAutoCommit(false);
+
+			pstmt.setInt(1, hausnummer);
+			pstmt.executeUpdate();
+
+			con.commit();
+
+		} catch (SQLException exc) {
+
+			try {
+				con.rollback();
+			} catch (SQLException ignored) {
+			}
+			try {
+				con.setAutoCommit(true);
+			} catch (SQLException ignored) {
+			}
+
+			exc.printStackTrace();
+			throw exc;
+
+		} finally {
+			try {
+				con.setAutoCommit(true);
+			} catch (SQLException ignored) {
+			}
+		}
+	}
 }

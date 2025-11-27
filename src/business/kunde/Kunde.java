@@ -2,6 +2,9 @@ package business.kunde;
 
 public class Kunde {
 	
+	// ---- Kundennummer -----
+	private int idKunde;
+	// ---- Kundennummer -----
 	private int hausnummer;
 	private String vorname;
 	private String nachname;
@@ -56,5 +59,23 @@ public class Kunde {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+	// VON Yamam
+	// --- Validierung ---
+
+	public boolean isVollstaendig() {
+		return vorname != null && !vorname.isBlank() && nachname != null && !nachname.isBlank() && telefonnummer != null
+				&& !telefonnummer.isBlank() && email != null && !email.isBlank() && hausnummer > 0;
+	}
+
+	public boolean isTelefonnummerValid() {
+		// nur Ziffern erlaubt
+		return telefonnummer != null && telefonnummer.matches("\\d+");
+	}
+
+	public boolean isEmailValid() {
+		// Minimalregel aus eurer User Story: muss ein '@' enthalten
+		return email != null && email.contains("@");
+	}
+
 }

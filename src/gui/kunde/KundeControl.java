@@ -91,6 +91,7 @@ public class KundeControl {
         try {
             Kunde kunde = kundeModel.ladeKunde(hausnummer);
             kundeView.zeigeKundeAufGui(kunde);
+            kundeView.zeigeHausBildFuerHausnummer(hausnummer);
         } catch (SQLException e) {
             kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
         }
@@ -128,5 +129,9 @@ public class KundeControl {
             kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
         }
     }
+	// Laden des Bildes aus der DB
+    public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
+		    return kundeModel.holBildAusDB(idBild);
+	  }
    
 }

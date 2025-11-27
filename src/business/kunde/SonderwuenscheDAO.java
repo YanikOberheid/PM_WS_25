@@ -11,4 +11,7 @@ public interface SonderwuenscheDAO {
 	
 	public void update(int hausnummer, int[] ausgewaehlteSw)
 	        throws SQLException, Exception;
+	// Delete benoetigt wenn der Kunde selbst gelöscht wird
+	public void delete(int hausnummer)
+			throws SQLException;
 }

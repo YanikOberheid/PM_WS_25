@@ -89,6 +89,21 @@ public class KundeDaoImplementation implements KundenDAO {
 	    }
 	}
 
-	
-
+	// Fürs Laden des Bild aus der Datenbank
+	@Override
+	public InputStream loadImage(int id) throws SQLException, Exception {
+		InputStream is = null;
+		
+		String sql = "SELECT data FROM images WHERE id = ?";
+		
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, id);
+			
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				is = rs.getBinaryStream("data");
+			}
+		return is;
+		}
+	}
 }
