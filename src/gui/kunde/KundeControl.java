@@ -8,7 +8,7 @@ import business.kunde.Kunde;
 import business.kunde.KundeModel;
 import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
-
+import gui.heizung.HeizungControl;
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
@@ -23,6 +23,7 @@ public class KundeControl {
     private GrundrissControl grundrissControl;
  // Referenz auf das neue Control-Objekt für Fliesen
     private FliesenControl fliesenControl;
+    private HeizungControl heizungControl;
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -44,7 +45,14 @@ public class KundeControl {
       	}
     	this.grundrissControl.oeffneGrundrissView();
     }
-    
+    public void oeffneHeizungControl() {
+        if (this.heizungControl == null) {
+       
+            this.heizungControl = new HeizungControl(kundeModel);
+        }
+        this.heizungControl.oeffneHeizungView();
+    }
+
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank
 	 * @param kunde, Kunde-Objekt, welches zu speichern ist
