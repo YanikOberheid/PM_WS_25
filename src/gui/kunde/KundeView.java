@@ -323,9 +323,8 @@ public class KundeView {
 	}
 
 	/**
-	 * Wird nach dem Laden der Kundendaten aufgerufen. Momentan zeigen wir für alle
-	 * Häuser ein Platzhalterbild. (Später kannst du hier nach Haustyp/DG
-	 * differenzieren.)
+	 * Wird nach dem Laden der Kundendaten aufgerufen.
+	 * Ein entsprechendes Bild wird je nach mit oder ohne Dachgeschoss angezeigt
 	 */
 	public void zeigeHausBildFuerHausnummer(int hausnummer) {
 		
