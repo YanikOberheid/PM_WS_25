@@ -113,7 +113,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
-
+	// Delete benoetigt für wenn der Kunde selbst gelöscht wird
 	@Override
 	public void delete(int hausnummer) throws SQLException {
 
