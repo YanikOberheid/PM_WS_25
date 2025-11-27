@@ -321,6 +321,7 @@ public final class KundeModel {
 		}
 	}
 
+	// Bild aus der DB bekommen
 	public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		return kundeDAO.loadImage(idBild);
