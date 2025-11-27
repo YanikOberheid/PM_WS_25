@@ -119,7 +119,7 @@ public class KundeControl {
             kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
         }
     }
-
+	// Laden des Bildes aus der DB
     public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		return kundeModel.holBildAusDB(idBild);
 	}
