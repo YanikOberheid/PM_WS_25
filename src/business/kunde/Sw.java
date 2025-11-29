@@ -22,7 +22,7 @@ public enum Sw {
 	// Grundriss-Varianten
 	WAND_KUECHE			(201, "Wand zur Abtrennung der Küche von dem Essbereich", 300.0),
 	TUER_KUECHE			(202, "Tür in der Wand zwischen Küche und Essbereich", 300.0),
-	GROSSES_ZIMMER		(203, "Großes Zimmer im OG statt uwei kleinen Zimmern", 0.0),
+	GROSSES_ZIMMER_OG	(203, "Großes Zimmer im OG statt uwei kleinen Zimmern", 0.0),
 	TREPPENRAUM_DG		(204, "Abgetrennter Treppenraum im DG", 890.0),
 	VORRICHTUNG_BAD_DG	(205, "Vorrichtung eines Bades im DG", 990.0),
 	AUSFUEHRUNG_BAD_DG	(206, "Ausführung eines Bades im DG", 8990.0),
