@@ -1,6 +1,7 @@
 package gui.heizung;
 
 import gui.basis.BasisView;
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -17,37 +18,38 @@ public class HeizungView extends BasisView {
 
     // --- GUI-Elemente ---
     private Label lblStdHeizkoerper =
-            new Label("Zusätzlicher Standard-Heizkörper (je Stück)");
+    		new Label(Sw.STD_HEIZKOERPER.bes);
     private TextField txtStdHeizkoerper = new TextField();
     private Label lblStdHeizkoerperEuro = new Label("Euro");
     private CheckBox chckBxStdHeizkoerper = new CheckBox();
 
     private Label lblGlattHeizkoerper =
-            new Label("Heizkörper mit glatter Oberfläche (je Stück)");
+            new Label(Sw.GLATT_HEIZKOERPER.bes);
     private TextField txtGlattHeizkoerper = new TextField();
     private Label lblGlattHeizkoerperEuro = new Label("Euro");
     private CheckBox chckBxGlattHeizkoerper = new CheckBox();
 
     private Label lblHandtuchHeizkoerper =
-            new Label("Handtuchheizkörper (je Stück)");
+            new Label(Sw.HANDTUCH.bes);
     private TextField txtHandtuchHeizkoerper = new TextField();
     private Label lblHandtuchHeizkoerperEuro = new Label("Euro");
     private CheckBox chckBxHandtuchHeizkoerper = new CheckBox();
 
     private Label lblFbhOhneDG =
-            new Label("Fußbodenheizung ohne DG");
+            new Label(Sw.FBH_OHNE_DG.bes);
     private TextField txtFbhOhneDG = new TextField();
     private Label lblFbhOhneDGEuro = new Label("Euro");
     private CheckBox chckBxFbhOhneDG = new CheckBox();
 
     private Label lblFbhMitDG =
-            new Label("Fußbodenheizung mit DG");
+            new Label(Sw.FBH_OHNE_DG.bes);
     private TextField txtFbhMitDG = new TextField();
     private Label lblFbhMitDGEuro = new Label("Euro");
     private CheckBox chckBxFbhMitDG = new CheckBox();
 
     // Gesamtpreis-Anzeige
-    private Label lblGesamt = new Label("Gesamtpreis Heizungs-Sonderwünsche");
+    private Label lblGesamt =
+    		new Label("Gesamtpreis Heizungs-Sonderwünsche");
     private TextField txtGesamt = new TextField();
     private Label lblGesamtEuro = new Label("Euro");
 

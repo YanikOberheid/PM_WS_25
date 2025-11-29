@@ -4,19 +4,16 @@ import business.kunde.KundeModel;
 import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import javafx.application.Platform;
 
 public class HeizungControl {
 
     private final HeizungView heizungView;
     private final KundeModel kundeModel;
 
-    public HeizungControl(KundeModel kundeModel) {
-        this.kundeModel = kundeModel;
-
+    public HeizungControl() {
         Stage stageHeizung = new Stage();
         stageHeizung.initModality(Modality.APPLICATION_MODAL);
+        this.kundeModel = KundeModel.getInstance();
         this.heizungView = new HeizungView(this, stageHeizung);
     }
 
@@ -27,9 +24,8 @@ public class HeizungControl {
 
     public void leseHeizungsSonderwuensche() {
         int[] swHeizung = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.HEIZKOERPER.id);
-        if (swHeizung != null) {
+        if (swHeizung != null)
             heizungView.updateSwCheckboxen(swHeizung);
-        }
     }
 
     public void speichereSonderwuensche(int[] heizungsSw) {
@@ -52,19 +48,5 @@ public class HeizungControl {
 
     public boolean pruefeKonstellationHeizkoerper(int[] ausgewaehlteSw) {
         return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
-    }
-
-    /** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
-    private void zeigeKonfliktFenster(String header, String text) {
-        if (Platform.isFxApplicationThread()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Konflikt");
-            alert.setHeaderText(header);
-            alert.setContentText(text);
-            alert.showAndWait();
-        } else {
-            // In Tests ohne JavaFX-Thread vermeiden wir Fehler:
-            System.out.println("Konflikt (ohne FX-UI): " + header + " - " + text);
-        }
     }
 }
