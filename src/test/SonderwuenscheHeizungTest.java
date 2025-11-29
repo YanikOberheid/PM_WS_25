@@ -74,8 +74,8 @@ public class SonderwuenscheHeizungTest {
      */
     @Test
     public void testLadenMitKategorieHeizung() throws Exception {
-        // Wir speichern testweise einen Heizungs-SW und z.B. einen Fliesen-SW (ID 9)
-        int[] daten = { HEIZUNG_ID_STD_HEIZKOERPER, 9 };
+        // Wir speichern testweise einen Heizungs-SW und z.B. einen Fliesen-SW (ID 705)
+        int[] daten = { HEIZUNG_ID_STD_HEIZKOERPER, Sw.F_BAD_DG.id };
 
         dao.update(TEST_HAUSNUMMER, daten);
 

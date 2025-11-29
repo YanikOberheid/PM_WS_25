@@ -1,7 +1,6 @@
 package gui.heizung;
 
 import gui.basis.BasisView;
-import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -47,12 +46,6 @@ public class HeizungView extends BasisView {
     private Label lblFbhMitDGEuro = new Label("Euro");
     private CheckBox chckBxFbhMitDG = new CheckBox();
 
-    // Gesamtpreis-Anzeige
-    private Label lblGesamt =
-    		new Label("Gesamtpreis Heizungs-Sonderwünsche");
-    private TextField txtGesamt = new TextField();
-    private Label lblGesamtEuro = new Label("Euro");
-
     public HeizungView(HeizungControl heizungControl, Stage heizungStage) {
         super(heizungStage);
         this.heizungControl = heizungControl;
@@ -65,7 +58,8 @@ public class HeizungView extends BasisView {
     protected void initKomponenten() {
         super.initKomponenten();
         super.getLblSonderwunsch().setText("Heizungs-Varianten");
-
+        
+        // super.getGridPaneSonderwunsch().add(Element, Spalte, Zeile);
         // Zeile 1
         super.getGridPaneSonderwunsch().add(lblStdHeizkoerper, 0, 1);
         super.getGridPaneSonderwunsch().add(txtStdHeizkoerper, 1, 1);
@@ -106,7 +100,7 @@ public class HeizungView extends BasisView {
         super.getGridPaneSonderwunsch().add(lblFbhMitDGEuro, 2, 5);
         super.getGridPaneSonderwunsch().add(chckBxFbhMitDG, 3, 5);
 
-        // Gesamtpreis (Zeile 6)
+        // Gesamtpreis (Zeile 6) - aus BasisView
         super.getGridPaneSonderwunsch().add(lblGesamt, 0, 6);
         super.getGridPaneSonderwunsch().add(txtGesamt, 1, 6);
         txtGesamt.setEditable(false);
@@ -122,39 +116,42 @@ public class HeizungView extends BasisView {
     }
 
     /** Checkboxen anhand der gespeicherten IDs setzen. */
+    @Override
     protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
-        // alles zurücksetzen
+        // Alles zurücksetzen
         chckBxStdHeizkoerper.setSelected(false);
         chckBxGlattHeizkoerper.setSelected(false);
         chckBxHandtuchHeizkoerper.setSelected(false);
         chckBxFbhOhneDG.setSelected(false);
         chckBxFbhMitDG.setSelected(false);
 
-        if (ausgewaehlteSw != null) {
-            for (int sw : ausgewaehlteSw) {
-                switch (Sw.findeMitId(sw)) {
-                    case STD_HEIZKOERPER:
-                        chckBxStdHeizkoerper.setSelected(true);
-                        break;
-                    case GLATT_HEIZKOERPER:
-                        chckBxGlattHeizkoerper.setSelected(true);
-                        break;
-                    case HANDTUCH:
-                        chckBxHandtuchHeizkoerper.setSelected(true);
-                        break;
-                    case FBH_OHNE_DG:
-                        chckBxFbhOhneDG.setSelected(true);
-                        break;
-                    case FBH_MIT_DG:
-                        chckBxFbhMitDG.setSelected(true);
-                        break;
-                    default:
-                        System.out.println("Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw);
-                }
+        // Checkboxen für vorkommende IDs ankreuzen
+        if (ausgewaehlteSw == null) return;
+        for (int sw : ausgewaehlteSw) {
+            switch (Sw.findeMitId(sw)) {
+                case STD_HEIZKOERPER:
+                    chckBxStdHeizkoerper.setSelected(true);
+                    break;
+                case GLATT_HEIZKOERPER:
+                    chckBxGlattHeizkoerper.setSelected(true);
+                    break;
+                case HANDTUCH:
+                    chckBxHandtuchHeizkoerper.setSelected(true);
+                    break;
+                case FBH_OHNE_DG:
+                    chckBxFbhOhneDG.setSelected(true);
+                    break;
+                case FBH_MIT_DG:
+                    chckBxFbhMitDG.setSelected(true);
+                    break;
+                default:
+                    System.out.println(
+                    		"Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw);
             }
         }
     }
     
+    @Override
     protected boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {
     			chckBxStdHeizkoerper.isSelected(),
@@ -164,16 +161,41 @@ public class HeizungView extends BasisView {
     			chckBxFbhMitDG.isSelected()
     	};
     }
+    
+    @Override
+    protected int[] checkboxenZuIntArray() {
+    	Vector<Integer> v = new Vector<>();
+
+        if (chckBxStdHeizkoerper.isSelected())
+            v.add(Sw.STD_HEIZKOERPER.id);
+        if (chckBxGlattHeizkoerper.isSelected())
+            v.add(Sw.GLATT_HEIZKOERPER.id);
+        if (chckBxHandtuchHeizkoerper.isSelected())
+            v.add(Sw.HANDTUCH.id);
+        if (chckBxFbhOhneDG.isSelected())
+            v.add(Sw.FBH_OHNE_DG.id);
+        if (chckBxFbhMitDG.isSelected())
+            v.add(Sw.FBH_MIT_DG.id);
+
+        int[] heizungSw = new int[v.size()];
+        for (int i = 0; i < v.size(); i++)
+            heizungSw[i] = v.get(i);
+        
+        return heizungSw;
+    }
 
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     protected void berechneUndZeigePreisSonderwuensche() {
-        double preis = 0.0;
+    	if (!heizungControl.pruefeKonstellationHeizkoerper(checkboxenZuIntArray()))
+    		return;
+        
+    	double preis = 0.0;
 
-        if (chckBxStdHeizkoerper.isSelected())   preis += 660.0;
-        if (chckBxGlattHeizkoerper.isSelected()) preis += 160.0;
-        if (chckBxHandtuchHeizkoerper.isSelected()) preis += 660.0;
-        if (chckBxFbhOhneDG.isSelected())        preis += 8990.0;
-        if (chckBxFbhMitDG.isSelected())         preis += 9990.0;
+        if (chckBxStdHeizkoerper.isSelected())   preis += Sw.STD_HEIZKOERPER.preis;
+        if (chckBxGlattHeizkoerper.isSelected()) preis += Sw.GLATT_HEIZKOERPER.preis;
+        if (chckBxHandtuchHeizkoerper.isSelected()) preis += Sw.HANDTUCH.preis;
+        if (chckBxFbhOhneDG.isSelected())        preis += Sw.FBH_OHNE_DG.preis;
+        if (chckBxFbhMitDG.isSelected())         preis += Sw.FBH_MIT_DG.preis;
 
         txtGesamt.setText(String.format("%.2f", preis));
     }

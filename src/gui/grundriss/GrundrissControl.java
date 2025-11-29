@@ -2,10 +2,8 @@ package gui.grundriss;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.util.Arrays;
-
 import business.kunde.KundeModel;
+import business.kunde.SwKategorie;
 
 /**
  * Klasse, welche das Fenster mit den Sonderwuenschen zu den Grundriss-Varianten
@@ -14,8 +12,8 @@ import business.kunde.KundeModel;
 public final class GrundrissControl {
 	
 	// das View-Objekt des Grundriss-Fensters
-	private GrundrissView grundrissView;
-	private KundeModel kundeModel;
+	private final GrundrissView grundrissView;
+	private final KundeModel kundeModel;
 
 	/**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -27,11 +25,6 @@ public final class GrundrissControl {
     	stageGrundriss.initModality(Modality.APPLICATION_MODAL);
     	this.kundeModel = KundeModel.getInstance();
     	this.grundrissView = new GrundrissView(this, stageGrundriss);
-    	// Erstellen von grundrissView updatet indirekt Checkboxen, denn
-    	// -> grundrissView ruft seinen Konstruktor auf
-	    // -> grundrissView ruft seine leseGrundrissSonderwuensche auf
-	    // -> grundrissView ruft grundrissControl's leseGrundrissSonderwuensche auf
-	    // -> grundrissControl ruft grundrissView's updateCheckboxen auf (Checkboxen sind private)
 	}
 	    
 	/**
@@ -43,45 +36,30 @@ public final class GrundrissControl {
 	}
 
 	public void leseGrundrissSonderwuensche(){
-		int[] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwAusDb();
-		if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0)
-			this.grundrissView.updateGrundrissCheckboxen(ausgewaehlteSw);
+		int[] swGrundriss = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.GRUNDRISS.id);
+		if (swGrundriss != null)
+			this.grundrissView.updateSwCheckboxen(swGrundriss);
     } 
 	
 	public void speichereSonderwuensche(int[] grundrissSw) {
-		// Hole Kopie der aktuell ausgewählten Sw aus der Datenbank
-		int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
-		// Filtere Sonderwünsche zu Grundriss-Varianten raus
-		ausgewaehlteSw = Arrays.stream(ausgewaehlteSw).filter(sw -> sw < 200 || sw >= 300).toArray();
-		
-		// Führe mit neuer Auswahl an Sonderwünschen zu Grundriss-Varianten zusammen
-		int[] zuPruefendeSwKonstellation = new int[ausgewaehlteSw.length + grundrissSw.length];
-		for (int i = 0; i < zuPruefendeSwKonstellation.length; i++) {
-			if (i < ausgewaehlteSw.length) {
-				zuPruefendeSwKonstellation[i] = ausgewaehlteSw[i];
-			} else {
-				zuPruefendeSwKonstellation[i] = grundrissSw[i];
-			}
-		}
-		
-		// Prüfe neue Konstellation
-		if (this.pruefeKonstellationSonderwuensche(zuPruefendeSwKonstellation)) {
-			try {
-				this.kundeModel.updateAusgewaehlteSw(zuPruefendeSwKonstellation);
-			} catch(Exception exc) {
-				System.out.println("Neue Auswahl an Sonderwünschen zu Grundriss-Varianten"
-						+ "konnte nicht gespeichert werden");
-			}
-		}
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationSonderwuensche(grundrissSw)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+        
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+                    grundrissSw,
+                    SwKategorie.GRUNDRISS.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Grundriss-Varianten konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
 	}
 	
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw){
 		return true;
-	}
-	
-	public GrundrissView getGrundrissView() {
-		return grundrissView;
-
-
 	}
 }
