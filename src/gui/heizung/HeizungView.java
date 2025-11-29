@@ -158,8 +158,7 @@ public class HeizungView extends BasisView {
     			chckBxGlattHeizkoerper.isSelected(),
     			chckBxHandtuchHeizkoerper.isSelected(),
     			chckBxFbhOhneDG.isSelected(),
-    			chckBxFbhMitDG.isSelected()
-    	};
+    			chckBxFbhMitDG.isSelected()};
     }
     
     @Override
