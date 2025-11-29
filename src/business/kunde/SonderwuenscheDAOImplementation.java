@@ -62,6 +62,35 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
+	
+	@Override
+	public int[] getExcluding(int hausnummer, int kategorieId) throws SQLException {
+		// [FIX] Removed quotes and added spaces to ends of lines
+				String sql = "SELECT swh.Sonderwunsch_idSonderwunsch "
+						+ "FROM Sonderwunsch_has_Haus swh "
+						+ "INNER JOIN Sonderwunsch sw " 
+						+ "ON swh.Sonderwunsch_idSonderwunsch = sw.idSonderwunsch "
+						+ "WHERE swh.Haus_Hausnr = ? "
+						+ "AND sw.Sonderwunschkategorie_idSonderwunschkategorie != ?;";
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setFetchSize(100);
+			pstmt.setInt(1, hausnummer);
+			pstmt.setInt(2, kategorieId);
+			ResultSet result = pstmt.executeQuery();
+			
+			ArrayList<Integer> ausgewaehlteSw = new ArrayList<Integer>();
+			while (result.next()) {
+				ausgewaehlteSw.add(result.getInt(1));
+			}
+			
+			int[] arr = new int[ausgewaehlteSw.size()];
+			for (int i = 0; i < arr.length; i++) arr[i] = (int) ausgewaehlteSw.get(i);
+			return arr;
+		} catch (SQLException exc) {
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
 
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {

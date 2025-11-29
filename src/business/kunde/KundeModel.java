@@ -199,7 +199,7 @@ public final class KundeModel {
 	}
 	
 	/**
-	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
+	 * Holt Sonderwünsche zu einem Kunden, setzt sie und gibt ein Array an Sonderwunschoptionen oder null.
 	 *
 	 * @return Klon von this.ausgewaehlteSw oder null 
 	 */
@@ -223,7 +223,7 @@ public final class KundeModel {
 	}
 	
 	/**
-	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen oder null.
+	 * Holt Sonderwünsche zu einem Kunden, setzt sie und gibt ein Array an Sonderwunschoptionen oder null.
 	 *
 	 * @param ID einer Sonderwunschkategorie als int
 	 * @return Klon von this.ausgewaehlteSw oder null
@@ -243,6 +243,29 @@ public final class KundeModel {
 			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche");
 			exc.printStackTrace();
 		}
+		return null;
+	}
+	
+	/**
+	 * Gibt Sonderwünsche zu einem Kunden ohne angegebener Kategorie oder null zurück.
+	 * 
+	 * @param kategorieId, zu der Kategorie, die aus der Rückgabe ausgeschlossen werden soll
+	 * @return int[] mit IDs ohne die der angegebenen Kategorie
+	 */
+	public int[] holeAusgewaehlteSwAusDbOhneKategorie(int kategorieId) {
+		if (this.kunde == null) return null;
+		int hausnr = this.kunde.getHausnummer();
+		
+		try {
+			return this.swDao.getExcluding(hausnr, kategorieId);
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche ohne " + kategorieId);
+			exc.printStackTrace();
+		}
+		
 		return null;
 	}
 	

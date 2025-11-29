@@ -1,5 +1,6 @@
 package gui.basis;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -20,6 +21,12 @@ public abstract class BasisView {
    	private Label lblSonderwunsch   	= new Label("Sonderwunsch");
     private Button btnBerechnen 	 	= new Button("Preis berechnen");
     private Button btnSpeichern 	 	= new Button("Speichern");
+    
+    // Gesamtpreis-Anzeige - protected, da Zeile im GridPane unbekannt
+    protected Label lblGesamt =
+    		new Label("Gesamtpreis");
+    protected TextField txtGesamt = new TextField();
+    protected Label lblGesamtEuro = new Label("Euro");
     //-------Ende Attribute der grafischen Oberflaeche-------
   
    /**
@@ -86,7 +93,21 @@ public abstract class BasisView {
   	
   	protected abstract boolean[] holeIsSelectedFuerCheckboxen();
   	protected abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
+  	protected abstract int[] checkboxenZuIntArray();
   	
+  	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
+    protected void zeigeKonfliktFenster(String header, String text) {
+        if (Platform.isFxApplicationThread()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Konflikt");
+            alert.setHeaderText(header);
+            alert.setContentText(text);
+            alert.showAndWait();
+        } else {
+            // In Tests ohne JavaFX-Thread vermeiden wir Fehler:
+            System.out.println("Konflikt (ohne FX-UI): " + header + " - " + text);
+        }
+    }
  	
 }
 
