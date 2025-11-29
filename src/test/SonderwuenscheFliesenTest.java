@@ -19,7 +19,7 @@ public class SonderwuenscheFliesenTest {
 	private SonderwuenscheDAO dao;
 	private final int TEST_HAUSNUMMER = 2; // Hausnummer für Test
 	private final int FLIESEN_KATEGORIE = 70;
-	private final int FLIESEN_ID = 9; // fliesen im bad sonderwunsch
+	private final int FLIESEN_ID = 705; // fliesen im bad sonderwunsch
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -59,7 +59,7 @@ public class SonderwuenscheFliesenTest {
 
 		assertNotNull(result, "Ergebnis darf nicht null sein");
 		assertEquals(1, result.length, "Es sollte genau 1 Fliesen-Sonderwunsch geben");
-		assertEquals(FLIESEN_ID, result[0], "Die ID muss 9 sein");
+		assertEquals(FLIESEN_ID, result[0], "Die ID muss 705 sein");
 	}
 
 	@Test
