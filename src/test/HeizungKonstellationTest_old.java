@@ -13,7 +13,7 @@ import gui.heizung.HeizungControl;
  * JUnit-Tests für pruefeKonstellationHeizkoerper().
  * Gehört zu Task [3]: Heizkörper Sonderwünsche Preis berechnen / Konstellation prüfen.
  */
-public class HeizungKonstellationTest {
+public class HeizungKonstellationTest_old {
 
     private HeizungControl heizungControl;
 

@@ -84,6 +84,9 @@ public abstract class BasisView {
    	/* speichert die ausgesuchten Sonderwuensche in der Datenbank ab */
   	protected abstract void speichereSonderwuensche();
   	
+  	protected abstract boolean[] holeIsSelectedFuerCheckboxen();
+  	protected abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
+  	
  	
 }
 

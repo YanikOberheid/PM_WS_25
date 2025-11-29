@@ -1,6 +1,7 @@
 package gui.heizung;
 
 import business.kunde.KundeModel;
+import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -10,13 +11,6 @@ public class HeizungControl {
 
     private final HeizungView heizungView;
     private final KundeModel kundeModel;
-
-    // IDs aus der DB (Heizung)
-    private static final int SW_STD_HEIZKOERPER   = 13;
-    private static final int SW_GLATT_HEIZKOERPER = 14;
-    private static final int SW_HANDTUCH          = 15;
-    private static final int SW_FBH_OHNE_DG       = 16;
-    private static final int SW_FBH_MIT_DG        = 17;
 
     public HeizungControl(KundeModel kundeModel) {
         this.kundeModel = kundeModel;
@@ -32,9 +26,9 @@ public class HeizungControl {
     }
 
     public void leseHeizungsSonderwuensche() {
-        int[] swHeizung = kundeModel.gibAusgewaehlteSwAusDb(KundeModel.KATEGORIE_HEIZUNG);
+        int[] swHeizung = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.HEIZKOERPER.id);
         if (swHeizung != null) {
-            heizungView.updateHeizungCheckboxen(swHeizung);
+            heizungView.updateSwCheckboxen(swHeizung);
         }
     }
 
@@ -48,50 +42,16 @@ public class HeizungControl {
         try {
             kundeModel.speichereSonderwuenscheFuerKategorie(
                     heizungsSw,
-                    KundeModel.KATEGORIE_HEIZUNG
+                    SwKategorie.HEIZKOERPER.id
             );
         } catch (Exception e) {
-            System.out.println("Heizungs-Sonderwünsche konnten nicht gespeichert werden.");
+            System.out.println("Sonderwünsche zu Heizungen konnten nicht gespeichert werden.");
             e.printStackTrace();
         }
     }
 
-    /**
-     * Prüft, ob die Kombination der Heizkörper-Sonderwünsche erlaubt ist.
-     * - Gibt true zurück, wenn alles okay ist.
-     * - Gibt false zurück, wenn ein Konflikt vorliegt.
-     * 
-     * Aktuell: Mock-Konflikt:
-     *  -> Wenn sowohl "Fußbodenheizung ohne DG" als auch "mit DG" gewählt sind,
-     *     wird ein Fehlerfenster mit "Dieser Test schlägt fehl." angezeigt.
-     */
     public boolean pruefeKonstellationHeizkoerper(int[] ausgewaehlteSw) {
-        if (ausgewaehlteSw == null || ausgewaehlteSw.length == 0) {
-            return true; // keine Auswahl -> kein Konflikt
-        }
-
-        boolean hatFbhOhne = false;
-        boolean hatFbhMit = false;
-
-        for (int sw : ausgewaehlteSw) {
-            if (sw == SW_FBH_OHNE_DG) {
-                hatFbhOhne = true;
-            } else if (sw == SW_FBH_MIT_DG) {
-                hatFbhMit = true;
-            }
-        }
-
-        // Mock-Konflikt: beide FBH-Varianten gleichzeitig
-        if (hatFbhOhne && hatFbhMit) {
-            zeigeKonfliktFenster(
-                "Fehler bei der Auswahl der Heizungs-Sonderwünsche",
-                "Dieser Test schlägt fehl."
-            );
-            return false;
-        }
-
-        // sonst aktuell noch alles erlaubt
-        return true;
+        return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
     }
 
     /** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */

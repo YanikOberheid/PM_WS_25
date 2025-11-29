@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 
 import java.util.Vector;
 
+import business.kunde.Sw;
+
 /**
  * View für die Sonderwünsche zu Heizungen.
  */
@@ -13,15 +15,7 @@ public class HeizungView extends BasisView {
 
     private HeizungControl heizungControl;
 
-    // IDs aus der DB (Kategorie 50)
-    private static final int SW_STD_HEIZKOERPER   = 13;
-    private static final int SW_GLATT_HEIZKOERPER = 14;
-    private static final int SW_HANDTUCH          = 15;
-    private static final int SW_FBH_OHNE_DG       = 16;
-    private static final int SW_FBH_MIT_DG        = 17;
-
     // --- GUI-Elemente ---
-
     private Label lblStdHeizkoerper =
             new Label("Zusätzlicher Standard-Heizkörper (je Stück)");
     private TextField txtStdHeizkoerper = new TextField();
@@ -74,7 +68,7 @@ public class HeizungView extends BasisView {
         super.getGridPaneSonderwunsch().add(lblStdHeizkoerper, 0, 1);
         super.getGridPaneSonderwunsch().add(txtStdHeizkoerper, 1, 1);
         txtStdHeizkoerper.setEditable(false);
-        txtStdHeizkoerper.setText("660");
+        txtStdHeizkoerper.setText("" + Sw.STD_HEIZKOERPER.preis);
         super.getGridPaneSonderwunsch().add(lblStdHeizkoerperEuro, 2, 1);
         super.getGridPaneSonderwunsch().add(chckBxStdHeizkoerper, 3, 1);
 
@@ -82,7 +76,7 @@ public class HeizungView extends BasisView {
         super.getGridPaneSonderwunsch().add(lblGlattHeizkoerper, 0, 2);
         super.getGridPaneSonderwunsch().add(txtGlattHeizkoerper, 1, 2);
         txtGlattHeizkoerper.setEditable(false);
-        txtGlattHeizkoerper.setText("160");
+        txtGlattHeizkoerper.setText("" + Sw.GLATT_HEIZKOERPER.preis);
         super.getGridPaneSonderwunsch().add(lblGlattHeizkoerperEuro, 2, 2);
         super.getGridPaneSonderwunsch().add(chckBxGlattHeizkoerper, 3, 2);
 
@@ -90,7 +84,7 @@ public class HeizungView extends BasisView {
         super.getGridPaneSonderwunsch().add(lblHandtuchHeizkoerper, 0, 3);
         super.getGridPaneSonderwunsch().add(txtHandtuchHeizkoerper, 1, 3);
         txtHandtuchHeizkoerper.setEditable(false);
-        txtHandtuchHeizkoerper.setText("660");
+        txtHandtuchHeizkoerper.setText("" + Sw.HANDTUCH.preis);
         super.getGridPaneSonderwunsch().add(lblHandtuchHeizkoerperEuro, 2, 3);
         super.getGridPaneSonderwunsch().add(chckBxHandtuchHeizkoerper, 3, 3);
 
@@ -98,7 +92,7 @@ public class HeizungView extends BasisView {
         super.getGridPaneSonderwunsch().add(lblFbhOhneDG, 0, 4);
         super.getGridPaneSonderwunsch().add(txtFbhOhneDG, 1, 4);
         txtFbhOhneDG.setEditable(false);
-        txtFbhOhneDG.setText("8990");
+        txtFbhOhneDG.setText("" + Sw.FBH_OHNE_DG.preis);
         super.getGridPaneSonderwunsch().add(lblFbhOhneDGEuro, 2, 4);
         super.getGridPaneSonderwunsch().add(chckBxFbhOhneDG, 3, 4);
 
@@ -106,7 +100,7 @@ public class HeizungView extends BasisView {
         super.getGridPaneSonderwunsch().add(lblFbhMitDG, 0, 5);
         super.getGridPaneSonderwunsch().add(txtFbhMitDG, 1, 5);
         txtFbhMitDG.setEditable(false);
-        txtFbhMitDG.setText("9990");
+        txtFbhMitDG.setText("" + Sw.FBH_MIT_DG.preis);
         super.getGridPaneSonderwunsch().add(lblFbhMitDGEuro, 2, 5);
         super.getGridPaneSonderwunsch().add(chckBxFbhMitDG, 3, 5);
 
@@ -126,8 +120,7 @@ public class HeizungView extends BasisView {
     }
 
     /** Checkboxen anhand der gespeicherten IDs setzen. */
-    protected void updateHeizungCheckboxen(int[] ausgewaehlteSw) {
-
+    protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
         // alles zurücksetzen
         chckBxStdHeizkoerper.setSelected(false);
         chckBxGlattHeizkoerper.setSelected(false);
@@ -137,32 +130,40 @@ public class HeizungView extends BasisView {
 
         if (ausgewaehlteSw != null) {
             for (int sw : ausgewaehlteSw) {
-                switch (sw) {
-                    case SW_STD_HEIZKOERPER:
+                switch (Sw.findeMitId(sw)) {
+                    case STD_HEIZKOERPER:
                         chckBxStdHeizkoerper.setSelected(true);
                         break;
-                    case SW_GLATT_HEIZKOERPER:
+                    case GLATT_HEIZKOERPER:
                         chckBxGlattHeizkoerper.setSelected(true);
                         break;
-                    case SW_HANDTUCH:
+                    case HANDTUCH:
                         chckBxHandtuchHeizkoerper.setSelected(true);
                         break;
-                    case SW_FBH_OHNE_DG:
+                    case FBH_OHNE_DG:
                         chckBxFbhOhneDG.setSelected(true);
                         break;
-                    case SW_FBH_MIT_DG:
+                    case FBH_MIT_DG:
                         chckBxFbhMitDG.setSelected(true);
                         break;
                     default:
-                        System.out.println("Unbekannte Heizungs-SW-ID: " + sw);
+                        System.out.println("Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw);
                 }
             }
         }
-
-        berechneUndZeigePreisSonderwuensche();
+    }
+    
+    protected boolean[] holeIsSelectedFuerCheckboxen() {
+    	return new boolean[] {
+    			chckBxStdHeizkoerper.isSelected(),
+    			chckBxGlattHeizkoerper.isSelected(),
+    			chckBxHandtuchHeizkoerper.isSelected(),
+    			chckBxFbhOhneDG.isSelected(),
+    			chckBxFbhMitDG.isSelected()
+    	};
     }
 
-    /** Gesamtpreis berechnen und anzeigen. */
+    /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     protected void berechneUndZeigePreisSonderwuensche() {
         double preis = 0.0;
 
@@ -180,20 +181,21 @@ public class HeizungView extends BasisView {
         Vector<Integer> v = new Vector<>();
 
         if (chckBxStdHeizkoerper.isSelected())
-            v.add(SW_STD_HEIZKOERPER);
+            v.add(Sw.STD_HEIZKOERPER.id);
         if (chckBxGlattHeizkoerper.isSelected())
-            v.add(SW_GLATT_HEIZKOERPER);
+            v.add(Sw.GLATT_HEIZKOERPER.id);
         if (chckBxHandtuchHeizkoerper.isSelected())
-            v.add(SW_HANDTUCH);
+            v.add(Sw.HANDTUCH.id);
         if (chckBxFbhOhneDG.isSelected())
-            v.add(SW_FBH_OHNE_DG);
+            v.add(Sw.FBH_OHNE_DG.id);
         if (chckBxFbhMitDG.isSelected())
-            v.add(SW_FBH_MIT_DG);
+            v.add(Sw.FBH_MIT_DG.id);
 
         int[] heizungSw = new int[v.size()];
         for (int i = 0; i < v.size(); i++)
             heizungSw[i] = v.get(i);
-
+        
+        // Control kontrolliert Konstellation
         heizungControl.speichereSonderwuensche(heizungSw);
     }
 }

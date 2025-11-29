@@ -97,7 +97,7 @@ public class FliesenView extends BasisView {
 		}
 	}
 	
-	public boolean[] holeFliesenCheckboxenIsSelected() {
+	protected boolean[] holeIsSelectedFuerCheckboxen() {
 		return new boolean[] {
 				cb701.isSelected(),
 				cb702.isSelected(),

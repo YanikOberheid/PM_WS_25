@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import business.kunde.DatabaseConnection;
 import business.kunde.SonderwuenscheDAO;
 import business.kunde.SonderwuenscheDAOImplementation;
+import business.kunde.Sw;
+import business.kunde.SwKategorie;
 
 /**
  * JUnit-Tests für die Heizungs-Sonderwünsche (Kategorie 50).
@@ -23,10 +25,10 @@ public class SonderwuenscheHeizungTest {
     private SonderwuenscheDAO dao;
 
     private final int TEST_HAUSNUMMER = 3; // Hausnummer nur für Tests, frei wählbar
-    private final int HEIZUNG_KATEGORIE = 50;
+    private final int HEIZUNG_KATEGORIE = SwKategorie.HEIZKOERPER.id;
 
     // eine konkrete Heizungs-ID 
-    private final int HEIZUNG_ID_STD_HEIZKOERPER = 13;
+    private final int HEIZUNG_ID_STD_HEIZKOERPER = Sw.STD_HEIZKOERPER.id;
 
     // optional: weitere Heizungs-IDs, falls gebraucht
     // private final int HEIZUNG_ID_GLATT = 14;
