@@ -73,62 +73,62 @@ public class GrundrissView extends BasisView{
     /* initialisiert die Steuerelemente auf der Maske */
     protected void initKomponenten(){
     	super.initKomponenten(); 
-       	super.getLblSonderwunsch().setText("Grundriss-Varianten");
+       	getLblSonderwunsch().setText("Grundriss-Varianten");
        	
        	// super.getGridPaneSonderwunsch().add(Element, Spalte, Zeile);
        	// Zeile 1
-       	super.getGridPaneSonderwunsch().add(lblWandKueche, 0, 1);
-    	super.getGridPaneSonderwunsch().add(txtPreisWandKueche, 1, 1);
+       	getGridPaneSonderwunsch().add(lblWandKueche, 0, 1);
+    	getGridPaneSonderwunsch().add(txtPreisWandKueche, 1, 1);
     	txtPreisWandKueche.setEditable(false);
     	txtPreisWandKueche.setText("" + Sw.WAND_KUECHE.bes);
-    	super.getGridPaneSonderwunsch().add(lblWandKuecheEuro, 2, 1);
-    	super.getGridPaneSonderwunsch().add(chckBxWandKueche, 3, 1);
+    	getGridPaneSonderwunsch().add(lblWandKuecheEuro, 2, 1);
+    	getGridPaneSonderwunsch().add(chckBxWandKueche, 3, 1);
     	
     	// Zeile 2
-    	super.getGridPaneSonderwunsch().add(lblTuerKueche, 0, 2);
-    	super.getGridPaneSonderwunsch().add(txtPreisTuerKueche, 1, 2);
+    	getGridPaneSonderwunsch().add(lblTuerKueche, 0, 2);
+    	getGridPaneSonderwunsch().add(txtPreisTuerKueche, 1, 2);
     	txtPreisTuerKueche.setEditable(false);
     	txtPreisTuerKueche.setText("" + Sw.TUER_KUECHE.bes);
-    	super.getGridPaneSonderwunsch().add(lblTuerKuecheEuro, 2, 2);
-    	super.getGridPaneSonderwunsch().add(chckBxTuerKueche, 3, 2);
+    	getGridPaneSonderwunsch().add(lblTuerKuecheEuro, 2, 2);
+    	getGridPaneSonderwunsch().add(chckBxTuerKueche, 3, 2);
     	
     	// Zeile 3
-    	super.getGridPaneSonderwunsch().add(lblGrossesZimmerOG, 0, 3);
-    	super.getGridPaneSonderwunsch().add(txtPreisGrossesZimmerOG, 1, 3);
+    	getGridPaneSonderwunsch().add(lblGrossesZimmerOG, 0, 3);
+    	getGridPaneSonderwunsch().add(txtPreisGrossesZimmerOG, 1, 3);
     	txtPreisGrossesZimmerOG.setEditable(false);
     	txtPreisGrossesZimmerOG.setText("" + Sw.GROSSES_ZIMMER_OG.bes);
-    	super.getGridPaneSonderwunsch().add(lblGrossesZimmerOGEuro, 2, 3);
-    	super.getGridPaneSonderwunsch().add(chckBxGrossesZimmerOG, 3, 3);
+    	getGridPaneSonderwunsch().add(lblGrossesZimmerOGEuro, 2, 3);
+    	getGridPaneSonderwunsch().add(chckBxGrossesZimmerOG, 3, 3);
     	
     	// Zeile 4
-    	super.getGridPaneSonderwunsch().add(lblTreppenraumDG, 0, 4);
-    	super.getGridPaneSonderwunsch().add(txtPreisTreppenraumDG, 1, 4);
+    	getGridPaneSonderwunsch().add(lblTreppenraumDG, 0, 4);
+    	getGridPaneSonderwunsch().add(txtPreisTreppenraumDG, 1, 4);
     	txtPreisTreppenraumDG.setEditable(false);
     	txtPreisTreppenraumDG.setText("" + Sw.TREPPENRAUM_DG.bes);
-		super.getGridPaneSonderwunsch().add(lblTreppenraumDGEuro, 2, 4);
-    	super.getGridPaneSonderwunsch().add(chckBxTreppenraumDG, 3, 4);
+		getGridPaneSonderwunsch().add(lblTreppenraumDGEuro, 2, 4);
+    	getGridPaneSonderwunsch().add(chckBxTreppenraumDG, 3, 4);
     	
     	// Zeile 5
-    	super.getGridPaneSonderwunsch().add(lblVorrichtungBadDG, 0, 5);
-    	super.getGridPaneSonderwunsch().add(txtPreisVorrichtungBadDG, 1, 5);
+    	getGridPaneSonderwunsch().add(lblVorrichtungBadDG, 0, 5);
+    	getGridPaneSonderwunsch().add(txtPreisVorrichtungBadDG, 1, 5);
     	txtPreisVorrichtungBadDG.setEditable(false);
     	txtPreisVorrichtungBadDG.setText("" + Sw.VORRICHTUNG_BAD_DG.bes);
-		super.getGridPaneSonderwunsch().add(lblVorrichtungBadDGEuro, 2, 5);
-    	super.getGridPaneSonderwunsch().add(chckBxVorrichtungBadDG, 3, 5);
+		getGridPaneSonderwunsch().add(lblVorrichtungBadDGEuro, 2, 5);
+    	getGridPaneSonderwunsch().add(chckBxVorrichtungBadDG, 3, 5);
     	
     	// Zeile 6
-    	super.getGridPaneSonderwunsch().add(lblAusfuehrungBadDG, 0, 6);
-    	super.getGridPaneSonderwunsch().add(txtPreisAusfuehrungBadDG, 1, 6);
+    	getGridPaneSonderwunsch().add(lblAusfuehrungBadDG, 0, 6);
+    	getGridPaneSonderwunsch().add(txtPreisAusfuehrungBadDG, 1, 6);
 		txtPreisAusfuehrungBadDG.setEditable(false);
 		txtPreisAusfuehrungBadDG.setText("" + Sw.AUSFUEHRUNG_BAD_DG.bes);
-		super.getGridPaneSonderwunsch().add(lblAusfuehrungBadDGEuro, 2, 6);
-    	super.getGridPaneSonderwunsch().add(chckBxAusfuehrungBadDG, 3, 6);
+		getGridPaneSonderwunsch().add(lblAusfuehrungBadDGEuro, 2, 6);
+    	getGridPaneSonderwunsch().add(chckBxAusfuehrungBadDG, 3, 6);
     	
     	// Gesamtpreis (Zeile 7) - aus BasisView
-        super.getGridPaneSonderwunsch().add(lblGesamt, 0, 7);
-        super.getGridPaneSonderwunsch().add(txtGesamt, 1, 7);
+        getGridPaneSonderwunsch().add(lblGesamt, 0, 7);
+        getGridPaneSonderwunsch().add(txtGesamt, 1, 7);
         txtGesamt.setEditable(false);
-        super.getGridPaneSonderwunsch().add(lblGesamtEuro, 2, 7);
+        getGridPaneSonderwunsch().add(lblGesamtEuro, 2, 7);
     }  
     
     /**
@@ -189,8 +189,7 @@ public class GrundrissView extends BasisView{
     			chckBxGrossesZimmerOG.isSelected(),
     			chckBxTreppenraumDG.isSelected(),
     			chckBxVorrichtungBadDG.isSelected(),
-    			chckBxAusfuehrungBadDG.isSelected()
-    	};
+    			chckBxAusfuehrungBadDG.isSelected()};
     }
     
     @Override
@@ -218,7 +217,8 @@ public class GrundrissView extends BasisView{
     }
     
  	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
-  	protected void berechneUndZeigePreisSonderwuensche(){
+  	@Override
+    protected void berechneUndZeigePreisSonderwuensche(){
   		grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuIntArray());
   		
   		double preis = 0.0;
@@ -233,33 +233,15 @@ public class GrundrissView extends BasisView{
   		txtGesamt.setText(String.format("%.2f", preis));
   	}
   	
-   	/* speichert die ausgesuchten Sonderwuensche in der Datenbank ab */
+  	/**
+	 * Wird von BasisView-Button "Speichern" aufgerufen.
+	 * Übergibt die Auswahl zum Speichern an Control.
+	 */
+  	@Override
   	protected void speichereSonderwuensche(){
- 		// Es wird erst die Methode pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw)
-  		// aus dem Control aufgerufen, dann die Sonderwuensche gespeichert.
-  		
-  		// Sammle Sonderwunsch-IDs angekreuzter Checkboxen
-  		Vector<Integer> v = new Vector<Integer>();
-  		if (chckBxWandKueche.isSelected())
-  			v.add(Sw.WAND_KUECHE.id);
-  		if (chckBxTuerKueche.isSelected())
-  			v.add(Sw.TUER_KUECHE.id);
-  		if (chckBxGrossesZimmerOG.isSelected())
-  			v.add(Sw.GROSSES_ZIMMER_OG.id);
-  		if (chckBxTreppenraumDG.isSelected())
-  			v.add(Sw.TREPPENRAUM_DG.id);
-  		if (chckBxVorrichtungBadDG.isSelected())
-  			v.add(Sw.VORRICHTUNG_BAD_DG.id);
-  		if (chckBxAusfuehrungBadDG.isSelected())
-  			v.add(Sw.AUSFUEHRUNG_BAD_DG.id);
-  		
-  		// Kopiere in int[]
-  		int[] grundrissSw = new int[v.size()];
-  		for (int i = 0; i < v.size(); i++)
-  			grundrissSw[i] = v.get(i);
   		
   		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
-  		this.grundrissControl.speichereSonderwuensche(grundrissSw);
+  		this.grundrissControl.speichereSonderwuensche(checkboxenZuIntArray());
   	}
  }
 

@@ -40,7 +40,7 @@ public class KundeControl {
      * Das View wird sichtbar gemacht.
      */
     private String keinKundeTitel = "Kein Kunde ausgewählt";
-    private String keinKundeMeldung = "Bitte wählen oder erstellen Sie einen Kunden.");
+    private String keinKundeMeldung = "Bitte wählen oder erstellen Sie einen Kunden.";
     public void oeffneGrundrissControl(){
     	if (kundeModel.getKunde() == null)
     		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
