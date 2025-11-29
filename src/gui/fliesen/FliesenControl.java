@@ -3,10 +3,9 @@ package gui.fliesen;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import business.kunde.KundeModel;
+import business.kunde.SwKategorie;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-// Importiere hier deine FliesenView Klasse, sobald sie erstellt ist
-// import gui.fliesen.FliesenView; 
 
 /**
  * Klasse, welche das Fenster mit den Sonderwünschen zu den Fliesen kontrolliert.
@@ -21,28 +20,17 @@ public class FliesenControl {
      * Erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
      * Fenster für die Sonderwünsche zu den Fliesen.
      */
-    public FliesenControl(KundeModel kundeModel) {  
+    public FliesenControl() {  
         Stage stageFliesen = new Stage();
         stageFliesen.initModality(Modality.APPLICATION_MODAL);
-        this.kundeModel = kundeModel;
+        this.kundeModel = KundeModel.getInstance();
         this.fliesenView = new FliesenView(this, stageFliesen);
     }
         
     /**
      * Macht das FliesenView-Objekt sichtbar.
      */
-    public void oeffneFliesenView(){ 
-        // 1. Check: Is a customer loaded?
-        if (kundeModel.getKunde() == null) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Warnung");
-            alert.setHeaderText("Kein Kunde ausgewählt");
-            alert.setContentText("Bitte wählen oder erstellen Sie zuerst einen Kunden im Hauptfenster.");
-            alert.showAndWait();
-            return; // Stop here, do not open the window
-        }
-
-        // 2. Load data and open window
+    public void oeffneFliesenView(){
         this.leseFliesenSonderwuensche();
         this.fliesenView.oeffneFliesenView();
     }
@@ -51,14 +39,9 @@ public class FliesenControl {
      * Liest die Sonderwünsche aus der Datenbank und aktualisiert die View.
      */
     public void leseFliesenSonderwuensche(){
-        // ID für die Kategorie "Fliesen" festlegen (Beispiel: 1)
-        int kategorieID = 70; 
-        
-        // Bestehende Auswahl aus der DB laden
-        int[] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwAusDb(kategorieID);
-        
-        if (ausgewaehlteSw != null) {
-            this.fliesenView.updateFliesenCheckboxen(ausgewaehlteSw);
+        int[] swFliesen = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.FLIESEN.id);
+        if (swFliesen != null) {
+            this.fliesenView.updateFliesenCheckboxen(swFliesen);
         }
     } 
 
@@ -67,20 +50,24 @@ public class FliesenControl {
      * @param fliesenSw Array der IDs, die in der View ausgewählt wurden.
      */
     public void speichereSonderwuensche(int[] fliesenSw) {
+    	// Erst Konstellation prüfen
+    	if (!pruefeKonstellationFliesen(fliesenSw)) {
+    		// Konflikt -> nicht speichern
+    		return;
+    	}
+    	
         try {
-            // Kategorie-ID für Fliesen (muss mit der DB-Tabelle übereinstimmen)
-            int fliesenKategorieID = 70;
-
-            // Aufruf der neuen "Smart Save" Methode im Model
-            // Dies verhindert, dass Grundriss- oder andere Sonderwünsche gelöscht werden.
-            this.kundeModel.speichereSonderwuenscheFuerKategorie(fliesenSw, fliesenKategorieID);
-            
-            // Optional: Erfolgsmeldung oder Fenster schließen
-            // this.fliesenView.schliesseFenster(); 
+        	this.kundeModel.speichereSonderwuenscheFuerKategorie(
+        			fliesenSw,
+        			SwKategorie.FLIESEN.id);
 
         } catch(Exception exc) {
             exc.printStackTrace();
             System.out.println("Fehler beim Speichern der Fliesen-Sonderwünsche.");
         }
+    }
+    
+    public boolean pruefeKonstellationFliesen(int[] ausgewaehlteSw) {
+    	return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
     }
 }

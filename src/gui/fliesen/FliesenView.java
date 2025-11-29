@@ -3,138 +3,232 @@ package gui.fliesen;
 import gui.basis.BasisView;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
+import java.util.Vector;
+
+import business.kunde.Sw;
 
 public class FliesenView extends BasisView {
 
     private FliesenControl fliesenControl;
+
+	// --- GUI-Elemente ---
+	private Label lblFKuecheEGOhne =
+			new Label(Sw.F_KUECHE_EG_OHNE.bes);
+    private TextField txtFKuecheEGOhne = new TextField();
+    private Label lblFKuecheEGOhneEuro = new Label("Euro");
+    private CheckBox chckBxFKuecheEGOhne = new CheckBox();
+	
+    private Label lblFBadOGOhne =
+			new Label(Sw.F_BAD_OG_OHNE.bes);
+    private TextField txtFBadOGOhne = new TextField();
+    private Label lblFBadOGOhneEuro = new Label("Euro");
+    private CheckBox chckBxFBadOGOhne = new CheckBox();
     
-    private static final int SW_7_1 = 701;
-	private static final int SW_7_2 = 702;
-	private static final int SW_7_3 = 703;
-	private static final int SW_7_4 = 704;
-	private static final int SW_7_5 = 705;
-	private static final int SW_7_6 = 706;
+    private Label lblFKuecheEGGross =
+			new Label(Sw.F_KUECHE_EG_GROSS.bes);
+    private TextField txtFKuecheEGGross = new TextField();
+    private Label lblFKuecheEGGrossEuro = new Label("Euro");
+    private CheckBox chckBxFKuecheEGGross = new CheckBox();
+    
+    private Label lblFBadOGGross =
+			new Label(Sw.F_BAD_OG_GROSS.bes);
+    private TextField txtFBadOGGross = new TextField();
+    private Label lblFBadOGGrossEuro = new Label("Euro");
+    private CheckBox chckBxFBadOGGross = new CheckBox();
+    
+    private Label lblFBadDG =
+			new Label(Sw.F_BAD_DG.bes);
+    private TextField txtFBadDG = new TextField();
+    private Label lblFBadDGEuro = new Label("Euro");
+    private CheckBox chckBxFBadDG = new CheckBox();
+    
+    private Label lblFBadDGGross =
+			new Label(Sw.F_BAD_DG_GROSS.bes);
+    private TextField txtFBadDGGross = new TextField();
+    private Label lblFBadDGGrossEuro = new Label("Euro");
+    private CheckBox chckBxFBadDGGross = new CheckBox();
 
-	// GUI-Elemente
-	private final Label lbl701 = new Label("7.1 Keine Fliesen im Küchenbereich des EG");
-	private final CheckBox cb701 = new CheckBox();
-
-	private final Label lbl702 = new Label("7.2 Keine Fliesen im Bad des OG");
-	private final CheckBox cb702 = new CheckBox();
-
-	private final Label lbl703 = new Label("7.3 Mehrpreis bei großformatige Fliesen im Küchenbereich des EG");
-	private final CheckBox cb703 = new CheckBox();
-
-	private final Label lbl704 = new Label("7.4 Mehrpreis bei großformatige Fliesen im Bad des OG");
-	private final CheckBox cb704 = new CheckBox();
-
-	private final Label lbl705 = new Label("7.5 Fliesen im Bad des DG");
-	private final CheckBox cb705 = new CheckBox();
-
-	private final Label lbl706 = new Label("7.6 Mehrpreis bei großformatige Fliesen im Bad des DG");
-	private final CheckBox cb706 = new CheckBox();
-
-    public FliesenView(FliesenControl fliesenControl, Stage stage) {
-        super(stage);
+    public FliesenView(FliesenControl fliesenControl, Stage fliesenStage) {
+        super(fliesenStage);
         this.fliesenControl = fliesenControl;
-        stage.setTitle("Sonderwünsche zu Fliesen");
+        fliesenStage.setTitle("Sonderwünsche zu Fliesen");
         
-        this.initKomponenten();
+        initKomponenten();
+        leseFliesenSonderwuensche();
     }
 
     protected void initKomponenten() {
     	super.initKomponenten();
 		super.getLblSonderwunsch().setText("Fliesen-Varianten");
 
-		int row = 1;
-		getGridPaneSonderwunsch().add(lbl701, 0, row);
-		getGridPaneSonderwunsch().add(cb701, 3, row++);
-		getGridPaneSonderwunsch().add(lbl702, 0, row);
-		getGridPaneSonderwunsch().add(cb702, 3, row++);
-		getGridPaneSonderwunsch().add(lbl703, 0, row);
-		getGridPaneSonderwunsch().add(cb703, 3, row++);
-		getGridPaneSonderwunsch().add(lbl704, 0, row);
-		getGridPaneSonderwunsch().add(cb704, 3, row++);
-		getGridPaneSonderwunsch().add(lbl705, 0, row);
-		getGridPaneSonderwunsch().add(cb705, 3, row++);
-		getGridPaneSonderwunsch().add(lbl706, 0, row);
-		getGridPaneSonderwunsch().add(cb706, 3, row++);
+		// super.getGridPaneSonderwunsch().add(Element, Spalte, Zeile);
+        // Zeile 1
+		getGridPaneSonderwunsch().add(lblFKuecheEGOhne, 0, 1);
+        getGridPaneSonderwunsch().add(txtFKuecheEGOhne, 1, 1);
+        txtFKuecheEGOhne.setEditable(false);
+        txtFKuecheEGOhne.setText("" + Sw.F_KUECHE_EG_OHNE.preis);
+        getGridPaneSonderwunsch().add(lblFKuecheEGOhneEuro, 2, 1);
+        getGridPaneSonderwunsch().add(chckBxFKuecheEGOhne, 3, 1);
+        
+        // Zeile 2
+     	getGridPaneSonderwunsch().add(lblFBadOGOhne, 0, 2);
+        getGridPaneSonderwunsch().add(txtFBadOGOhne, 1, 2);
+        txtFBadOGOhne.setEditable(false);
+        txtFBadOGOhne.setText("" + Sw.F_BAD_OG_OHNE.preis);
+        getGridPaneSonderwunsch().add(lblFBadOGOhneEuro, 2, 2);
+        getGridPaneSonderwunsch().add(chckBxFBadOGOhne, 3, 2);
+
+        // Zeile 3
+     	getGridPaneSonderwunsch().add(lblFKuecheEGGross, 0, 3);
+        getGridPaneSonderwunsch().add(txtFKuecheEGGross, 1, 3);
+        txtFKuecheEGGross.setEditable(false);
+        txtFKuecheEGGross.setText("" + Sw.F_KUECHE_EG_GROSS.preis);
+        getGridPaneSonderwunsch().add(lblFKuecheEGGrossEuro, 2, 3);
+        getGridPaneSonderwunsch().add(chckBxFKuecheEGGross, 3, 3);
+        
+        // Zeile 4
+     	getGridPaneSonderwunsch().add(lblFBadOGGross, 0, 4);
+        getGridPaneSonderwunsch().add(txtFBadOGGross, 1, 4);
+        txtFBadOGGross.setEditable(false);
+        txtFBadOGGross.setText("" + Sw.F_BAD_OG_GROSS.preis);
+        getGridPaneSonderwunsch().add(lblFBadOGGrossEuro, 2, 4);
+        getGridPaneSonderwunsch().add(chckBxFBadOGGross, 3, 4);
+        
+        // Zeile 5
+     	getGridPaneSonderwunsch().add(lblFBadDG, 0, 5);
+        getGridPaneSonderwunsch().add(txtFBadDG, 1, 5);
+        txtFBadDG.setEditable(false);
+        txtFBadDG.setText("" + Sw.F_BAD_DG.preis);
+        getGridPaneSonderwunsch().add(lblFBadDGEuro, 2, 5);
+        getGridPaneSonderwunsch().add(chckBxFBadDG, 3, 5);
+        
+        // Zeile 6
+     	getGridPaneSonderwunsch().add(lblFBadDGGross, 0, 6);
+        getGridPaneSonderwunsch().add(txtFBadDGGross, 1, 6);
+        txtFBadDGGross.setEditable(false);
+        txtFBadDGGross.setText("" + Sw.F_BAD_DG_GROSS.preis);
+        getGridPaneSonderwunsch().add(lblFBadDGGrossEuro, 2, 6);
+        getGridPaneSonderwunsch().add(chckBxFBadDGGross, 3, 6);
+        
+        // Gesamtpreis (Zeile 7) - aus BasisView
+        getGridPaneSonderwunsch().add(lblGesamt, 0, 7);
+        getGridPaneSonderwunsch().add(txtGesamt, 1, 7);
+        txtGesamt.setEditable(false);
+        getGridPaneSonderwunsch().add(lblGesamtEuro, 2, 7);
     }
 
     public void oeffneFliesenView() {
         super.oeffneBasisView();
     }
+    
+    private void leseFliesenSonderwuensche() {
+    	fliesenControl.leseFliesenSonderwuensche();
+    }
 
-    /** Setzt die Haken in der GUI basierend auf den geladenen Daten aus der DB. */
-	public void updateFliesenCheckboxen(int[] ausgewaehlteSw) {
-		// Reset
-		cb701.setSelected(false);
-		cb702.setSelected(false);
-		cb703.setSelected(false);
-		cb704.setSelected(false);
-		cb705.setSelected(false);
-		cb706.setSelected(false);
+    /** Checkboxen anhand der gespeicherten IDs setzen. */
+    @Override
+    protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
+    	// Alles zurücksetzen
+    	chckBxFKuecheEGOhne.setSelected(false);
+    	chckBxFBadOGOhne.setSelected(false);
+    	chckBxFKuecheEGGross.setSelected(false);
+    	chckBxFBadOGGross.setSelected(false);
+    	chckBxFBadDG.setSelected(false);
+    	chckBxFBadDGGross.setSelected(false);
 
-		if (ausgewaehlteSw == null)
-			return;
-
-		for (int id : ausgewaehlteSw) {
-			if (id == SW_7_1)
-				cb701.setSelected(true);
-			else if (id == SW_7_2)
-				cb702.setSelected(true);
-			else if (id == SW_7_3)
-				cb703.setSelected(true);
-			else if (id == SW_7_4)
-				cb704.setSelected(true);
-			else if (id == SW_7_5)
-				cb705.setSelected(true);
-			else if (id == SW_7_6)
-				cb706.setSelected(true);
+    	// Checkboxen für vorkommende IDs ankreuzen
+        if (ausgewaehlteSw == null) return;
+        for (int sw : ausgewaehlteSw) {
+            switch (Sw.findeMitId(sw)) {
+            	case F_KUECHE_EG_OHNE:
+            		chckBxFKuecheEGOhne.setSelected(true);
+            		break;
+            	case F_BAD_OG_OHNE:
+            		chckBxFBadOGOhne.setSelected(true);
+            		break;
+            	case F_KUECHE_EG_GROSS:
+            		chckBxFKuecheEGGross.setSelected(true);
+            		break;
+            	case F_BAD_OG_GROSS:
+            		chckBxFBadOGGross.setSelected(true);
+            		break;
+            	case F_BAD_DG:
+            		chckBxFBadDG.setSelected(true);
+            		break;
+            	case F_BAD_DG_GROSS:
+            		chckBxFBadDGGross.setSelected(true);
+            		break;
+            	default:
+            		System.out.println(
+                    		"Unbekannte Sonderwunsch-ID zu Fliesen: " + sw);
+            		break;
+            }
 		}
 	}
 	
 	protected boolean[] holeIsSelectedFuerCheckboxen() {
 		return new boolean[] {
-				cb701.isSelected(),
-				cb702.isSelected(),
-				cb703.isSelected(),
-				cb704.isSelected(),
-				cb705.isSelected(),
-				cb706.isSelected(),
+				chckBxFKuecheEGOhne.isSelected(),
+		    	chckBxFBadOGOhne.isSelected(),
+		    	chckBxFKuecheEGGross.isSelected(),
+		    	chckBxFBadOGGross.isSelected(),
+		    	chckBxFBadDG.isSelected(),
+		    	chckBxFBadDGGross.isSelected(),
 				};
 	}
-
-   
-    /**
-	 * Wird von BasisView-Button "Speichern" aufgerufen. Übergibt die Auswahl an das
-	 * Control.
-	 */
+	
 	@Override
-	protected void speichereSonderwuensche() {
-		ArrayList<Integer> auswahl = new ArrayList<>();
-		if (cb701.isSelected())
-			auswahl.add(SW_7_1);
-		if (cb702.isSelected())
-			auswahl.add(SW_7_2);
-		if (cb703.isSelected())
-			auswahl.add(SW_7_3);
-		if (cb704.isSelected())
-			auswahl.add(SW_7_4);
-		if (cb705.isSelected())
-			auswahl.add(SW_7_5);
-		if (cb706.isSelected())
-			auswahl.add(SW_7_6);
-		
-		int[] auswahlArray = auswahl.stream().mapToInt(i -> i).toArray();
-		fliesenControl.speichereSonderwuensche(auswahlArray);
-	}
+    protected int[] checkboxenZuIntArray() {
+    	Vector<Integer> v = new Vector<>();
+
+        if (chckBxFKuecheEGOhne.isSelected())
+            v.add(Sw.F_KUECHE_EG_GROSS.id);
+        if (chckBxFBadOGOhne.isSelected())
+            v.add(Sw.F_BAD_OG_OHNE.id);
+        if (chckBxFKuecheEGGross.isSelected())
+            v.add(Sw.F_KUECHE_EG_GROSS.id);
+        if (chckBxFBadOGGross.isSelected())
+            v.add(Sw.F_BAD_OG_GROSS.id);
+        if (chckBxFBadDG.isSelected())
+            v.add(Sw.F_BAD_DG.id);
+        if (chckBxFBadDGGross.isSelected())
+        	v.add(Sw.F_BAD_DG_GROSS.id);
+
+        int[] fliesenSw = new int[v.size()];
+        for (int i = 0; i < v.size(); i++)
+            fliesenSw[i] = v.get(i);
+        
+        return fliesenSw;
+    }
+	
 
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
-        // Optional: Preisberechnung hier implementieren
+    	if (!fliesenControl.pruefeKonstellationFliesen(checkboxenZuIntArray()))
+    		return;
+        
+    	double preis = 0.0;
+
+        if (chckBxFKuecheEGOhne.isSelected())   preis += Sw.F_KUECHE_EG_OHNE.preis;
+        if (chckBxFBadOGOhne.isSelected()) 		preis += Sw.F_BAD_OG_OHNE.preis;
+        if (chckBxFKuecheEGGross.isSelected()) 	preis += Sw.F_KUECHE_EG_GROSS.preis;
+        if (chckBxFBadOGGross.isSelected())     preis += Sw.F_BAD_OG_GROSS.preis;
+        if (chckBxFBadDG.isSelected())       	preis += Sw.F_BAD_DG.preis;
+        if (chckBxFBadDGGross.isSelected())		preis += Sw.F_BAD_DG_GROSS.preis;
+        
+        txtGesamt.setText(String.format("%.2f", preis));
     }
+    
+    /**
+	 * Wird von BasisView-Button "Speichern" aufgerufen.
+	 * Übergibt die Auswahl zum Speichern an Control.
+	 */
+	@Override
+	protected void speichereSonderwuensche() {
+		// Control kontrolliert Konstellation
+		fliesenControl.speichereSonderwuensche(checkboxenZuIntArray());
+	}
 }

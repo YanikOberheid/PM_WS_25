@@ -36,21 +36,39 @@ public class KundeControl {
     }
     
     /*
-     * erstellt, falls nicht vorhanden, ein Grundriss-Control-Objekt.
-     * Das GrundrissView wird sichtbar gemacht.
+     * Erstellen, falls nicht vorhanden, ein Control-Objekt.
+     * Das View wird sichtbar gemacht.
      */
+    private String keinKundeTitel = "Kein Kunde ausgewählt";
+    private String keinKundeMeldung = "Bitte wählen oder erstellen Sie einen Kunden.";
     public void oeffneGrundrissControl(){
+    	if (kundeModel.getKunde() == null)
+    		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+    	
     	if (this.grundrissControl == null){
     		this.grundrissControl = new GrundrissControl();
       	}
     	this.grundrissControl.oeffneGrundrissView();
     }
+    
     public void oeffneHeizungControl() {
+    	if (kundeModel.getKunde() == null)
+    		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
         if (this.heizungControl == null) {
        
-            this.heizungControl = new HeizungControl(kundeModel);
+            this.heizungControl = new HeizungControl();
         }
         this.heizungControl.oeffneHeizungView();
+    }
+    
+    public void oeffneFliesenControl(){
+    	if (kundeModel.getKunde() == null)
+    		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+        
+    	if (this.fliesenControl == null){
+            this.fliesenControl = new FliesenControl();
+        }
+        this.fliesenControl.oeffneFliesenView();
     }
 
 	/**
@@ -77,17 +95,6 @@ public class KundeControl {
     		this.kundeView.zeigeFehlermeldung("Exception",
                 "Unbekannter Fehler");
     	}
-    }
-    
-    /**
-     * Erstellt, falls nicht vorhanden, ein Fliesen-Control-Objekt.
-     * Das FliesenView wird sichtbar gemacht.
-     */
-    public void oeffneFliesenControl(){
-        if (this.fliesenControl == null){
-            this.fliesenControl = new FliesenControl(kundeModel);
-        }
-        this.fliesenControl.oeffneFliesenView();
     }
     
     /**

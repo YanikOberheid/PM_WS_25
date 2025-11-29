@@ -61,50 +61,50 @@ public class HeizungView extends BasisView {
         
         // super.getGridPaneSonderwunsch().add(Element, Spalte, Zeile);
         // Zeile 1
-        super.getGridPaneSonderwunsch().add(lblStdHeizkoerper, 0, 1);
-        super.getGridPaneSonderwunsch().add(txtStdHeizkoerper, 1, 1);
+        getGridPaneSonderwunsch().add(lblStdHeizkoerper, 0, 1);
+        getGridPaneSonderwunsch().add(txtStdHeizkoerper, 1, 1);
         txtStdHeizkoerper.setEditable(false);
         txtStdHeizkoerper.setText("" + Sw.STD_HEIZKOERPER.preis);
-        super.getGridPaneSonderwunsch().add(lblStdHeizkoerperEuro, 2, 1);
-        super.getGridPaneSonderwunsch().add(chckBxStdHeizkoerper, 3, 1);
+        getGridPaneSonderwunsch().add(lblStdHeizkoerperEuro, 2, 1);
+        getGridPaneSonderwunsch().add(chckBxStdHeizkoerper, 3, 1);
 
         // Zeile 2
-        super.getGridPaneSonderwunsch().add(lblGlattHeizkoerper, 0, 2);
-        super.getGridPaneSonderwunsch().add(txtGlattHeizkoerper, 1, 2);
+        getGridPaneSonderwunsch().add(lblGlattHeizkoerper, 0, 2);
+        getGridPaneSonderwunsch().add(txtGlattHeizkoerper, 1, 2);
         txtGlattHeizkoerper.setEditable(false);
         txtGlattHeizkoerper.setText("" + Sw.GLATT_HEIZKOERPER.preis);
-        super.getGridPaneSonderwunsch().add(lblGlattHeizkoerperEuro, 2, 2);
-        super.getGridPaneSonderwunsch().add(chckBxGlattHeizkoerper, 3, 2);
+        getGridPaneSonderwunsch().add(lblGlattHeizkoerperEuro, 2, 2);
+        getGridPaneSonderwunsch().add(chckBxGlattHeizkoerper, 3, 2);
 
         // Zeile 3
-        super.getGridPaneSonderwunsch().add(lblHandtuchHeizkoerper, 0, 3);
-        super.getGridPaneSonderwunsch().add(txtHandtuchHeizkoerper, 1, 3);
+        getGridPaneSonderwunsch().add(lblHandtuchHeizkoerper, 0, 3);
+        getGridPaneSonderwunsch().add(txtHandtuchHeizkoerper, 1, 3);
         txtHandtuchHeizkoerper.setEditable(false);
         txtHandtuchHeizkoerper.setText("" + Sw.HANDTUCH.preis);
-        super.getGridPaneSonderwunsch().add(lblHandtuchHeizkoerperEuro, 2, 3);
-        super.getGridPaneSonderwunsch().add(chckBxHandtuchHeizkoerper, 3, 3);
+        getGridPaneSonderwunsch().add(lblHandtuchHeizkoerperEuro, 2, 3);
+        getGridPaneSonderwunsch().add(chckBxHandtuchHeizkoerper, 3, 3);
 
         // Zeile 4
-        super.getGridPaneSonderwunsch().add(lblFbhOhneDG, 0, 4);
-        super.getGridPaneSonderwunsch().add(txtFbhOhneDG, 1, 4);
+        getGridPaneSonderwunsch().add(lblFbhOhneDG, 0, 4);
+        getGridPaneSonderwunsch().add(txtFbhOhneDG, 1, 4);
         txtFbhOhneDG.setEditable(false);
         txtFbhOhneDG.setText("" + Sw.FBH_OHNE_DG.preis);
-        super.getGridPaneSonderwunsch().add(lblFbhOhneDGEuro, 2, 4);
-        super.getGridPaneSonderwunsch().add(chckBxFbhOhneDG, 3, 4);
+        getGridPaneSonderwunsch().add(lblFbhOhneDGEuro, 2, 4);
+        getGridPaneSonderwunsch().add(chckBxFbhOhneDG, 3, 4);
 
         // Zeile 5
-        super.getGridPaneSonderwunsch().add(lblFbhMitDG, 0, 5);
-        super.getGridPaneSonderwunsch().add(txtFbhMitDG, 1, 5);
+        getGridPaneSonderwunsch().add(lblFbhMitDG, 0, 5);
+        getGridPaneSonderwunsch().add(txtFbhMitDG, 1, 5);
         txtFbhMitDG.setEditable(false);
         txtFbhMitDG.setText("" + Sw.FBH_MIT_DG.preis);
-        super.getGridPaneSonderwunsch().add(lblFbhMitDGEuro, 2, 5);
-        super.getGridPaneSonderwunsch().add(chckBxFbhMitDG, 3, 5);
+        getGridPaneSonderwunsch().add(lblFbhMitDGEuro, 2, 5);
+        getGridPaneSonderwunsch().add(chckBxFbhMitDG, 3, 5);
 
         // Gesamtpreis (Zeile 6) - aus BasisView
-        super.getGridPaneSonderwunsch().add(lblGesamt, 0, 6);
-        super.getGridPaneSonderwunsch().add(txtGesamt, 1, 6);
+        getGridPaneSonderwunsch().add(lblGesamt, 0, 6);
+        getGridPaneSonderwunsch().add(txtGesamt, 1, 6);
         txtGesamt.setEditable(false);
-        super.getGridPaneSonderwunsch().add(lblGesamtEuro, 2, 6);
+        getGridPaneSonderwunsch().add(lblGesamtEuro, 2, 6);
     }
 
     public void oeffneHeizungView() {
@@ -153,13 +153,11 @@ public class HeizungView extends BasisView {
     
     @Override
     protected boolean[] holeIsSelectedFuerCheckboxen() {
-    	return new boolean[] {
-    			chckBxStdHeizkoerper.isSelected(),
+    	return new boolean[] {chckBxStdHeizkoerper.isSelected(),
     			chckBxGlattHeizkoerper.isSelected(),
     			chckBxHandtuchHeizkoerper.isSelected(),
     			chckBxFbhOhneDG.isSelected(),
-    			chckBxFbhMitDG.isSelected()
-    	};
+    			chckBxFbhMitDG.isSelected()};
     }
     
     @Override
@@ -185,6 +183,7 @@ public class HeizungView extends BasisView {
     }
 
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
+    @Override
     protected void berechneUndZeigePreisSonderwuensche() {
     	if (!heizungControl.pruefeKonstellationHeizkoerper(checkboxenZuIntArray()))
     		return;
@@ -200,26 +199,13 @@ public class HeizungView extends BasisView {
         txtGesamt.setText(String.format("%.2f", preis));
     }
 
-    /** Auswahl speichern (IDs aus den Checkboxen sammeln). */
+    /**
+	 * Wird von BasisView-Button "Speichern" aufgerufen.
+	 * Übergibt die Auswahl zum Speichern an Control.
+	 */
+    @Override
     protected void speichereSonderwuensche() {
-        Vector<Integer> v = new Vector<>();
-
-        if (chckBxStdHeizkoerper.isSelected())
-            v.add(Sw.STD_HEIZKOERPER.id);
-        if (chckBxGlattHeizkoerper.isSelected())
-            v.add(Sw.GLATT_HEIZKOERPER.id);
-        if (chckBxHandtuchHeizkoerper.isSelected())
-            v.add(Sw.HANDTUCH.id);
-        if (chckBxFbhOhneDG.isSelected())
-            v.add(Sw.FBH_OHNE_DG.id);
-        if (chckBxFbhMitDG.isSelected())
-            v.add(Sw.FBH_MIT_DG.id);
-
-        int[] heizungSw = new int[v.size()];
-        for (int i = 0; i < v.size(); i++)
-            heizungSw[i] = v.get(i);
-        
-        // Control kontrolliert Konstellation
-        heizungControl.speichereSonderwuensche(heizungSw);
+    	// Control kontrolliert Konstellation
+        heizungControl.speichereSonderwuensche(checkboxenZuIntArray());
     }
 }
