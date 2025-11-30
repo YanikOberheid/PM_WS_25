@@ -2,44 +2,58 @@ package gui.fenster;
 
 import java.util.Vector;
 
+import business.kunde.Sw;
 import gui.basis.BasisView;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
- * Klasse, welche das Fenster mit den Sonderwuenschen zu
- * Fenstern und Außentueren bereitstellt.
+ * Fenster mit den Sonderwuenschen zu
+ * Fenstern und Außentüren
  */
 public class FensterView extends BasisView {
 
-    // Control-Objekt des Fenster-Fensters
     private FensterControl fensterControl;
 
     // GUI-Elemente
-    private Label lblSchiebetueren = new Label("Schiebetueren und Haustuer");
-    private CheckBox chckBxSchiebetuerEg = new CheckBox("3.1) Schiebetueren im EG zur Terrasse (590 Euro)");
-    private CheckBox chckBxSchiebetuerDg = new CheckBox("3.2) Schiebetueren im DG zur Dachterrasse (590 Euro)");
-    private CheckBox chckBxEinbruchschutz = new CheckBox("3.3) Erhoehter Einbruchschutz an der Haustuer (690 Euro)");
+    private Label lblSchiebetueren =
+            new Label("Schiebetueren und Haustuer");
+    private CheckBox chckBxSchiebetuerEg =
+            new CheckBox(Sw.STUEREN_TERRASSE.bes);
+    private CheckBox chckBxSchiebetuerDg =
+            new CheckBox(Sw.STUEREN_DACHTERRASSE.bes);
+    private CheckBox chckBxEinbruchschutz =
+            new CheckBox(Sw.EBS_HAUSTUER.bes);
 
-    private Label lblVorbereitung = new Label("Vorbereitung fuer elektrische Antriebe Rolllaeden");
-    private CheckBox chckBxVorbereitungEg = new CheckBox("3.4) EG (190 Euro)");
-    private CheckBox chckBxVorbereitungOg = new CheckBox("3.5) OG (190 Euro)");
-    private CheckBox chckBxVorbereitungDg = new CheckBox("3.6) DG (190 Euro)");
+    private Label lblVorbereitung =
+            new Label("Vorbereitung fuer elektrische Antriebe Rolllaeden");
+    private CheckBox chckBxVorbereitungEg =
+            new CheckBox(Sw.VEAR_EG.bes);
+    private CheckBox chckBxVorbereitungOg =
+            new CheckBox(Sw.VEAR_OG.bes);
+    private CheckBox chckBxVorbereitungDg =
+            new CheckBox(Sw.VEAR_DG.bes);
 
-    private Label lblRolllaeden = new Label("Elektrische Rolllaeden");
-    private CheckBox chckBxRollladenEg = new CheckBox("3.7) EG (990 Euro)");
-    private CheckBox chckBxRollladenOg = new CheckBox("3.8) OG (990 Euro)");
-    private CheckBox chckBxRollladenDg = new CheckBox("3.9) DG (990 Euro)");
+    private Label lblRolllaeden =
+            new Label("Elektrische Rolllaeden");
+    private CheckBox chckBxRollladenEg =
+            new CheckBox(Sw.ER_EG.bes);
+    private CheckBox chckBxRollladenOg =
+            new CheckBox(Sw.ER_OG.bes);
+    private CheckBox chckBxRollladenDg =
+            new CheckBox(Sw.ER_DG.bes);
 
-   
     public FensterView(FensterControl fensterControl, Stage fensterStage) {
         super(fensterStage);
         this.fensterControl = fensterControl;
         fensterStage.setTitle("Sonderwuensche zu Fenstern und Außentueren");
-
+        fensterStage.setWidth(650);
+        fensterStage.setHeight(600);
         this.initKomponenten();
-        this.leseFensterSonderwuensche();
+        // WICHTIG: keine Daten hier laden! Control macht das beim Öffnen.
+        // KEIN: this.leseFensterSonderwuensche();
+        //Bitte !!!
     }
 
     @Override
@@ -50,41 +64,42 @@ public class FensterView extends BasisView {
         int row = 1;
 
         // Schiebetueren und Haustuer
-        super.getGridPaneSonderwunsch().add(lblSchiebetueren, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxSchiebetuerEg, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxSchiebetuerDg, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxEinbruchschutz, 0, row++);
+        getGridPaneSonderwunsch().add(lblSchiebetueren, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxSchiebetuerEg, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxSchiebetuerDg, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxEinbruchschutz, 0, row++);
 
         row++;
 
         // Vorbereitung Rolllaeden
-        super.getGridPaneSonderwunsch().add(lblVorbereitung, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxVorbereitungEg, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxVorbereitungOg, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxVorbereitungDg, 0, row++);
+        getGridPaneSonderwunsch().add(lblVorbereitung, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxVorbereitungEg, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxVorbereitungOg, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxVorbereitungDg, 0, row++);
 
         row++;
 
         // Elektrische Rolllaeden
-        super.getGridPaneSonderwunsch().add(lblRolllaeden, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxRollladenEg, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxRollladenOg, 0, row++);
-        super.getGridPaneSonderwunsch().add(chckBxRollladenDg, 0, row++);
-    }
+        getGridPaneSonderwunsch().add(lblRolllaeden, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxRollladenEg, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxRollladenOg, 0, row++);
+        getGridPaneSonderwunsch().add(chckBxRollladenDg, 0, row++);
 
+        // Optional: Gesamtpreis wie bei Heizung
+        getGridPaneSonderwunsch().add(lblGesamt, 0, row);
+        getGridPaneSonderwunsch().add(txtGesamt, 1, row);
+        txtGesamt.setEditable(false);
+        getGridPaneSonderwunsch().add(lblGesamtEuro, 2, row);
+    }
 
     public void oeffneFensterView() {
         super.oeffneBasisView();
     }
 
-    private void leseFensterSonderwuensche() {
-        this.fensterControl.leseFensterSonderwuensche();
-    }
 
-    /**
-     * Setzt die Checkboxen entsprechend der uebergebenen Sonderwunsch-IDs.
-     */
-    protected void updateFensterCheckboxen(int[] ausgewaehlteSw) {
+    /** Checkboxen anhand der gespeicherten IDs setzen. (wie bei andere Klassen.) */
+    @Override
+    public void updateSwCheckboxen(int[] ausgewaehlteSw) {
 
         // alle auf false setzen
         chckBxSchiebetuerEg.setSelected(false);
@@ -101,110 +116,116 @@ public class FensterView extends BasisView {
             return;
         }
 
-        for (int sw : ausgewaehlteSw) {
-            if (sw < 300 || sw >= 400) {
-                continue;
-            }
+        for (int swId : ausgewaehlteSw) {
+            Sw sw = Sw.findeMitId(swId);
             switch (sw) {
-                case 301:
+                case STUEREN_TERRASSE:
                     chckBxSchiebetuerEg.setSelected(true);
                     break;
-                case 302:
+                case STUEREN_DACHTERRASSE:
                     chckBxSchiebetuerDg.setSelected(true);
                     break;
-                case 303:
-                    chckBxEinbruchschutz.setSelected(true);
+                case EBS_HAUSTUER:
+                	chckBxEinbruchschutz.setSelected(true);
                     break;
-                case 304:
+                case VEAR_EG:
                     chckBxVorbereitungEg.setSelected(true);
                     break;
-                case 305:
+                case VEAR_OG:
                     chckBxVorbereitungOg.setSelected(true);
                     break;
-                case 306:
+                case VEAR_DG:
                     chckBxVorbereitungDg.setSelected(true);
                     break;
-                case 307:
+                case ER_EG:
                     chckBxRollladenEg.setSelected(true);
                     break;
-                case 308:
+                case ER_OG:
                     chckBxRollladenOg.setSelected(true);
                     break;
-                case 309:
+                case ER_DG:
                     chckBxRollladenDg.setSelected(true);
                     break;
                 default:
-                    System.out.println("Konnte ID " + sw
-                            + " keiner Fenster-Checkbox zuordnen");
+                    System.out.println("Unbekannte Sonderwunsch-ID zu Fenstern: " + swId);
             }
         }
     }
 
- 
-
     @Override
-    protected void speichereSonderwuensche() {
-
-        // Sammle Sonderwunsch-IDs angekreuzter Checkboxen (Fensterbereich 301–309)
-        Vector<Integer> v = new Vector<Integer>();
-
-        if (chckBxSchiebetuerEg.isSelected()) {
-            v.add(301);
-        }
-        if (chckBxSchiebetuerDg.isSelected()) {
-            v.add(302);
-        }
-        if (chckBxEinbruchschutz.isSelected()) {
-            v.add(303);
-        }
-        if (chckBxVorbereitungEg.isSelected()) {
-            v.add(304);
-        }
-        if (chckBxVorbereitungOg.isSelected()) {
-            v.add(305);
-        }
-        if (chckBxVorbereitungDg.isSelected()) {
-            v.add(306);
-        }
-        if (chckBxRollladenEg.isSelected()) {
-            v.add(307);
-        }
-        if (chckBxRollladenOg.isSelected()) {
-            v.add(308);
-        }
-        if (chckBxRollladenDg.isSelected()) {
-            v.add(309);
-        }
-
-        int[] fensterSw = new int[v.size()];
-        for (int i = 0; i < v.size(); i++) {
-            fensterSw[i] = v.get(i);
-        }
-
-        this.fensterControl.speichereSonderwuensche(fensterSw);
+    public boolean[] holeIsSelectedFuerCheckboxen() {
+        return new boolean[] {
+                chckBxSchiebetuerEg.isSelected(),
+                chckBxSchiebetuerDg.isSelected(),
+                chckBxEinbruchschutz.isSelected(),
+                chckBxVorbereitungEg.isSelected(),
+                chckBxVorbereitungOg.isSelected(),
+                chckBxVorbereitungDg.isSelected(),
+                chckBxRollladenEg.isSelected(),
+                chckBxRollladenOg.isSelected(),
+                chckBxRollladenDg.isSelected()
+        };
     }
 
-	@Override
-	protected void berechneUndZeigePreisSonderwuensche() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    protected int[] checkboxenZuIntArray() {
+        Vector<Integer> v = new Vector<>();
 
-	@Override
-	protected boolean[] holeIsSelectedFuerCheckboxen() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        if (chckBxSchiebetuerEg.isSelected())
+            v.add(Sw.STUEREN_TERRASSE.id);
+        if (chckBxSchiebetuerDg.isSelected())
+            v.add(Sw.STUEREN_DACHTERRASSE.id);
+        if (chckBxEinbruchschutz.isSelected())
+            v.add(Sw.EBS_HAUSTUER.id);
 
-	@Override
-	protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
-		// TODO Auto-generated method stub
-		
-	}
+        if (chckBxVorbereitungEg.isSelected())
+            v.add(Sw.VEAR_EG.id);
+        if (chckBxVorbereitungOg.isSelected())
+            v.add(Sw.VEAR_OG.id);
+        if (chckBxVorbereitungDg.isSelected())
+            v.add(Sw.VEAR_DG.id);
 
-	@Override
-	protected int[] checkboxenZuIntArray() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        if (chckBxRollladenEg.isSelected())
+            v.add(Sw.ER_EG.id);
+        if (chckBxRollladenOg.isSelected())
+            v.add(Sw.ER_OG.id);
+        if (chckBxRollladenDg.isSelected())
+            v.add(Sw.ER_DG.id);
+
+        int[] fensterSw = new int[v.size()];
+        for (int i = 0; i < v.size(); i++)
+            fensterSw[i] = v.get(i);
+
+        return fensterSw;
+    }
+
+    @Override
+    protected void berechneUndZeigePreisSonderwuensche() {
+        // Konstellationsprüfung kommt später (Prio [5])
+
+        double preis = 0.0;
+
+        if (chckBxSchiebetuerEg.isSelected())   preis += Sw.STUEREN_TERRASSE.preis;
+        if (chckBxSchiebetuerDg.isSelected())   preis += Sw.STUEREN_DACHTERRASSE.preis;
+        if (chckBxEinbruchschutz.isSelected())  preis += Sw.EBS_HAUSTUER.preis;
+
+        if (chckBxVorbereitungEg.isSelected())  preis += Sw.VEAR_EG.preis;
+        if (chckBxVorbereitungOg.isSelected())  preis += Sw.VEAR_OG.preis;
+        if (chckBxVorbereitungDg.isSelected())  preis += Sw.VEAR_DG.preis;
+
+        if (chckBxRollladenEg.isSelected())     preis += Sw.ER_EG.preis;
+        if (chckBxRollladenOg.isSelected())     preis += Sw.ER_OG.preis;
+        if (chckBxRollladenDg.isSelected())     preis += Sw.ER_DG.preis;
+
+        txtGesamt.setText(String.format("%.2f", preis));
+    }
+
+    /**
+     * Wird von BasisView-Button "Speichern" aufgerufen.
+     * Übergibt die Auswahl zum Speichern an Control.
+     */
+    @Override
+    protected void speichereSonderwuensche() {
+        fensterControl.speichereSonderwuensche(checkboxenZuIntArray());
+    }
 }

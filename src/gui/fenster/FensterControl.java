@@ -32,7 +32,7 @@ public final class FensterControl {
     public void leseFensterSonderwuensche() {
         int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
         if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
-            this.fensterView.updateFensterCheckboxen(ausgewaehlteSw);
+            this.fensterView.updateSwCheckboxen(ausgewaehlteSw);
         }
     }
 
