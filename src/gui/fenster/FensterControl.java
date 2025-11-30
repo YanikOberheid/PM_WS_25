@@ -68,7 +68,6 @@ public final class FensterControl {
             }
         }
     }
-
   
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
         return true;
