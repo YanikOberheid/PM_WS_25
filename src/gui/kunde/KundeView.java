@@ -68,6 +68,8 @@ public class KundeView {
 	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
 	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
 	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
+	// ...
+	private MenuItem mnItmInnentueren = new MenuItem("Innentüren"); // NEU
 
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
@@ -140,11 +142,13 @@ public class KundeView {
 
 		// MenuBar und Menu
 		borderPane.setTop(mnBar);
+		
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
 		mnSonderwuensche.getItems().add(mnItmFliesen);
 		mnSonderwuensche.getItems().add(mnItmHeizung);
 		mnSonderwuensche.getItems().add(mnItmFenster);
+		mnSonderwuensche.getItems().add(mnItmInnentueren);
     
     // --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
@@ -202,6 +206,9 @@ public class KundeView {
 		mnItmFenster.setOnAction(aEvent -> {            
 		    kundeControl.oeffneFensterControl();
 		});
+		mnItmInnentueren.setOnAction(aEvent -> {
+		    kundeControl.oeffneInnentuerenControl();
+		});
 	}
 
 	private void holeInfoDachgeschoss() {
@@ -210,7 +217,15 @@ public class KundeView {
 	private void leseKunden() {
 	    Integer hausnummer = cmbBxNummerHaus.getValue();
 	    
-	    if (hausnummer != 0) {
+	    if (hausnummer == 0) {
+	    	txtKundennummer.clear();
+	        txtVorname.clear();
+	        txtNachname.clear();
+	        txtNummer.clear();
+	        txtEmail.clear();
+	        kundeControl.setAttributeNull();
+	    }
+	    else {
 	        kundeControl.ladeKundenZuHausnummer(hausnummer);
 	    }
 	}

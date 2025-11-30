@@ -58,6 +58,11 @@ public abstract class BasisView {
 	    btnBerechnen.setMinSize(150,  25);
     	gridPaneButtons.add(btnSpeichern, 2, 0);
 	    btnSpeichern.setMinSize(150,  25);
+	    
+	    
+	    
+	    
+	    
     }  
     
     /* Es muessen die Listener implementiert werden. */
@@ -78,6 +83,8 @@ public abstract class BasisView {
   		return lblSonderwunsch;
   	}
   	
+  	
+  	// Bearbeit 
   	/*
   	 * macht das BasisView-Objekt sichtbar.
   	 */
