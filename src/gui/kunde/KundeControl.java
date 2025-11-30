@@ -9,6 +9,7 @@ import business.kunde.KundeModel;
 import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
 import gui.heizung.HeizungControl;
+import gui.fenster.FensterControl;
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
@@ -24,6 +25,7 @@ public class KundeControl {
  // Referenz auf das neue Control-Objekt für Fliesen
     private FliesenControl fliesenControl;
     private HeizungControl heizungControl;
+    private FensterControl fensterControl;
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -80,6 +82,25 @@ public class KundeControl {
     	this.fliesenControl.leseFliesenSonderwuensche();
         this.fliesenControl.oeffneFliesenView();
     }
+    
+   //fenster wird geöffnet#
+    
+    public void oeffneFensterControl() {
+        if (this.kundeModel.getKunde() == null) {
+            this.kundeView.zeigeFehlermeldung(
+                    "Kein Kunde ausgewaehlt",
+                    "Bitte waehlen oder erstellen Sie zuerst einen Kunden.");
+            return;
+        }
+
+        if (this.fensterControl == null) {
+            this.fensterControl = new FensterControl();
+        }
+        this.fensterControl.oeffneFensterView();
+    }
+
+    
+    
 
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank
