@@ -27,7 +27,7 @@ public class HeizungKonstellationTest_old {
     public void setUp() {
         // Wir brauchen ein KundeModel-Objekt, weil der Konstruktor es verlangt
         KundeModel kundeModel = KundeModel.getInstance();
-        heizungControl = new HeizungControl(kundeModel);
+        heizungControl = new HeizungControl();
     }
 
     @Test
