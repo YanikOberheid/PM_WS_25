@@ -52,7 +52,6 @@ public class HeizungView extends BasisView {
         heizungStage.setTitle("Sonderwünsche zu Heizungen");
 
         initKomponenten();
-        leseHeizungsSonderwuensche();
     }
 
     protected void initKomponenten() {

@@ -57,7 +57,6 @@ public class FliesenView extends BasisView {
         fliesenStage.setTitle("Sonderwünsche zu Fliesen");
         
         initKomponenten();
-        leseFliesenSonderwuensche();
     }
 
     protected void initKomponenten() {

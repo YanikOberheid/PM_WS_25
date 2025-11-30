@@ -50,6 +50,7 @@ public class KundeControl {
     	if (this.grundrissControl == null){
     		this.grundrissControl = new GrundrissControl();
       	}
+    	this.grundrissControl.leseGrundrissSonderwuensche();
     	this.grundrissControl.oeffneGrundrissView();
     }
     
@@ -63,6 +64,7 @@ public class KundeControl {
        
             this.heizungControl = new HeizungControl();
         }
+        this.heizungControl.leseHeizungsSonderwuensche();
         this.heizungControl.oeffneHeizungView();
     }
     
@@ -75,6 +77,7 @@ public class KundeControl {
     	if (this.fliesenControl == null){
             this.fliesenControl = new FliesenControl();
         }
+    	this.fliesenControl.leseFliesenSonderwuensche();
         this.fliesenControl.oeffneFliesenView();
     }
 

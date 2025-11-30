@@ -66,8 +66,7 @@ public class GrundrissView extends BasisView{
         this.grundrissControl = grundrissControl;
         grundrissStage.setTitle("Sonderw�nsche zu Grundriss-Varianten");
                 
-	    this.initKomponenten();
-	    this.leseGrundrissSonderwuensche();
+	    initKomponenten();
     }
   
     /* initialisiert die Steuerelemente auf der Maske */
