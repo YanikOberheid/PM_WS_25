@@ -64,6 +64,8 @@ public class KundeView {
 	private MenuItem mnItmInnentueren = new MenuItem("Innentüren"); // NEU
 	
 	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
+	
+	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
 
 	// Guard, damit initKomponenten nur einmal läuft
 	private boolean uiInitialized = false;
@@ -179,7 +181,8 @@ public class KundeView {
 	        mnItmGrundriss,
 	        mnItmFliesen,
 	        mnItmInnentueren,
-	        mnItmHeizung
+	        mnItmHeizung,
+	        mnItmFenster
 	    );
 
 		hausImageView.setImage(null);
@@ -214,6 +217,10 @@ public class KundeView {
 		
 		mnItmHeizung.setOnAction(aEvent -> {
 		    kundeControl.oeffneHeizungControl();        
+		});
+		
+		mnItmFenster.setOnAction(aEvent -> {            
+		    kundeControl.oeffneFensterControl();
 		});
 
 	}

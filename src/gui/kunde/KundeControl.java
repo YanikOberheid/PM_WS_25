@@ -8,6 +8,7 @@ import business.kunde.KundeModel;
 import gui.grundriss.GrundrissControl;
 import gui.heizung.HeizungControl;
 import gui.innentueren.InnentuerenControl;
+import gui.fenster.FensterControl;
 import gui.fliesen.FliesenControl;
 import java.io.InputStream;
 
@@ -30,8 +31,10 @@ public class KundeControl {
 
 	// ...InnentuerenControl
 	private InnentuerenControl innentuerenControl; // NEU
-	
+
 	private HeizungControl heizungControl;
+
+	private FensterControl fensterControl;
 
 	/**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum
@@ -145,18 +148,32 @@ public class KundeControl {
 		}
 		this.innentuerenControl.oeffneView();
 	}
-	
+
 	public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		return kundeModel.holBildAusDB(idBild);
 	}
 	// ...
-	
-	
-	 public void oeffneHeizungControl() {
-	        if (this.heizungControl == null) {
-	       
-	            this.heizungControl = new HeizungControl(kundeModel);
-	        }
-	        this.heizungControl.oeffneHeizungView();
-	    }
+
+	public void oeffneHeizungControl() {
+		if (this.heizungControl == null) {
+
+			this.heizungControl = new HeizungControl(kundeModel);
+		}
+		this.heizungControl.oeffneHeizungView();
+	}
+
+	// fenster wird geöffnet#
+
+	public void oeffneFensterControl() {
+		if (this.kundeModel.getKunde() == null) {
+			this.kundeView.zeigeFehlermeldung("Kein Kunde ausgewaehlt",
+					"Bitte waehlen oder erstellen Sie zuerst einen Kunden.");
+			return;
+		}
+
+		if (this.fensterControl == null) {
+			this.fensterControl = new FensterControl();
+		}
+		this.fensterControl.oeffneFensterView();
+	}
 }
