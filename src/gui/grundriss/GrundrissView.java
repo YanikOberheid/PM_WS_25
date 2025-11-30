@@ -142,7 +142,7 @@ public class GrundrissView extends BasisView{
     }
     
     @Override
-    protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
+    public void updateSwCheckboxen(int[] ausgewaehlteSw) {
     	// Alles zurücksetzen
     	chckBxWandKueche.setSelected(false);
     	chckBxTuerKueche.setSelected(false);

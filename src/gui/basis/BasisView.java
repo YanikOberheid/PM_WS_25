@@ -92,7 +92,7 @@ public abstract class BasisView {
   	protected abstract void speichereSonderwuensche();
   	
   	public abstract boolean[] holeIsSelectedFuerCheckboxen();
-  	protected abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
+  	public abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
   	protected abstract int[] checkboxenZuIntArray();
   	
   	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */

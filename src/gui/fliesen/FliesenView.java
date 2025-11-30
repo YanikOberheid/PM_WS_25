@@ -129,7 +129,7 @@ public class FliesenView extends BasisView {
 
     /** Checkboxen anhand der gespeicherten IDs setzen. */
     @Override
-    protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
+    public void updateSwCheckboxen(int[] ausgewaehlteSw) {
     	// Alles zurücksetzen
     	chckBxFKuecheEGOhne.setSelected(false);
     	chckBxFBadOGOhne.setSelected(false);
