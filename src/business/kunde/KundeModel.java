@@ -359,6 +359,19 @@ public final class KundeModel {
         return this.kunde;
     }
     
+    /* 		Damit sich die Sonderwunsch-View nicht öffnet, wenn keine Kundendaten vorhanden sind.
+     * 		Details zum Bug:
+     * 		Wenn man einen Kunden bzw. eine Hausnummer mit vorhandenen Kundendaten auswählt
+     * 		und anschließend auf Hausnummer 0 wechselt
+     * 		und dann ein Sonderwunsch-Fenster öffnen möchte, wird dieses dennoch geöffnet.
+     * 		Eine andere Loesung waere beim ...control.oeffneSonderwuenscheFenster neben existiert Kunde, 
+     * 		nachschaut ob die Hausnummer ungleich 0 ist.
+     */
+    public void setAttributesNull() {
+        this.kunde = null;
+        this.ausgewaehlteSw = null;
+    }
+    
     public void deleteSonderwunschHasHaus(int hausnummer) throws SQLException, Exception {
 		try {
 			this.swDao.delete(hausnummer);

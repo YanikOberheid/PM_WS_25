@@ -43,6 +43,7 @@ public class KundeControl {
      */
     private String keinKundeTitel = "Kein Kunde ausgewählt";
     private String keinKundeMeldung = "Bitte wählen oder erstellen Sie einen Kunden.";
+    
     public void oeffneGrundrissControl(){
     	if (kundeModel.getKunde() == null) {
     		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
@@ -183,5 +184,9 @@ public class KundeControl {
     public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		    return kundeModel.holBildAusDB(idBild);
 	  }
+
+	public void setAttributeNull() {
+		kundeModel.setAttributesNull();
+	}
    
 }

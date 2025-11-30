@@ -64,7 +64,7 @@ public class GrundrissView extends BasisView{
     public GrundrissView (GrundrissControl grundrissControl, Stage grundrissStage){
     	super(grundrissStage);
         this.grundrissControl = grundrissControl;
-        grundrissStage.setTitle("Sonderw�nsche zu Grundriss-Varianten");
+        grundrissStage.setTitle("Sonderwuensche zu Grundriss-Varianten");
                 
 	    initKomponenten();
     }

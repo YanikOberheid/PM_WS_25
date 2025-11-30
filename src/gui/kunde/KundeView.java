@@ -210,7 +210,15 @@ public class KundeView {
 	private void leseKunden() {
 	    Integer hausnummer = cmbBxNummerHaus.getValue();
 	    
-	    if (hausnummer != 0) {
+	    if (hausnummer == 0) {
+	    	txtKundennummer.clear();
+	        txtVorname.clear();
+	        txtNachname.clear();
+	        txtNummer.clear();
+	        txtEmail.clear();
+	        kundeControl.setAttributeNull();
+	    }
+	    else {
 	        kundeControl.ladeKundenZuHausnummer(hausnummer);
 	    }
 	}
