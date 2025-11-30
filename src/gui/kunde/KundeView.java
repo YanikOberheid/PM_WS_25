@@ -107,6 +107,7 @@ public class KundeView {
 		gridPane.add(cmbBxNummerHaus, 1, 2);
 		cmbBxNummerHaus.setMinSize(150, 25);
 		cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
+		cmbBxNummerHaus.setValue(0);
 		
 		// Kundennummer
 		gridPane.add(lblKundennummer, 0, 3);
@@ -204,7 +205,7 @@ public class KundeView {
 	private void leseKunden() {
 	    Integer hausnummer = cmbBxNummerHaus.getValue();
 	    
-	    if (hausnummer != null) {
+	    if (hausnummer != 0) {
 	        kundeControl.ladeKundenZuHausnummer(hausnummer);
 	    }
 	}
