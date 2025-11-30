@@ -182,7 +182,7 @@ public class GrundrissView extends BasisView{
     }
     
     @Override
-    protected boolean[] holeIsSelectedFuerCheckboxen() {
+    public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {
     			chckBxWandKueche.isSelected(),
     			chckBxTuerKueche.isSelected(),
