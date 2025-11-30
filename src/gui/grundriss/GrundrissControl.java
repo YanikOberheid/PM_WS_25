@@ -27,12 +27,12 @@ public final class GrundrissControl {
     	this.kundeModel = KundeModel.getInstance();
     	this.grundrissView = new GrundrissView(this, stageGrundriss);
     	// Erstellen von grundrissView updatet indirekt Checkboxen, denn
-    	// -> grundrissView ruft seinen Konstruktor auf
+	    // -> grundrissView ruft seinen Konstruktor auf
 	    // -> grundrissView ruft seine leseGrundrissSonderwuensche auf
 	    // -> grundrissView ruft grundrissControl's leseGrundrissSonderwuensche auf
 	    // -> grundrissControl ruft grundrissView's updateCheckboxen auf (Checkboxen sind private)
 	}
-	
+	    
 	/**
 	 * macht das GrundrissView-Objekt sichtbar.
 	 */
@@ -50,8 +50,14 @@ public final class GrundrissControl {
 	public void speichereSonderwuensche(int[] grundrissSw) {
 		// Hole Kopie der aktuell ausgewählten Sw aus der Datenbank
 		int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
-		// Filtere Sonderwünsche zu Grundriss-Varianten raus
-		ausgewaehlteSw = Arrays.stream(ausgewaehlteSw).filter(sw -> sw < 200 || sw >= 300).toArray();
+		if (ausgewaehlteSw == null) {
+			ausgewaehlteSw = new int[0];
+		}
+
+		// Filtere Sonderwünsche zu Grundriss-Varianten raus (IDs 200–299)
+		ausgewaehlteSw = Arrays.stream(ausgewaehlteSw)
+				.filter(sw -> sw < 200 || sw >= 300)
+				.toArray();
 		
 		// Führe mit neuer Auswahl an Sonderwünschen zu Grundriss-Varianten zusammen
 		int[] zuPruefendeSwKonstellation = new int[ausgewaehlteSw.length + grundrissSw.length];
@@ -59,6 +65,7 @@ public final class GrundrissControl {
 			if (i < ausgewaehlteSw.length) {
 				zuPruefendeSwKonstellation[i] = ausgewaehlteSw[i];
 			} else {
+				// WICHTIG: Index in grundrissSw ist i - ausgewaehlteSw.length
 				zuPruefendeSwKonstellation[i] = grundrissSw[i - ausgewaehlteSw.length];
 			}
 		}
@@ -69,7 +76,8 @@ public final class GrundrissControl {
 				this.kundeModel.updateAusgewaehlteSw(zuPruefendeSwKonstellation);
 			} catch(Exception exc) {
 				System.out.println("Neue Auswahl an Sonderwünschen zu Grundriss-Varianten"
-						+ "konnte nicht gespeichert werden");
+						+ " konnte nicht gespeichert werden");
+				exc.printStackTrace();
 			}
 		}
 	}

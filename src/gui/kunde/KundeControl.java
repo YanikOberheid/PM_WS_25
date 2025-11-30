@@ -1,17 +1,15 @@
 package gui.kunde;
 
-import java.io.InputStream;
 import java.sql.SQLException;
 
-import javax.print.FlavorException;
-
+import javafx.stage.Stage;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
+import gui.grundriss.GrundrissControl;
+import gui.heizung.HeizungControl;
+import gui.innentueren.InnentuerenControl;
 import gui.fliesen.FliesenControl;
-import gui.grundriss.GrundrissControl;
-import business.kunde.*;
-import javafx.stage.Stage;
-import gui.grundriss.GrundrissControl;
+import java.io.InputStream;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
@@ -20,50 +18,44 @@ public class KundeControl {
 
 	// das View-Objekt des Grundfensters mit den Kundendaten
 	private KundeView kundeView;
-    // das Model-Objekt des Grundfensters mit den Kundendaten
-    private KundeModel kundeModel;
-    /* das GrundrissControl-Objekt fuer die Sonderwuensche
-       zum Grundriss zu dem Kunden */
-    private GrundrissControl grundrissControl;
-	private FliesenControl fliesenControl;
-	private DatabaseConnection connection= DatabaseConnection.getInstance();
-    
-    /**
-	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
-	 * Grundfenster mit den Kundendaten.
-	 * @param primaryStage, Stage fuer das View-Objekt zu dem Grundfenster mit den Kundendaten
+	// das Model-Objekt des Grundfensters mit den Kundendaten
+	private KundeModel kundeModel;
+	/*
+	 * das GrundrissControl-Objekt fuer die Sonderwuensche zum Grundriss zu dem
+	 * Kunden
 	 */
-	//private Object grundrissControl;
+	private GrundrissControl grundrissControl;
 
-    public KundeControl(Stage primaryStage) { 
-        this.kundeModel = KundeModel.getInstance(); 
-        this.kundeView = new KundeView(this, primaryStage, kundeModel);
-        this.super
-    }
-    
-    /*
-     * erstellt, falls nicht vorhanden, ein Grundriss-Control-Objekt.
-     * Das GrundrissView wird sichtbar gemacht.
-     */
-    public void oeffneGrundrissControl(){
-    	if (this.grundrissControl == null){
-    		this.grundrissControl = new GrundrissControl();
-      	}
-    	this.grundrissControl.oeffneGrundrissView();
-		
-    }
-	 public void oeffneFliesenControl(){
+	private FliesenControl fliesenControl;
 
-		if (this.fliesenControl == null){
+	// ...InnentuerenControl
+	private InnentuerenControl innentuerenControl; // NEU
 	
-    		this.fliesenControl = new FliesenControl(kundeModel, connection);
-      	}
-    	this.fliesenControl.oeffneFliesenView();
+	private HeizungControl heizungControl;
 
-		
-    }
-    
-    
+	/**
+	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum
+	 * Grundfenster mit den Kundendaten.
+	 * 
+	 * @param primaryStage Stage fuer das View-Objekt zu dem Grundfenster mit den
+	 *                     Kundendaten
+	 */
+	public KundeControl(Stage primaryStage) {
+		this.kundeModel = KundeModel.getInstance();
+		this.kundeView = new KundeView(this, primaryStage, kundeModel);
+	}
+
+	/*
+	 * erstellt, falls nicht vorhanden, ein Grundriss-Control-Objekt. Das
+	 * GrundrissView wird sichtbar gemacht.
+	 */
+	public void oeffneGrundrissControl() {
+		if (this.grundrissControl == null) {
+			this.grundrissControl = new GrundrissControl(); // <<< hier angepasst
+		}
+		this.grundrissControl.oeffneGrundrissView();
+	}
+
 	/**
 	 * speichert ein Kunde-Objekt in die Datenbank
 	 * 
@@ -72,81 +64,99 @@ public class KundeControl {
 	public void speichereKunden(Kunde kunde) {
 		try {
 			// Kundendaten validieren
+			// Falls dein Model nur isValidCustomer(Kunde) hat, nimm diese Variante:
+			// if (!kundeModel.isValidCustomer(kunde)) {
 			if (!kundeModel.isValidCustomer(kunde, false)) {
 				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
 				return;
 			}
 			kundeModel.speichereKunden(kunde);
 			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
-			// Kundennummer setzen nach dem Anlegen des Kunden
+		} catch (SQLException exc) {
+			exc.printStackTrace();
+			this.kundeView.zeigeFehlermeldung("SQLException", "Fehler beim Speichern in die Datenbank");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+			this.kundeView.zeigeFehlermeldung("Exception", "Unbekannter Fehler");
+		}
+	}
+
+	/**
+	 * Lädt den Kunden zur angegebenen Hausnummer und zeigt ihn in der View an.
+	 */
+	public void ladeKundenZuHausnummer(int hausnummer) {
+		try {
+			Kunde kunde = kundeModel.ladeKunde(hausnummer);
 			kundeView.zeigeKundeAufGui(kunde);
-    	}
-    	catch(SQLException exc){
-    		exc.printStackTrace();
-    		this.kundeView.zeigeFehlermeldung("SQLException",
-                "Fehler beim Speichern in die Datenbank");
-    	}
-    	catch(Exception exc){
-    		exc.printStackTrace();
-    		this.kundeView.zeigeFehlermeldung("Exception",
-                "Unbekannter Fehler");
-    	}
-    }
-    
-    /**
-     * Lädt den Kunden zur angegebenen Hausnummer aus dem Model und zeigt ihn in der View an.
-     * Falls ein Datenbankfehler auftritt, wird eine Fehlermeldung in der View angezeigt.
-     *
-     * @param hausnummer die Hausnummer / Plannummer des Kunden, der geladen werden soll
-     */
-    public void ladeKundenZuHausnummer(int hausnummer) {
-        try {
-            Kunde kunde = kundeModel.ladeKunde(hausnummer);
-            kundeView.zeigeKundeAufGui(kunde);
-            kundeView.zeigeHausBildFuerHausnummer(hausnummer);
-        } catch (SQLException e) {
-            kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
-        } 
-    }
-    
-    public void loescheKunden(int kundenummer, int hausnummer) {
-        try {
-            boolean erfolg = kundeModel.loescheKunden(kundenummer, hausnummer);
-            if (erfolg) {
-                kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
-                kundeView.zeigeKundeAufGui(null); // GUI leeren
-            } else {
-                kundeView.zeigeFehlermeldung("Fehler", "Kein Kunde unter dieser Hausnummer gefunden.");
-            }
-        } catch (SQLException e) {
-            kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-            kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim löschen.");
-        }
-    }
-    
-    public void updateKunde(Kunde kunde) {
-        try {
-            if (!kundeModel.isValidCustomer(kunde, true)) {
-                kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
-                return;
-            }
+			kundeView.zeigeHausBildFuerHausnummer(hausnummer);
+		} catch (SQLException e) {
+			kundeView.zeigeFehlermeldung("Fehler", "Kunde konnte nicht geladen werden.");
+		}
+	}
 
-            kundeModel.updateKunde(kunde);
-            kundeView.zeigeErfolgsmeldung("Erfolg", "Kundendaten wurden erfolgreich aktualisiert.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            kundeView.zeigeFehlermeldung("Fehler", "Kundendaten konnten nicht aktualisiert werden.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
-        }
-    }
+	public void loescheKunden(int hausnummer) {
+		try {
+			boolean erfolg = kundeModel.loescheKunden(hausnummer);
+			if (erfolg) {
+				kundeView.zeigeErfolgsmeldung("Erfolg", "Kunde wurde gelöscht.");
+				kundeView.zeigeKundeAufGui(null); // GUI leeren
+			} else {
+				kundeView.zeigeFehlermeldung("Fehler", "Kein Kunde unter dieser Hausnummer gefunden.");
+			}
+		} catch (SQLException e) {
+			kundeView.zeigeFehlermeldung("Fehler", "Datenbankfehler beim Löschen.");
+			e.printStackTrace();
+		}
+	}
 
-    public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
+	public void updateKunde(Kunde kunde) {
+		try {
+			// analoger Hinweis wie oben: ggf. isValidCustomer(kunde) verwenden
+			if (!kundeModel.isValidCustomer(kunde, true)) {
+				kundeView.zeigeFehlermeldung("Ungültige Eingabe", "Bitte prüfen Sie die Kundendaten.");
+				return;
+			}
+			kundeModel.updateKunde(kunde);
+			kundeView.zeigeErfolgsmeldung("Erfolg", "Kundendaten wurden erfolgreich aktualisiert.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			kundeView.zeigeFehlermeldung("Fehler", "Kundendaten konnten nicht aktualisiert werden.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			kundeView.zeigeFehlermeldung("Fehler", "Unbekannter Fehler beim Aktualisieren.");
+		}
+	}
+
+	/**
+	 * Erstellt, falls nicht vorhanden, ein Fliesen-Control-Objekt. Das FliesenView
+	 * wird sichtbar gemacht.
+	 */
+	public void oeffneFliesenControl() {
+		if (this.fliesenControl == null) {
+			this.fliesenControl = new FliesenControl(kundeModel);
+		}
+		this.fliesenControl.oeffneFliesenView();
+	}
+
+	// InnentuerenControl
+	public void oeffneInnentuerenControl() {
+		if (this.innentuerenControl == null) {
+			this.innentuerenControl = new InnentuerenControl(kundeModel);
+		}
+		this.innentuerenControl.oeffneView();
+	}
+	
+	public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		return kundeModel.holBildAusDB(idBild);
 	}
-   
+	// ...
+	
+	
+	 public void oeffneHeizungControl() {
+	        if (this.heizungControl == null) {
+	       
+	            this.heizungControl = new HeizungControl(kundeModel);
+	        }
+	        this.heizungControl.oeffneHeizungView();
+	    }
 }

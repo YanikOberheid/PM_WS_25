@@ -1,8 +1,16 @@
 package business.kunde;
 
-import java.io.InputStream;
 import java.sql.SQLException;
 import javafx.collections.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+import java.io.InputStream;
+
+
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.
  */
@@ -81,10 +89,6 @@ public final class KundeModel {
 		// Datenbank speichern
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		kundeDAO.add(kunde);
-		
-		// Die ID, die von der DB gegeben wurde laden und speichern lokal in Kunde.idKunde
-		int idKunde = (kundeDAO.findByHausnummer(this.kunde.getHausnummer())).getIdKunde();
-		this.kunde.setIdKunde(idKunde);
 	}
 
 	/**
@@ -98,42 +102,34 @@ public final class KundeModel {
 	 * @throws SQLException Fehler beim Datenbankzugriff
 	 */
 	public Kunde ladeKunde(int hausnummer) throws SQLException {
-	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-	    
-	    if (kundeDAO.istHausnummerBesetzt(hausnummer)) {
-	        // Kunde existiert, lade das Objekt
-	    	System.out.println("Hausnummer besetzt");
-	        this.kunde = kundeDAO.findByHausnummer(hausnummer);
-	    } else {
-	        // Kein Kunde unter dieser Hausnummer
-	        this.kunde = null;
-	    }
-	    return this.kunde;
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+
+		if (kundeDAO.istHausnummerBesetzt(hausnummer)) {
+			// Kunde existiert, lade das Objekt
+			this.kunde = kundeDAO.findByHausnummer(hausnummer);
+		} else {
+			// Kein Kunde unter dieser Hausnummer
+			this.kunde = null;
+		}
+
+		return this.kunde;
 	}
 
 	// Löscht den Kunden zur angegebenen Hausnummer.
-	public boolean loescheKunden(int kundennummer, int hausnummer) throws Exception {
-	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-	    
-	    // Damit der Kunde mit der jeweiligen ID geändert wird und nicht 
-	    // ausversehen ein weitere Datensatz hinzugefügt wird
-	    //kunde.setIdKunde(this.kunde.getIdKunde());
-	    boolean geloescht = kundeDAO.deleteKunde(kundennummer);
-	    
-	    // Wenn gelöscht, auch aktuelles Kunde-Objekt im Model leeren
-	    if (geloescht && this.kunde != null && this.kunde.getHausnummer() == hausnummer) {
-	    	deleteSonderwunschHasHaus(hausnummer);
-	        this.kunde = null;
-	    }
-	    return geloescht;
+	public boolean loescheKunden(int hausnummer) throws SQLException {
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+		boolean geloescht = kundeDAO.deleteKunde(hausnummer);
+
+		// Wenn gelöscht, auch aktuelles Kunde-Objekt im Model leeren
+		if (geloescht && this.kunde != null && this.kunde.getHausnummer() == hausnummer) {
+			this.kunde = null;
+		}
+		return geloescht;
 	}
-	
-	public void updateKunde (Kunde kunde) throws SQLException, Exception {
-	    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-	    // Damit der Kunde mit der jeweiligen ID geändert wird und nicht 
-	    // ausversehen ein weitere Datensatz hinzugefügt wird
-	    //kunde.setIdKunde(this.kunde.getIdKunde());
-	    kundeDAO.updateKunde(kunde);
+
+	public void updateKunde(Kunde kunde) throws SQLException, Exception {
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+		kundeDAO.updateKunde(kunde);
 	}
 
 	/**
@@ -145,7 +141,7 @@ public final class KundeModel {
 	 */
 	public boolean isValidCustomer(Kunde kunde, boolean isUpdate) throws SQLException {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-		
+
 		if (kunde == null) {
 			System.err.println("❌ Validation failed: Kunde object is null.");
 			return false;
@@ -176,8 +172,7 @@ public final class KundeModel {
 			return false;
 		}
 		
-	    boolean hausnummerBesetzt = kundeDAO.istHausnummerBesetzt(kunde.getHausnummer());
-
+		boolean hausnummerBesetzt = kundeDAO.istHausnummerBesetzt(kunde.getHausnummer());
 		if (!isUpdate && hausnummerBesetzt) {
 			System.err.println("Fehlgeschlagen: Die Hausnummer ist besetzt.");
 			return false;
@@ -222,13 +217,15 @@ public final class KundeModel {
 	// ------------ Sonderwünsche ------------
 	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
 	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
-	
+
 	public int[] gibAusgewaehlteSwLokal() {
-		if (kunde == null) return null;
-		if (this.ausgewaehlteSw == null) return null;
+		if (kunde == null)
+			return null;
+		if (this.ausgewaehlteSw == null)
+			return null;
 		return this.ausgewaehlteSw.clone();
 	}
-	
+
 	/**
 	 * Holt Sonderwünsche zu einem Kunden und gibt ein Array an Sonderwunschoptionen
 	 * oder null.
@@ -236,7 +233,8 @@ public final class KundeModel {
 	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
 	public int[] gibAusgewaehlteSwAusDb() {
-		if (kunde == null) return null; 
+		if (kunde == null)
+			return null;
 		// throw new Exception("Es konnte kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
 
@@ -261,8 +259,10 @@ public final class KundeModel {
 	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
 	public int[] gibAusgewaehlteSwAusDb(int kategorieId) {
-		if (this.kunde == null) return null;
-		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");
+		if (this.kunde == null)
+			return null;
+		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte
+		// kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
 
 		try {
@@ -305,24 +305,84 @@ public final class KundeModel {
 			// exc.printStackTrace();
 			throw exc;
 		}
+		
+		
 	}
 	
-	public void deleteSonderwunschHasHaus(int hausnummer) throws SQLException, Exception {
-		try {
-			this.swDao.delete(hausnummer);
-		} catch (SQLException exc) {
-			System.out.println("Fehler beim Delete Sondderwunsch_has_Haus: SQL Fehler");
-			exc.printStackTrace();
-			throw exc;
-		} catch (Exception exc) {
-			System.out.println("Fehler beim Delete Sondderwunsch_has_Haus");
-			exc.printStackTrace();
-			throw exc;
-		}
-	}
+	
+	
+	
+	
+	/**
+     * [3] Speichert Sonderwünsche einer spezifischen Kategorie (z.B. Fliesen),
+     * ohne die Sonderwünsche anderer Kategorien (z.B. Grundriss) zu löschen.
+     * * @param neueAuswahlIDs Ein Array mit den IDs der neu gewählten Sonderwünsche.
+     * @param kategorieId    Die ID der Kategorie (z.B. 1 für Fliesen), deren Daten ersetzt werden sollen.
+     */
+    public void speichereSonderwuenscheFuerKategorie(int[] neueAuswahlIDs, int kategorieId) throws Exception {
+        if (this.kunde == null) {
+            throw new Exception("Fehler: Kein Kunde ausgewählt.");
+        }
+        int hausnr = this.kunde.getHausnummer();
 
-	public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
+        // 1. Hole ALLE aktuellen Sonderwünsche des Kunden aus der DB (z.B. Grundriss + alte Fliesen)
+        int[] alleVorhandenen = swDao.get(hausnr);
+        
+        // 2. Hole nur die alten Sonderwünsche dieser speziellen Kategorie (z.B. alte Fliesen)
+        int[] alteKategorieDaten = swDao.get(hausnr, kategorieId);
+
+        // Hilfsliste zum Bearbeiten erstellen
+        ArrayList<Integer> neueGesamtListe = new ArrayList<>();
+
+        // Füge zunächst alle vorhandenen Einträge der Liste hinzu
+        if (alleVorhandenen != null) {
+            for (int id : alleVorhandenen) {
+                neueGesamtListe.add(id);
+            }
+        }
+
+        // 3. Entferne die "alten" Einträge der angegebenen Kategorie aus der Liste
+        // (Wir löschen den alten Stand der Fliesen, um den neuen zu setzen)
+        if (alteKategorieDaten != null) {
+            for (int altId : alteKategorieDaten) {
+                // Wichtig: Integer.valueOf nutzen, damit das Objekt (die ID) entfernt wird, nicht der Index
+                neueGesamtListe.remove(Integer.valueOf(altId));
+            }
+        }
+
+        // 4. Füge die NEUE Auswahl hinzu
+        if (neueAuswahlIDs != null) {
+            for (int neuId : neueAuswahlIDs) {
+                // Nur hinzufügen, wenn noch nicht vorhanden (Vermeidung von Duplikaten)
+                if (!neueGesamtListe.contains(neuId)) {
+                    neueGesamtListe.add(neuId);
+                }
+            }
+        }
+
+        // 5. Konvertiere die Liste zurück in ein int-Array
+        int[] updateArray = neueGesamtListe.stream().mapToInt(i -> i).toArray();
+
+        // 6. Rufe die sichere Update-Methode auf
+        // Da updateArray jetzt ALLES enthält (Grundriss + NEUE Fliesen), ist das Löschen im DAO sicher.
+        this.updateAusgewaehlteSw(updateArray);
+        
+        System.out.println("✅ Sonderwünsche für Kategorie " + kategorieId + " erfolgreich gespeichert.");
+    }
+    
+    /**
+     * Gibt das aktuelle Kunde-Objekt zurück.
+     * Wird benötigt, um zu prüfen, ob ein Kunde ausgewählt ist.
+     */
+    public Kunde getKunde() {
+        return this.kunde;
+    }
+    
+    public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		return kundeDAO.loadImage(idBild);
 	}
+    
+    
+
 }
