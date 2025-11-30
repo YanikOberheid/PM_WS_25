@@ -10,6 +10,9 @@ import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
 import gui.heizung.HeizungControl;
 import gui.fenster.FensterControl;
+import gui.innentueren.InnentuerenControl;
+import gui.fliesen.FliesenControl;
+
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
@@ -22,10 +25,12 @@ public class KundeControl {
     /* das GrundrissControl-Objekt fuer die Sonderwuensche
        zum Grundriss zu dem Kunden */
     private GrundrissControl grundrissControl;
- // Referenz auf das neue Control-Objekt für Fliesen
+    // Referenz auf das neue Control-Objekt für Fliesen
     private FliesenControl fliesenControl;
     private HeizungControl heizungControl;
     private FensterControl fensterControl;
+    // ...InnentuerenControl
+	private InnentuerenControl innentuerenControl; // NEU
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -100,7 +105,13 @@ public class KundeControl {
         this.fensterControl.oeffneFensterView();
     }
 
-    
+    // InnentuerenControl
+	public void oeffneInnentuerenControl() {
+		if (this.innentuerenControl == null) {
+			this.innentuerenControl = new InnentuerenControl(kundeModel);
+		}
+		this.innentuerenControl.oeffneView();
+	}
     
 
 	/**

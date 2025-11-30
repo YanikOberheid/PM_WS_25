@@ -292,6 +292,8 @@ public final class KundeModel {
 			// exc.printStackTrace();
 			throw exc;
 		}
+		
+		
 	}
 	
 	/**
