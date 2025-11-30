@@ -34,7 +34,7 @@ public final class KundeModel {
 	private static KundeModel kundeModel;
 
 	// privater Konstruktor zur Realisierung des Singleton-Pattern
-	private KundeModel() {
+	private  KundeModel() {
 		super();
 	}
 
@@ -382,6 +382,25 @@ public final class KundeModel {
 		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
 		return kundeDAO.loadImage(idBild);
 	}
+    
+    
+ // Preis-Summenberechnung für übergebene Sonderwunsch-IDs
+    public int berechnePreisFuerSonderwunschIds(int[] ids) throws Exception {
+        if (ids == null || ids.length == 0) return 0;
+
+        String placeholders = String.join(",", java.util.Arrays.stream(ids)
+                .mapToObj(i -> "?").toArray(String[]::new));
+        String sql = "SELECT COALESCE(SUM(Preis),0) FROM Sonderwunsch "
+                   + "WHERE idSonderwunsch IN (" + placeholders + ")";
+
+        try (var ps = DatabaseConnection.getInstance().getConnection().prepareStatement(sql)) {
+            int p = 1;
+            for (int id : ids) ps.setInt(p++, id);
+            try (var rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : 0;
+            }
+        }
+    }
     
     
 
