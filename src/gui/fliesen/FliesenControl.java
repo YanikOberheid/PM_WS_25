@@ -41,7 +41,7 @@ public class FliesenControl {
     public void leseFliesenSonderwuensche(){
         int[] swFliesen = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.FLIESEN.id);
         if (swFliesen != null) {
-            this.fliesenView.updateFliesenCheckboxen(swFliesen);
+            this.fliesenView.updateSwCheckboxen(swFliesen);
         }
     } 
 

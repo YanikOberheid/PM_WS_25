@@ -80,7 +80,7 @@ public class GrundrissView extends BasisView{
        	getGridPaneSonderwunsch().add(lblWandKueche, 0, 1);
     	getGridPaneSonderwunsch().add(txtPreisWandKueche, 1, 1);
     	txtPreisWandKueche.setEditable(false);
-    	txtPreisWandKueche.setText("" + Sw.WAND_KUECHE.bes);
+    	txtPreisWandKueche.setText("" + Sw.WAND_KUECHE.preis);
     	getGridPaneSonderwunsch().add(lblWandKuecheEuro, 2, 1);
     	getGridPaneSonderwunsch().add(chckBxWandKueche, 3, 1);
     	
@@ -88,7 +88,7 @@ public class GrundrissView extends BasisView{
     	getGridPaneSonderwunsch().add(lblTuerKueche, 0, 2);
     	getGridPaneSonderwunsch().add(txtPreisTuerKueche, 1, 2);
     	txtPreisTuerKueche.setEditable(false);
-    	txtPreisTuerKueche.setText("" + Sw.TUER_KUECHE.bes);
+    	txtPreisTuerKueche.setText("" + Sw.TUER_KUECHE.preis);
     	getGridPaneSonderwunsch().add(lblTuerKuecheEuro, 2, 2);
     	getGridPaneSonderwunsch().add(chckBxTuerKueche, 3, 2);
     	
@@ -96,7 +96,7 @@ public class GrundrissView extends BasisView{
     	getGridPaneSonderwunsch().add(lblGrossesZimmerOG, 0, 3);
     	getGridPaneSonderwunsch().add(txtPreisGrossesZimmerOG, 1, 3);
     	txtPreisGrossesZimmerOG.setEditable(false);
-    	txtPreisGrossesZimmerOG.setText("" + Sw.GROSSES_ZIMMER_OG.bes);
+    	txtPreisGrossesZimmerOG.setText("" + Sw.GROSSES_ZIMMER_OG.preis);
     	getGridPaneSonderwunsch().add(lblGrossesZimmerOGEuro, 2, 3);
     	getGridPaneSonderwunsch().add(chckBxGrossesZimmerOG, 3, 3);
     	
@@ -104,7 +104,7 @@ public class GrundrissView extends BasisView{
     	getGridPaneSonderwunsch().add(lblTreppenraumDG, 0, 4);
     	getGridPaneSonderwunsch().add(txtPreisTreppenraumDG, 1, 4);
     	txtPreisTreppenraumDG.setEditable(false);
-    	txtPreisTreppenraumDG.setText("" + Sw.TREPPENRAUM_DG.bes);
+    	txtPreisTreppenraumDG.setText("" + Sw.TREPPENRAUM_DG.preis);
 		getGridPaneSonderwunsch().add(lblTreppenraumDGEuro, 2, 4);
     	getGridPaneSonderwunsch().add(chckBxTreppenraumDG, 3, 4);
     	
@@ -112,7 +112,7 @@ public class GrundrissView extends BasisView{
     	getGridPaneSonderwunsch().add(lblVorrichtungBadDG, 0, 5);
     	getGridPaneSonderwunsch().add(txtPreisVorrichtungBadDG, 1, 5);
     	txtPreisVorrichtungBadDG.setEditable(false);
-    	txtPreisVorrichtungBadDG.setText("" + Sw.VORRICHTUNG_BAD_DG.bes);
+    	txtPreisVorrichtungBadDG.setText("" + Sw.VORRICHTUNG_BAD_DG.preis);
 		getGridPaneSonderwunsch().add(lblVorrichtungBadDGEuro, 2, 5);
     	getGridPaneSonderwunsch().add(chckBxVorrichtungBadDG, 3, 5);
     	
@@ -120,7 +120,7 @@ public class GrundrissView extends BasisView{
     	getGridPaneSonderwunsch().add(lblAusfuehrungBadDG, 0, 6);
     	getGridPaneSonderwunsch().add(txtPreisAusfuehrungBadDG, 1, 6);
 		txtPreisAusfuehrungBadDG.setEditable(false);
-		txtPreisAusfuehrungBadDG.setText("" + Sw.AUSFUEHRUNG_BAD_DG.bes);
+		txtPreisAusfuehrungBadDG.setText("" + Sw.AUSFUEHRUNG_BAD_DG.preis);
 		getGridPaneSonderwunsch().add(lblAusfuehrungBadDGEuro, 2, 6);
     	getGridPaneSonderwunsch().add(chckBxAusfuehrungBadDG, 3, 6);
     	
@@ -182,7 +182,7 @@ public class GrundrissView extends BasisView{
     }
     
     @Override
-    protected boolean[] holeIsSelectedFuerCheckboxen() {
+    public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {
     			chckBxWandKueche.isSelected(),
     			chckBxTuerKueche.isSelected(),

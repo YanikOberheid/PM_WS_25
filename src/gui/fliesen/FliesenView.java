@@ -169,7 +169,7 @@ public class FliesenView extends BasisView {
 		}
 	}
 	
-	protected boolean[] holeIsSelectedFuerCheckboxen() {
+    public boolean[] holeIsSelectedFuerCheckboxen() {
 		return new boolean[] {
 				chckBxFKuecheEGOhne.isSelected(),
 		    	chckBxFBadOGOhne.isSelected(),
