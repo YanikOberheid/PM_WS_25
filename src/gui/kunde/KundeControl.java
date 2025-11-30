@@ -10,6 +10,9 @@ import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
 import gui.heizung.HeizungControl;
 import gui.fenster.FensterControl;
+import gui.innentueren.InnentuerenControl;
+import gui.fliesen.FliesenControl;
+
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten kontrolliert.
  */
@@ -22,10 +25,12 @@ public class KundeControl {
     /* das GrundrissControl-Objekt fuer die Sonderwuensche
        zum Grundriss zu dem Kunden */
     private GrundrissControl grundrissControl;
- // Referenz auf das neue Control-Objekt für Fliesen
+    // Referenz auf das neue Control-Objekt für Fliesen
     private FliesenControl fliesenControl;
     private HeizungControl heizungControl;
     private FensterControl fensterControl;
+    // ...InnentuerenControl
+	private InnentuerenControl innentuerenControl; // NEU
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -43,6 +48,7 @@ public class KundeControl {
      */
     private String keinKundeTitel = "Kein Kunde ausgewählt";
     private String keinKundeMeldung = "Bitte wählen oder erstellen Sie einen Kunden.";
+    
     public void oeffneGrundrissControl(){
     	if (kundeModel.getKunde() == null) {
     		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
@@ -87,9 +93,7 @@ public class KundeControl {
     
     public void oeffneFensterControl() {
         if (this.kundeModel.getKunde() == null) {
-            this.kundeView.zeigeFehlermeldung(
-                    "Kein Kunde ausgewaehlt",
-                    "Bitte waehlen oder erstellen Sie zuerst einen Kunden.");
+            this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
             return;
         }
 
@@ -99,7 +103,18 @@ public class KundeControl {
         this.fensterControl.oeffneFensterView();
     }
 
-    
+    // InnentuerenControl
+	public void oeffneInnentuerenControl() {
+		if (this.kundeModel.getKunde() == null) {
+            this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+            return;
+        }
+		
+        if (this.innentuerenControl == null) {
+			this.innentuerenControl = new InnentuerenControl();
+		}
+		this.innentuerenControl.oeffneInnenturenView();
+	}
     
 
 	/**
@@ -183,5 +198,9 @@ public class KundeControl {
     public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		    return kundeModel.holBildAusDB(idBild);
 	  }
+
+	public void setAttributeNull() {
+		kundeModel.setAttributesNull();
+	}
    
 }
