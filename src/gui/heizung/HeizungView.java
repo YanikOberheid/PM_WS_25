@@ -116,7 +116,7 @@ public class HeizungView extends BasisView {
 
     /** Checkboxen anhand der gespeicherten IDs setzen. */
     @Override
-    protected void updateSwCheckboxen(int[] ausgewaehlteSw) {
+    public void updateSwCheckboxen(int[] ausgewaehlteSw) {
         // Alles zurücksetzen
         chckBxStdHeizkoerper.setSelected(false);
         chckBxGlattHeizkoerper.setSelected(false);
