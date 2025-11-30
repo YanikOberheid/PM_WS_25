@@ -11,8 +11,9 @@ import javafx.stage.Stage;
  */
 public class InnentuerenView extends BasisView {
 
-    private final InnentuerenControl control;
-
+    private final InnentuerenControl innentuerenControl;
+    
+    // GUI-Elemente
     // 4.1 / 4.2: Anzahl-Eingaben (Spinner), 4.3: Checkbox
     private final Label lbl41 = new Label("4.1 Mehrpreis Klarglas-Ausschnitt je Tür (460 €)");
     private final Spinner<Integer> sp41 = new Spinner<>(0, 20, 0);
@@ -23,10 +24,10 @@ public class InnentuerenView extends BasisView {
     private final Label lbl43 = new Label("4.3 Innentür zur Garage als Holztür (660 €) – je 1x");
     private final CheckBox cb43 = new CheckBox();
 
-    public InnentuerenView(InnentuerenControl control, Stage stage) {
-        super(stage);
-        this.control = control;
-        stage.setTitle("Sonderwünsche zu Innentüren");
+    public InnentuerenView(InnentuerenControl innentuerenControl, Stage innentuerenStage) {
+        super(innentuerenStage);
+        this.innentuerenControl = innentuerenControl;
+        innentuerenStage.setTitle("Sonderwuensche zu Innentüren");
         initKomponenten();
     }
 
@@ -52,7 +53,7 @@ public class InnentuerenView extends BasisView {
         gp.add(cb43, 3, row);
     }
 
-    public void oeffne() {
+    public void oeffneInnentuerenView() {
         super.oeffneBasisView(); // geschützter Aufruf innerhalb der erbenden Klasse zulässig
     }
 
@@ -61,21 +62,12 @@ public class InnentuerenView extends BasisView {
     public int getAnzahl42() { return sp42.getValue(); }
     public boolean isAuswahl43() { return cb43.isSelected(); }
 
-    // Task-Scope: kein Speichern – wir zeigen nur eine freundliche Meldung
-    @Override
-    protected void speichereSonderwuensche() {
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("Hinweis");
-        info.setHeaderText("Nur GUI-Aufgabe");
-        info.setContentText("Speichern ist in diesem Task noch nicht vorgesehen.");
-        info.showAndWait();
-    }
-
-    @Override
-    protected void berechneUndZeigePreisSonderwuensche() {
-        // Optional: Hier könnte man eine reine UI-Summenanzeige ergänzen (nicht gefordert).
-    }
-
+	@Override
+	public void updateSwCheckboxen(int[] ausgewaehlteSw) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	@Override
 	public boolean[] holeIsSelectedFuerCheckboxen() {
 		// TODO Auto-generated method stub
@@ -83,14 +75,33 @@ public class InnentuerenView extends BasisView {
 	}
 
 	@Override
-	public void updateSwCheckboxen(int[] ausgewaehlteSw) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	protected int[] checkboxenZuIntArray() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+    protected void berechneUndZeigePreisSonderwuensche() {
+        // Optional: Hier könnte man eine reine UI-Summenanzeige ergänzen (nicht gefordert).
+		Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setTitle("Hinweis");
+        info.setHeaderText("Nur GUI-Aufgabe");
+        info.setContentText("Preis berechnen muss noch implementiert werden, wenn die Task von jemanden bearbeitet wird!");
+        info.showAndWait();
+    }
+	
+    // Task-Scope: kein Speichern – wir zeigen nur eine freundliche Meldung
+    @Override
+    protected void speichereSonderwuensche() {
+    	// Sobal die innentuerenControl.speichereSonderwuensche und checkBoxZuIntArray Methoden implementiert wurde das hier ausfuehren, 
+    	// statt Alert info usw.
+    	// innentuerenControl.speichereSonderwuensche(checkboxenZuIntArray)
+        
+    	Alert info = new Alert(Alert.AlertType.INFORMATION);
+        info.setTitle("Hinweis");
+        info.setHeaderText("Nur GUI-Aufgabe");
+        info.setContentText("Speichern ist in diesem Task noch nicht vorgesehen.");
+        info.showAndWait();
+    }
+
 }

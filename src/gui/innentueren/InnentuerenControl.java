@@ -1,7 +1,7 @@
 package gui.innentueren;
 
 import business.kunde.KundeModel;
-import javafx.scene.control.Alert;
+import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -11,23 +11,35 @@ import javafx.stage.Stage;
  */
 public class InnentuerenControl {
 
-    private final KundeModel model;
-    private final InnentuerenView view;
+	private final InnentuerenView innentuerenView;
+    private final KundeModel kundeModel;
 
-    public InnentuerenControl(KundeModel model) {
-        this.model = model;
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        this.view = new InnentuerenView(this, stage);
+    public InnentuerenControl() {
+        Stage stageInnentueren = new Stage();
+        stageInnentueren.initModality(Modality.APPLICATION_MODAL);
+        this.kundeModel = KundeModel.getInstance();
+        this.innentuerenView = new InnentuerenView(this, stageInnentueren);
     }
-
-    public void oeffneView() {
-        if (model.getKunde() == null) {
-            new Alert(Alert.AlertType.WARNING,
-                "Bitte zuerst im Hauptfenster einen Kunden (Hausnummer) auswählen oder anlegen."
-            ).showAndWait();
-            return;
-        }
-        view.oeffne();
+    
+    public void oeffneInnenturenView() {
+    	leseInnentuerenSonderwuensche();
+    	innentuerenView.oeffneInnentuerenView();
+    }
+    
+    public void leseInnentuerenSonderwuensche() {
+        int[] swInnentueren = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.INNENTUEREN.id);
+        if (swInnentueren != null)
+        	innentuerenView.updateSwCheckboxen(swInnentueren);
+    }
+    
+    // Muss noch implementiert werden
+	// Entsprechende Task
+    public void speichereSonderwuensche(int [] innentuerenSw) {
+    	
+    }
+    
+    // Spatere Implementierung Priorität 5
+    public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
+        return true;
     }
 }

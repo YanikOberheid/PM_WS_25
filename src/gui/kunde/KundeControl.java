@@ -93,9 +93,7 @@ public class KundeControl {
     
     public void oeffneFensterControl() {
         if (this.kundeModel.getKunde() == null) {
-            this.kundeView.zeigeFehlermeldung(
-                    "Kein Kunde ausgewaehlt",
-                    "Bitte waehlen oder erstellen Sie zuerst einen Kunden.");
+            this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
             return;
         }
 
@@ -107,10 +105,15 @@ public class KundeControl {
 
     // InnentuerenControl
 	public void oeffneInnentuerenControl() {
-		if (this.innentuerenControl == null) {
-			this.innentuerenControl = new InnentuerenControl(kundeModel);
+		if (this.kundeModel.getKunde() == null) {
+            this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+            return;
+        }
+		
+        if (this.innentuerenControl == null) {
+			this.innentuerenControl = new InnentuerenControl();
 		}
-		this.innentuerenControl.oeffneView();
+		this.innentuerenControl.oeffneInnenturenView();
 	}
     
 
