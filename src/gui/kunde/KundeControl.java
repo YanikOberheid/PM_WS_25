@@ -42,8 +42,10 @@ public class KundeControl {
     private String keinKundeTitel = "Kein Kunde ausgewählt";
     private String keinKundeMeldung = "Bitte wählen oder erstellen Sie einen Kunden.";
     public void oeffneGrundrissControl(){
-    	if (kundeModel.getKunde() == null)
+    	if (kundeModel.getKunde() == null) {
     		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+    		return;
+    	}
     	
     	if (this.grundrissControl == null){
     		this.grundrissControl = new GrundrissControl();
@@ -52,8 +54,11 @@ public class KundeControl {
     }
     
     public void oeffneHeizungControl() {
-    	if (kundeModel.getKunde() == null)
+    	if (kundeModel.getKunde() == null) {
     		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+    		return;
+    	}
+    	
         if (this.heizungControl == null) {
        
             this.heizungControl = new HeizungControl();
@@ -62,8 +67,10 @@ public class KundeControl {
     }
     
     public void oeffneFliesenControl(){
-    	if (kundeModel.getKunde() == null)
+    	if (kundeModel.getKunde() == null) {
     		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+    		return;
+    	}
         
     	if (this.fliesenControl == null){
             this.fliesenControl = new FliesenControl();
