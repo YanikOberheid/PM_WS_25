@@ -130,12 +130,27 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			pstmt.execute();
 			// INSERT
 			pstmt = con.prepareStatement(sql_ins);
-			for (int id: ausgewaehlteSw) {
-				pstmt.setInt(1, id);
-				pstmt.setInt(2, hausnummer);
-				pstmt.execute();
+			for (int id : ausgewaehlteSw) {
+    			PreparedStatement checkStmt = con.prepareStatement(
+        		"SELECT COUNT(*) FROM Sonderwunsch WHERE idSonderwunsch = ?"
+    			);
+    			checkStmt.setInt(1, id);
+    			ResultSet rs = checkStmt.executeQuery();
+    			rs.next();
+    			int count = rs.getInt(1);
+    			rs.close();
+    			checkStmt.close();
+
+    			if (count > 0) { 
+        			pstmt.setInt(1, id);        
+        			pstmt.setInt(2, hausnummer); 
+        			pstmt.executeUpdate();
+        			System.out.println("Speichere SW-ID: " + id);
+    			} else {
+        			System.out.println("SW-ID " + id + " existiert nicht, Insert übersprungen.");
+    			} 
 			}
-			// commit
+			// commit  
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException exc) {
