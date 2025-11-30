@@ -67,6 +67,7 @@ public class KundeView {
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
 	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
 	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
+	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
 
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
@@ -143,6 +144,7 @@ public class KundeView {
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
 		mnSonderwuensche.getItems().add(mnItmFliesen);
 		mnSonderwuensche.getItems().add(mnItmHeizung);
+		mnSonderwuensche.getItems().add(mnItmFenster);
     
     // --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
@@ -196,6 +198,9 @@ public class KundeView {
 	    });
 		mnItmHeizung.setOnAction(aEvent -> {
 		    kundeControl.oeffneHeizungControl();        
+		});
+		mnItmFenster.setOnAction(aEvent -> {            
+		    kundeControl.oeffneFensterControl();
 		});
 	}
 
