@@ -115,7 +115,7 @@ public class FensterView extends BasisView {
         if (ausgewaehlteSw == null) {
             return;
         }
-
+        System.out.println("Return Null");
         for (int swId : ausgewaehlteSw) {
             Sw sw = Sw.findeMitId(swId);
             switch (sw) {

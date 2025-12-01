@@ -22,7 +22,6 @@ public final class FensterControl {
         this.kundeModel = KundeModel.getInstance();
         this.fensterView = new FensterView(this, stageFenster);
     }
-
   
     public void oeffneFensterView() {
         this.leseFensterSonderwuensche();
@@ -36,7 +35,6 @@ public final class FensterControl {
         }
     }
 
- 
     public void speichereSonderwuensche(int[] fensterSw) {
         int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
         if (ausgewaehlteSw == null) {
