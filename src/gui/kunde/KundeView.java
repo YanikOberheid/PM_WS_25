@@ -65,11 +65,13 @@ public class KundeView {
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
-	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
-	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
 	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
-	// ...
-	private MenuItem mnItmInnentueren = new MenuItem("Innentüren"); // NEU
+	private MenuItem mnItmInnentueren = new MenuItem("Innentüren");
+	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
+	// hier Sanitär
+	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
+	// hier Parkett
+	private MenuItem mnItmAussenanlagen = new MenuItem("Außenanlagen");
 
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
@@ -145,10 +147,13 @@ public class KundeView {
 		
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
-		mnSonderwuensche.getItems().add(mnItmFliesen);
-		mnSonderwuensche.getItems().add(mnItmHeizung);
 		mnSonderwuensche.getItems().add(mnItmFenster);
 		mnSonderwuensche.getItems().add(mnItmInnentueren);
+		mnSonderwuensche.getItems().add(mnItmHeizung);
+		// hier Sanitär
+		mnSonderwuensche.getItems().add(mnItmFliesen);
+		// hier Parkett
+		mnSonderwuensche.getItems().add(mnItmAussenanlagen);
     
     // --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
@@ -208,6 +213,9 @@ public class KundeView {
 		});
 		mnItmInnentueren.setOnAction(aEvent -> {
 		    kundeControl.oeffneInnentuerenControl();
+		});
+		mnItmAussenanlagen.setOnAction(aEvent -> {
+			kundeControl.oeffneAussenanlagenControl();
 		});
 	}
 

@@ -9,6 +9,7 @@ import business.kunde.KundeModel;
 import gui.fliesen.FliesenControl;
 import gui.grundriss.GrundrissControl;
 import gui.heizung.HeizungControl;
+import gui.aussenanlagen.AussenanlagenControl;
 import gui.fenster.FensterControl;
 import gui.innentueren.InnentuerenControl;
 import gui.fliesen.FliesenControl;
@@ -30,7 +31,8 @@ public class KundeControl {
     private HeizungControl heizungControl;
     private FensterControl fensterControl;
     // ...InnentuerenControl
-	private InnentuerenControl innentuerenControl; // NEU
+	private InnentuerenControl innentuerenControl;
+	private AussenanlagenControl aussenanlagenControl;
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -114,6 +116,19 @@ public class KundeControl {
 			this.innentuerenControl = new InnentuerenControl();
 		}
 		this.innentuerenControl.oeffneInnenturenView();
+	}
+	
+	// Außenanlagen
+	public void oeffneAussenanlagenControl() {
+		if (this.kundeModel.getKunde() == null) {
+			this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+			return;
+		}
+		
+		if (this.aussenanlagenControl == null) {
+			this.aussenanlagenControl = new AussenanlagenControl();
+		}
+		this.oeffneAussenanlagenControl();.oeffneAussenanlagenView();
 	}
     
 
