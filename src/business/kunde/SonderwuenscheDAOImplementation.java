@@ -62,7 +62,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
-	
+
 	@Override
 	public int[] getExcluding(int hausnummer, int kategorieId) throws SQLException {
 		// [FIX] Removed quotes and added spaces to ends of lines

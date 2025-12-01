@@ -232,7 +232,7 @@ public class GrundrissView extends BasisView{
   		txtGesamt.setText(String.format("%.2f", preis));
   	}
   	
-  	/**
+  	/*
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
 	 * Übergibt die Auswahl zum Speichern an Control.
 	 */

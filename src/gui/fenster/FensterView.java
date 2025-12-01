@@ -8,7 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-/**
+/*
  * Fenster mit den Sonderwuenschen zu
  * Fenstern und Außentüren
  */

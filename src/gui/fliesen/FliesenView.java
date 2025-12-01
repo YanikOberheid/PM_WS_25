@@ -161,8 +161,7 @@ public class FliesenView extends BasisView {
             		chckBxFBadDGGross.setSelected(true);
             		break;
             	default:
-            		System.out.println(
-                    		"Unbekannte Sonderwunsch-ID zu Fliesen: " + sw);
+            		System.out.println("Unbekannte Sonderwunsch-ID zu Fliesen: " + sw);
             		break;
             }
 		}

@@ -149,7 +149,7 @@ public class HeizungView extends BasisView {
             }
         }
     }
-    
+
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {chckBxStdHeizkoerper.isSelected(),
