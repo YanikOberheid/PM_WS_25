@@ -224,7 +224,6 @@ public class KundeView {
 
 	private void leseKunden() {
 	    Integer hausnummer = cmbBxNummerHaus.getValue();
-	    
 	    if (hausnummer == 0) {
 	    	txtKundennummer.clear();
 	        txtVorname.clear();

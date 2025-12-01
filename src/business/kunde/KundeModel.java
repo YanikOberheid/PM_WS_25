@@ -208,7 +208,6 @@ public final class KundeModel {
 		// throw new Exception("Es konnte kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
 		
-		
 		try {
 			this.ausgewaehlteSw = this.swDao.get(hausnr);
 			return this.ausgewaehlteSw.clone();

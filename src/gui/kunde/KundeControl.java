@@ -128,7 +128,7 @@ public class KundeControl {
 		if (this.aussenanlagenControl == null) {
 			this.aussenanlagenControl = new AussenanlagenControl();
 		}
-		this.oeffneAussenanlagenControl();.oeffneAussenanlagenView();
+		this.aussenanlagenControl.oeffneAussenanlagenView();
 	}
     
 
