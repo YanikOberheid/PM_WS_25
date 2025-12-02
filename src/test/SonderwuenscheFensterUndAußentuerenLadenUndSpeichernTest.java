@@ -56,7 +56,6 @@ public class SonderwuenscheFensterUndAußentuerenLadenUndSpeichernTest {
 		assertArrayEquals(expected, actual);
 	}
 	
-	
 	@Test
 	public void testLadenMitKategorieFensterAussentueren() throws Exception {
 		int[] daten = { FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID };
@@ -69,18 +68,4 @@ public class SonderwuenscheFensterUndAußentuerenLadenUndSpeichernTest {
 		assertEquals(1, result.length, "Es sollte genau 1 Fenster und Aussentueren-Sonderwunsch geben");
 		assertEquals(FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID, result[0], "Die ID muss "+ Integer.toString(Sw.STUEREN_TERRASSE.id) + " sein");
 	}
-	
-	/*
-	@Test
-	public void testDeleteFensterAussentueren() throws Exception {
-		int[] daten = { FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID };
-
-		swDao.update(TEST_HAUSNUMMER, daten);
-
-		swDao.delete(TEST_HAUSNUMMER);
-
-		int[] result = swDao.get(TEST_HAUSNUMMER);
-
-		assertEquals(0, result.length, "Nach dem Löschen muss die Liste leer sein");
-	}*/
 }
