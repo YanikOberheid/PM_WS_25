@@ -25,7 +25,7 @@ public interface KundenDAO {
 	
 	public void updateKunde(Kunde kunde)
 			throws SQLException;
-	
+	// Bild Laden Methode
 	public InputStream loadImage(int id)
 			throws SQLException, Exception;
 }

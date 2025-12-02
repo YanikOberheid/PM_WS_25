@@ -6,7 +6,7 @@ import business.kunde.KundeModel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
+/*
  * Klasse, welche das Fenster mit den Sonderwuenschen zu Fenstern und
  * Außentueren kontrolliert.
  */
@@ -22,7 +22,6 @@ public final class FensterControl {
         this.kundeModel = KundeModel.getInstance();
         this.fensterView = new FensterView(this, stageFenster);
     }
-
   
     public void oeffneFensterView() {
         this.leseFensterSonderwuensche();
@@ -36,7 +35,6 @@ public final class FensterControl {
         }
     }
 
- 
     public void speichereSonderwuensche(int[] fensterSw) {
         int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
         if (ausgewaehlteSw == null) {
@@ -68,7 +66,6 @@ public final class FensterControl {
             }
         }
     }
-
   
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
         return true;

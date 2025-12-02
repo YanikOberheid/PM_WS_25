@@ -7,7 +7,7 @@ import business.kunde.SwKategorie;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-/**
+/*
  * Klasse, welche das Fenster mit den Sonderwünschen zu den Fliesen kontrolliert.
  */
 public class FliesenControl {
