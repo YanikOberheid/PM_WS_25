@@ -12,46 +12,43 @@ import org.junit.jupiter.api.Test;
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
 import business.kunde.SonderwuenscheDAOImplementation;
+import business.kunde.Sw;
 import gui.fenster.FensterControl;
 import gui.fenster.FensterView;
 import javafx.application.Platform;
 
-/**
- * Vorgehen:
- *  - KundeModel mit Test-Kunde + Fake-DAO vorbereiten (Mockdaten, keine echte DB)
- *  - FensterControl erzeugen → FensterView erstellt und liest Sonderwünsche
- *  - Über holeIsSelectedFuerCheckboxen() prüfen, ob die richtigen Checkboxen selektiert sind
- */
 class FensterAnzeigenTest {
 
     @BeforeAll
     static void initFx() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
-
-        Platform.startup(() -> {
-            latch.countDown();
-        });
-
-        if (!latch.await(10, TimeUnit.SECONDS)) {
-            fail("JavaFX konnte nicht initialisiert werden");
-        }
+        Platform.startup(latch::countDown);
+        assertTrue(latch.await(10, TimeUnit.SECONDS),
+                "JavaFX konnte nicht initialisiert werden");
     }
 
     @Test
     void ausgewaehlteFensterSonderwuenscheWerdenAngezeigt() throws Exception {
 
-        // 1) Mockdaten (Sonderwünsche)
+        //  Mockdaten (Sonderwünsche)
         int hausnummer = 20;
 
-        // Alle 9 Fenster-/Außentür-Sonderwünsche auswählen
+        // Alle 9 Fenster-/Außentür-SWs über Enum-IDs
         int[] ausgewaehlteFensterSw = {
-            301, 302, 303, 304, 305, 306, 307, 308, 309
+            Sw.STUEREN_TERRASSE.id,      // 301
+            Sw.STUEREN_DACHTERRASSE.id,  // 302
+            Sw.EBS_HAUSTUER.id,          // 303
+            Sw.VEAR_EG.id,               // 304
+            Sw.VEAR_OG.id,               // 305
+            Sw.VEAR_DG.id,               // 306
+            Sw.ER_EG.id,                 // 307
+            Sw.ER_OG.id,                 // 308
+            Sw.ER_DG.id                  // 309
         };
 
-        // 2) KundeModel per Reflection vorbereiten (Mock)
         KundeModel kundeModel = KundeModel.getInstance();
 
-        // Test-Kunde setzen (ohne echte DB-Operation)
+        // aktueller Kunde direkt ins private Feld 'kunde' schreien
         Field kundeField = KundeModel.class.getDeclaredField("kunde");
         kundeField.setAccessible(true);
         kundeField.set(kundeModel, new Kunde(
@@ -70,25 +67,19 @@ class FensterAnzeigenTest {
                         "DAO sollte mit der Test-Hausnummer aufgerufen werden");
                 return ausgewaehlteFensterSw.clone();
             }
-
-            public int[] get(int hausnr, int kategorieId) {
-                assertEquals(hausnummer, hausnr,
-                        "DAO sollte mit der Test-Hausnummer aufgerufen werden");
-                return ausgewaehlteFensterSw.clone();
-            }
         }
 
-        // Fake DAO in KundeModel injizieren
+        // swDao im KundeModel ersetzen
         Field swDaoField = KundeModel.class.getDeclaredField("swDao");
         swDaoField.setAccessible(true);
         swDaoField.set(kundeModel, new FakeSwDao());
 
-        // Lokale Sonderwunschliste zurücksetzen, damit neu geladen wird
+        // ausgewaehlteSw zurücksetzen, damit wirklich aus dem DAO gelesen wird
         Field ausgewaehlteSwField = KundeModel.class.getDeclaredField("ausgewaehlteSw");
         ausgewaehlteSwField.setAccessible(true);
         ausgewaehlteSwField.set(kundeModel, null);
 
-        // 3) FensterControl + FensterView starten
+        // FensterControl + FensterView auf FX-Thread erzeugen
         CountDownLatch latch = new CountDownLatch(1);
         final boolean[][] selectedHolder = new boolean[1][];
 
@@ -96,14 +87,16 @@ class FensterAnzeigenTest {
             try {
                 FensterControl control = new FensterControl();
 
+                control.leseFensterSonderwuensche();
+
                 Field viewField = FensterControl.class.getDeclaredField("fensterView");
                 viewField.setAccessible(true);
                 FensterView view = (FensterView) viewField.get(control);
 
-                boolean[] selected = view.holeIsSelectedFuerCheckboxen();
-                selectedHolder[0] = selected;
+                selectedHolder[0] = view.holeIsSelectedFuerCheckboxen();
 
             } catch (Exception e) {
+                e.printStackTrace();
                 fail(e);
             } finally {
                 latch.countDown();
@@ -113,13 +106,13 @@ class FensterAnzeigenTest {
         assertTrue(latch.await(5, TimeUnit.SECONDS),
                 "FX-Thread ist nicht rechtzeitig fertig geworden");
 
-        // 4) Prüfen der Checkboxen
+        //  Prüfen der Checkboxen
         boolean[] selected = selectedHolder[0];
         assertNotNull(selected, "Selektions-Array darf nicht null sein");
         assertEquals(9, selected.length,
                 "Es sollten 9 Checkboxen in holeIsSelectedFuerCheckboxen() sein");
 
-        // Wir haben alle 9 SW ausgewählt,alle Checkboxen sollen true sein
+        // Wir haben alle 9 SW ausgewählt, alle 9 Checkboxen müssen true sein
         for (int i = 0; i < selected.length; i++) {
             assertTrue(selected[i], "Checkbox an Index " + i + " sollte selektiert sein");
         }
