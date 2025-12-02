@@ -28,6 +28,7 @@ public enum SwKategorie {
 	PARKETT(80, "Parkett"),
 	AUSSENANLAGEN(90, "Außenanlagen");
 	
+	
 	// --- Enum Definition ---
     // Felder
 	public final int id;

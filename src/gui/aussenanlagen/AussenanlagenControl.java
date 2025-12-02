@@ -1,6 +1,7 @@
 package gui.aussenanlagen;
 
 import business.kunde.KundeModel;
+import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,21 +23,34 @@ public class AussenanlagenControl {
 	}
 	
 	public void leseAussenanlagenSonderwuensche() {
-		    // 1. Lokale Sonderwünsche versuchen
-		    int[] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwLokal();
-		    
-		    // 2. Wenn lokal nichts da ist, aus DB holen
-		    if (ausgewaehlteSw == null || ausgewaehlteSw.length == 0) {
-		        ausgewaehlteSw = kundeModel.gibAusgewaehlteSwAusDb();
-		    }
-		    if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
-		        aussenanlagenView.updateSwCheckboxen(ausgewaehlteSw);
-		    }
-		}
-	
+	    // 1. Lokale Sonderwünsche versuchen
+	    int[] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwLokal();
+	    
+	    // 2. Wenn lokal nichts da ist, aus DB holen
+	    if (ausgewaehlteSw == null || ausgewaehlteSw.length == 0) {
+	        ausgewaehlteSw = kundeModel.gibAusgewaehlteSwAusDb();
+	    }
+	    if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
+	        aussenanlagenView.updateSwCheckboxen(ausgewaehlteSw);
+	    }
+	}
 	
 	public void speichereSonderwuensche(int[] aussenanlagenSw) {
-		// TODO
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationAussenanlagen(aussenanlagenSw)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+            		aussenanlagenSw,
+                    SwKategorie.AUSSENANLAGEN.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Heizungen konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
 	}
 	
 	public boolean pruefeKonstellationAussenanlagen(int[] ausgewaehlteSw) {
