@@ -22,8 +22,18 @@ public class AussenanlagenControl {
 	}
 	
 	public void leseAussenanlagenSonderwuensche() {
-		// TODO
-	}
+		    // 1. Lokale Sonderwünsche versuchen
+		    int[] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwLokal();
+		    
+		    // 2. Wenn lokal nichts da ist, aus DB holen
+		    if (ausgewaehlteSw == null || ausgewaehlteSw.length == 0) {
+		        ausgewaehlteSw = kundeModel.gibAusgewaehlteSwAusDb();
+		    }
+		    if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
+		        aussenanlagenView.updateSwCheckboxen(ausgewaehlteSw);
+		    }
+		}
+	
 	
 	public void speichereSonderwuensche(int[] aussenanlagenSw) {
 		// TODO
