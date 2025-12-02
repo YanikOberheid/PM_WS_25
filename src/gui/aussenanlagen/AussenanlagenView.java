@@ -144,18 +144,85 @@ public class AussenanlagenView extends BasisView {
     /** Checkboxen anhand der gespeicherten IDs setzen. */
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
-    	// TODO
-    }
+    	    // Erstmal alles zurücksetzen
+    	    chckBxAbstellTerrasseEG.setSelected(false);
+    	    chckBxVEAMarkiseEG.setSelected(false);
+    	    chckBxVEAMarkiseDG.setSelected(false);
+    	    chckBxEMarkiseEG.setSelected(false);
+    	    chckBxEMarkiseDG.setSelected(false);
+    	    chckBxEAGaragentor.setSelected(false);
+    	    chckBxSTGaragentor.setSelected(false);
+
+    	    if (ausgewaehlteSw == null) {
+    	        return;
+    	    }
+
+    	    for (int swId : ausgewaehlteSw) {
+    	        if (swId == Sw.ABSTELL_TERRASSE_EG.id) {
+    	            chckBxAbstellTerrasseEG.setSelected(true);
+    	        } else if (swId == Sw.VEA_MARKISE_EG.id) {
+    	            chckBxVEAMarkiseEG.setSelected(true);
+    	        } else if (swId == Sw.VEA_MARKISE_DG.id) {
+    	            chckBxVEAMarkiseDG.setSelected(true);
+    	        } else if (swId == Sw.E_MARKISE_EG.id) {
+    	            chckBxEMarkiseEG.setSelected(true);
+    	        } else if (swId == Sw.E_MARKISE_DG.id) {
+    	            chckBxEMarkiseDG.setSelected(true);
+    	        } else if (swId == Sw.EA_GARAGENTOR.id) {
+    	            chckBxEAGaragentor.setSelected(true);
+    	        } else if (swId == Sw.ST_GARAGENTOR.id) {
+    	            chckBxSTGaragentor.setSelected(true);
+    	        }
+    	    }
+    	}
+    
     
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
-    	return null; // TODO
+        return new boolean[] {
+            chckBxAbstellTerrasseEG.isSelected(),
+            chckBxVEAMarkiseEG.isSelected(),
+            chckBxVEAMarkiseDG.isSelected(),
+            chckBxEMarkiseEG.isSelected(),
+            chckBxEMarkiseDG.isSelected(),
+            chckBxEAGaragentor.isSelected(),
+            chckBxSTGaragentor.isSelected()
+        };
     }
+
     
     @Override
     protected int[] checkboxenZuIntArray() {
-    	return null; // TODO
-    }
+        java.util.List<Integer> swIds = new java.util.ArrayList<>();
+
+        if (chckBxAbstellTerrasseEG.isSelected()) {
+            swIds.add(Sw.ABSTELL_TERRASSE_EG.id);
+        }
+        if (chckBxVEAMarkiseEG.isSelected()) {
+            swIds.add(Sw.VEA_MARKISE_EG.id);
+        }
+        if (chckBxVEAMarkiseDG.isSelected()) {
+            swIds.add(Sw.VEA_MARKISE_DG.id);
+        }
+        if (chckBxEMarkiseEG.isSelected()) {
+            swIds.add(Sw.E_MARKISE_EG.id);
+        }
+        if (chckBxEMarkiseDG.isSelected()) {
+            swIds.add(Sw.E_MARKISE_DG.id);
+        }
+        if (chckBxEAGaragentor.isSelected()) {
+            swIds.add(Sw.EA_GARAGENTOR.id);
+        }
+        if (chckBxSTGaragentor.isSelected()) {
+            swIds.add(Sw.ST_GARAGENTOR.id);
+        }
+
+        int[] result = new int[swIds.size()];
+        for (int i = 0; i < swIds.size(); i++) {
+            result[i] = swIds.get(i);
+        }
+        return result;
+    }    
     
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     @Override
