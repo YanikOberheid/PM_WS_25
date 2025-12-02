@@ -32,6 +32,7 @@ public class KundeDaoImplementation implements KundenDAO {
 		}
 	}
 
+	// Auf Dopplung prüfen
 	@Override
 	public boolean istHausnummerBesetzt(int hausnummer) throws SQLException {
 	    String sql = "SELECT 1 FROM Kunde WHERE Haus_Hausnr = ?";

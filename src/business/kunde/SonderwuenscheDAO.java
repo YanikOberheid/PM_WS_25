@@ -9,7 +9,7 @@ public interface SonderwuenscheDAO {
 	public int[] get(int hausnummer, int kategorieId)
 			throws SQLException;
 	
-	/**
+	/*
 	 * @param hausnummer, zu der Sonderwünsche geholt werden sollen
 	 * @param kategorieId, zu der KEINE IDs geholt werden sollen
 	 * @return int[] mit Sonderwunsch-IDs ohne die angegeben Kategorie

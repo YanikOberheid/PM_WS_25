@@ -1,6 +1,7 @@
 package gui.aussenanlagen;
 
 import business.kunde.KundeModel;
+import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,11 +23,27 @@ public class AussenanlagenControl {
 	}
 	
 	public void leseAussenanlagenSonderwuensche() {
-		// TODO
+		 int[] swAussenanlagen = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.AUSSENANLAGEN.id);
+	        if (swAussenanlagen != null)
+	        	aussenanlagenView.updateSwCheckboxen(swAussenanlagen);
 	}
 	
 	public void speichereSonderwuensche(int[] aussenanlagenSw) {
-		// TODO
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationAussenanlagen(aussenanlagenSw)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+            		aussenanlagenSw,
+                    SwKategorie.AUSSENANLAGEN.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Heizungen konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
 	}
 	
 	public boolean pruefeKonstellationAussenanlagen(int[] ausgewaehlteSw) {

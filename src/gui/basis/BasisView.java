@@ -21,7 +21,6 @@ public abstract class BasisView {
    	private Label lblSonderwunsch   	= new Label("Sonderwunsch");
     private Button btnBerechnen 	 	= new Button("Preis berechnen");
     private Button btnSpeichern 	 	= new Button("Speichern");
-    
     // Gesamtpreis-Anzeige - protected, da Zeile im GridPane unbekannt
     protected Label lblGesamt =
     		new Label("Gesamtpreis");

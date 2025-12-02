@@ -16,7 +16,7 @@ public class HeizungControl {
         this.kundeModel = KundeModel.getInstance();
         this.heizungView = new HeizungView(this, stageHeizung);
     }
-
+    
     public void oeffneHeizungView() {
         leseHeizungsSonderwuensche();
         heizungView.oeffneHeizungView();

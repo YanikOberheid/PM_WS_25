@@ -3,9 +3,14 @@ package business.kunde;
 import java.io.InputStream;
 import java.sql.SQLException;
 import javafx.collections.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.io.InputStream;
+
 
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.

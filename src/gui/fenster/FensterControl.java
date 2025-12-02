@@ -6,7 +6,7 @@ import business.kunde.KundeModel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
+/*
  * Klasse, welche das Fenster mit den Sonderwuenschen zu Fenstern und
  * Außentueren kontrolliert.
  */

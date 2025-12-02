@@ -25,7 +25,8 @@ public enum SwKategorie {
 	HEIZKOERPER(50, "Heizkörper"),
 	SANITAERINSTALLATION(60, "Sanitärinstallation"),
 	FLIESEN(70, "Fliesen"),
-	PARKETT(80, "Parkett");
+	PARKETT(80, "Parkett"),
+	AUSSENANLAGEN(90, "Außenanlagen");
 	
 	
 	// --- Enum Definition ---

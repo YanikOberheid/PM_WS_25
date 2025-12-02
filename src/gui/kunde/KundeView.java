@@ -382,7 +382,7 @@ public class KundeView {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//zeigeHausBild(STANDARD_HAUS_BILD);
+			//zeigeHausBild(STANDARD_HAUS_BILD);
 			} else {
 				System.out.println("Haus hat einen Dachgeschoss!");
 				try {

@@ -213,7 +213,7 @@ public class KundeControl {
     public InputStream ladeBildAusDB(int idBild) throws SQLException, Exception {
 		    return kundeModel.holBildAusDB(idBild);
 	  }
-
+    
 	public void setAttributeNull() {
 		kundeModel.setAttributesNull();
 	}

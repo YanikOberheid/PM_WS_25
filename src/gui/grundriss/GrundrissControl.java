@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import business.kunde.KundeModel;
 import business.kunde.SwKategorie;
 
-/**
+/*
  * Klasse, welche das Fenster mit den Sonderwuenschen zu den Grundriss-Varianten
  * kontrolliert.
  */
