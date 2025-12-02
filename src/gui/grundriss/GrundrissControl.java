@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import business.kunde.KundeModel;
 import business.kunde.SwKategorie;
 
-/**
+/*
  * Klasse, welche das Fenster mit den Sonderwuenschen zu den Grundriss-Varianten
  * kontrolliert.
  */
@@ -16,8 +16,8 @@ public final class GrundrissControl {
 	private final KundeModel kundeModel;
 
 	/**
-	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
 	 * Fenster fuer die Sonderwuensche zum Grundriss.
+	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
 	 * @param grundrissStage, Stage fuer das View-Objekt zu den Sonderwuenschen zum Grundriss
 	 */
 	public GrundrissControl(){  

@@ -3,9 +3,14 @@ package business.kunde;
 import java.io.InputStream;
 import java.sql.SQLException;
 import javafx.collections.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.io.InputStream;
+
 
 /**
  * Klasse, welche das Model des Grundfensters mit den Kundendaten enthaelt.
@@ -207,7 +212,6 @@ public final class KundeModel {
 		if (kunde == null) return null; 
 		// throw new Exception("Es konnte kein Kunde gefunden werden");
 		int hausnr = this.kunde.getHausnummer();
-		
 		
 		try {
 			this.ausgewaehlteSw = this.swDao.get(hausnr);

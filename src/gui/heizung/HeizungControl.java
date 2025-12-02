@@ -16,7 +16,7 @@ public class HeizungControl {
         this.kundeModel = KundeModel.getInstance();
         this.heizungView = new HeizungView(this, stageHeizung);
     }
-
+    
     public void oeffneHeizungView() {
         leseHeizungsSonderwuensche();
         heizungView.oeffneHeizungView();
@@ -27,7 +27,8 @@ public class HeizungControl {
         if (swHeizung != null)
             heizungView.updateSwCheckboxen(swHeizung);
     }
-
+    
+    // Speichern der ausgewählten Sonderwuensche
     public void speichereSonderwuensche(int[] heizungsSw) {
         // Erst Konstellation prüfen
         if (!pruefeKonstellationHeizkoerper(heizungsSw)) {

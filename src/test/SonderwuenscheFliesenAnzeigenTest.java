@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  * Nur FliesenView.updateFliesenCheckboxen(...) wird hier getestet.
  *  
  */
-
+	
 class SonderwuenscheFliesenAnzeigenTest {
 	
 

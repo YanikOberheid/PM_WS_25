@@ -25,7 +25,7 @@ public class InnentuerenControl {
     	leseInnentuerenSonderwuensche();
     	innentuerenView.oeffneInnentuerenView();
     }
-    
+
     public void leseInnentuerenSonderwuensche() {
         int[] swInnentueren = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.INNENTUEREN.id);
         if (swInnentueren != null)

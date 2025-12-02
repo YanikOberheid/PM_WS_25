@@ -8,7 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-/**
+/*
  * Fenster mit den Sonderwuenschen zu
  * Fenstern und Außentüren
  */
@@ -115,7 +115,7 @@ public class FensterView extends BasisView {
         if (ausgewaehlteSw == null) {
             return;
         }
-
+        System.out.println("Return Null");
         for (int swId : ausgewaehlteSw) {
             Sw sw = Sw.findeMitId(swId);
             switch (sw) {
