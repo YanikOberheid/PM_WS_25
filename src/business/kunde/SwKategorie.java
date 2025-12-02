@@ -27,6 +27,7 @@ public enum SwKategorie {
 	FLIESEN(70, "Fliesen"),
 	PARKETT(80, "Parkett");
 	
+	
 	// --- Enum Definition ---
     // Felder
 	public final int id;
