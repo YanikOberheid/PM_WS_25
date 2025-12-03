@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import business.kunde.KundeModel;
 import business.kunde.SwKategorie;
-
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import gui.aussenanlagen.AussenanlagenControl;
