@@ -199,6 +199,7 @@ public class AussenanlagenView extends BasisView {
                 chckBxSTGaragentor.isSelected()
 				};
     }
+
     
     @Override
     protected int[] checkboxenZuIntArray() {

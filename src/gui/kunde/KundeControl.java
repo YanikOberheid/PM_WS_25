@@ -12,6 +12,7 @@ import gui.heizung.HeizungControl;
 import gui.aussenanlagen.AussenanlagenControl;
 import gui.fenster.FensterControl;
 import gui.innentueren.InnentuerenControl;
+import gui.parkett.ParkettControl;
 import gui.fliesen.FliesenControl;
 
 /**
@@ -33,6 +34,8 @@ public class KundeControl {
     // ...InnentuerenControl
 	private InnentuerenControl innentuerenControl;
 	private AussenanlagenControl aussenanlagenControl;
+	private ParkettControl parkettControl;
+
     
     /**
 	 * erzeugt ein ControlObjekt inklusive View-Objekt und Model-Objekt zum 
@@ -90,9 +93,7 @@ public class KundeControl {
     	this.fliesenControl.leseFliesenSonderwuensche();
         this.fliesenControl.oeffneFliesenView();
     }
-    
-   //fenster wird geöffnet#
-    
+        
     public void oeffneFensterControl() {
         if (this.kundeModel.getKunde() == null) {
             this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
@@ -130,6 +131,19 @@ public class KundeControl {
 		}
 		this.aussenanlagenControl.oeffneAussenanlagenView();
 	}
+	// Parkett
+	public void oeffneParkettControl() {
+	    if (this.kundeModel.getKunde() == null) {
+	        this.kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+	        return;
+	    }
+
+	    if (this.parkettControl == null) {
+	        this.parkettControl = new ParkettControl();
+	    }
+	    this.parkettControl.oeffneParkettView();
+	}
+
     
 
 	/**

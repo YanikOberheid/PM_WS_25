@@ -62,7 +62,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
-
+	
 	@Override
 	public int[] getExcluding(int hausnummer, int kategorieId) throws SQLException {
 		// [FIX] Removed quotes and added spaces to ends of lines
@@ -94,12 +94,14 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 
 	@Override
 	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
-		// UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
-		// [FIX] Removed quotes and added space before WHERE
+		/* UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
+		 * Alle Eintraege mit der Hausnummer löschen/entfernen, also alle Zeilen mit der uebergebenden Hausnummer
+		*/ 
 		String sql_del = "DELETE FROM Sonderwunsch_has_Haus "
 						+ "WHERE Haus_Hausnr = ?";
-				
-		// [FIX] Removed quotes and added space
+		
+		// Insert Sql Statement vorbereiten
+		// Gedacht für mehrmalige Nutzung - Zeile 137 Bis 142 - For Schleife
 		String sql_ins = "INSERT INTO Sonderwunsch_has_Haus "
 						+ "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) "
 						+ "VALUES (?, ?)";
@@ -128,8 +130,15 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			PreparedStatement pstmt = con.prepareStatement(sql_del);
 			pstmt.setInt(1, hausnummer);
 			pstmt.execute();
-			// INSERT
 			pstmt = con.prepareStatement(sql_ins);
+			// Mehrmaliges ausfuehren des INSERT SQL-Statement
+			// fuer die verschiedenen Ausgewaehlten Sonderwuensche
+			/*for (int id: ausgewaehlteSw) {
+				System.out.println("Folgende ID: " + Integer.toString(id));
+				pstmt.setInt(1, id);
+				pstmt.setInt(2, hausnummer);
+				pstmt.execute();
+			*/
 			for (int id : ausgewaehlteSw) {
     			PreparedStatement checkStmt = con.prepareStatement(
         		"SELECT COUNT(*) FROM Sonderwunsch WHERE idSonderwunsch = ?"
@@ -150,7 +159,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
         			System.out.println("SW-ID " + id + " existiert nicht, Insert übersprungen.");
     			} 
 			}
-			// commit  
+			// commit
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException exc) {

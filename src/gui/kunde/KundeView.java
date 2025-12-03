@@ -68,10 +68,10 @@ public class KundeView {
 	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
 	private MenuItem mnItmInnentueren = new MenuItem("Innentüren");
 	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
-	// hier Sanitär
 	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
-	// hier Parkett
 	private MenuItem mnItmAussenanlagen = new MenuItem("Außenanlagen");
+	private MenuItem mnItmParkett = new MenuItem("Parkett");
+
 
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
@@ -150,10 +150,10 @@ public class KundeView {
 		mnSonderwuensche.getItems().add(mnItmFenster);
 		mnSonderwuensche.getItems().add(mnItmInnentueren);
 		mnSonderwuensche.getItems().add(mnItmHeizung);
-		// hier Sanitär
 		mnSonderwuensche.getItems().add(mnItmFliesen);
-		// hier Parkett
 		mnSonderwuensche.getItems().add(mnItmAussenanlagen);
+		mnSonderwuensche.getItems().add(mnItmParkett);
+
     
     // --- Rechts: Bildbereich (neu) ---
 		VBox rightBox = new VBox(10);
@@ -186,38 +186,42 @@ public class KundeView {
 
 	/* initialisiert die Listener zu den Steuerelementen auf de Maske */
 	private void initListener() {
-		cmbBxNummerHaus.setOnAction(aEvent -> {
-			holeInfoDachgeschoss();
-			leseKunden();
-		});
-		btnAnlegen.setOnAction(aEvent -> {
-			legeKundenAn();
-		});
-		btnAendern.setOnAction(aEvent -> {
-			aendereKunden();
-		});
-		btnLoeschen.setOnAction(aEvent -> {
-			loescheKunden();
-		});
-		mnItmGrundriss.setOnAction(aEvent -> {
-			kundeControl.oeffneGrundrissControl();
-		});
-		mnItmFliesen.setOnAction(aEvent -> {
+	    cmbBxNummerHaus.setOnAction(aEvent -> {
+	        holeInfoDachgeschoss();
+	        leseKunden();
+	    });
+	    btnAnlegen.setOnAction(aEvent -> {
+	        legeKundenAn();
+	    });
+	    btnAendern.setOnAction(aEvent -> {
+	        aendereKunden();
+	    });
+	    btnLoeschen.setOnAction(aEvent -> {
+	        loescheKunden();
+	    });
+	    mnItmGrundriss.setOnAction(aEvent -> {
+	        kundeControl.oeffneGrundrissControl();
+	    });
+	    mnItmFliesen.setOnAction(aEvent -> {
 	        kundeControl.oeffneFliesenControl();
 	    });
-		mnItmHeizung.setOnAction(aEvent -> {
-		    kundeControl.oeffneHeizungControl();        
-		});
-		mnItmFenster.setOnAction(aEvent -> {            
-		    kundeControl.oeffneFensterControl();
-		});
-		mnItmInnentueren.setOnAction(aEvent -> {
-		    kundeControl.oeffneInnentuerenControl();
-		});
-		mnItmAussenanlagen.setOnAction(aEvent -> {
-			kundeControl.oeffneAussenanlagenControl();
-		});
+	    mnItmHeizung.setOnAction(aEvent -> {
+	        kundeControl.oeffneHeizungControl();
+	    });
+	    mnItmFenster.setOnAction(aEvent -> {
+	        kundeControl.oeffneFensterControl();
+	    });
+	    mnItmInnentueren.setOnAction(aEvent -> {
+	        kundeControl.oeffneInnentuerenControl();
+	    });
+	    mnItmParkett.setOnAction(aEvent -> {
+	        kundeControl.oeffneParkettControl();   // ✭ WICHTIG ✭
+	    });
+	    mnItmAussenanlagen.setOnAction(aEvent -> {
+	        kundeControl.oeffneAussenanlagenControl();
+	    });
 	}
+
 
 	private void holeInfoDachgeschoss() {
 	}
