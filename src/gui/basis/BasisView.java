@@ -33,7 +33,7 @@ public abstract class BasisView {
     */
     public BasisView(Stage sonderwunschStage){
     	this.sonderwunschStage = sonderwunschStage;
-	    Scene scene = new Scene(borderPane, 560, 400);
+	    Scene scene = new Scene(borderPane, 560, 560);
 	    sonderwunschStage.setScene(scene);
 	
 	    this.initListener();
