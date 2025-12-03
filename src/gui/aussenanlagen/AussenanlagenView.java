@@ -1,5 +1,7 @@
 package gui.aussenanlagen;
 
+import java.util.Vector;
+
 import business.kunde.Sw;
 import gui.basis.BasisView;
 import javafx.scene.control.CheckBox;
@@ -144,23 +146,104 @@ public class AussenanlagenView extends BasisView {
     /** Checkboxen anhand der gespeicherten IDs setzen. */
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
+        // Alles zurücksetzen
+    	    chckBxAbstellTerrasseEG.setSelected(false);
+            chckBxVEAMarkiseEG.setSelected(false);
+            chckBxVEAMarkiseDG.setSelected(false);
+            chckBxEMarkiseEG.setSelected(false);
+            chckBxEMarkiseDG.setSelected(false);
+            chckBxEAGaragentor.setSelected(false);
+            chckBxSTGaragentor.setSelected(false);
+
+    	// Checkboxen für vorkommende IDs ankreuzen
+        if (ausgewaehlteSw == null) return;
+        for (int sw : ausgewaehlteSw) {
+            switch (Sw.findeMitId(sw)) {
+            	case ABSTELL_TERRASSE_EG:
+            		chckBxAbstellTerrasseEG.setSelected(true);
+            		break;
+            	case VEA_MARKISE_EG:
+            		chckBxVEAMarkiseEG.setSelected(true);
+            		break;
+            	case VEA_MARKISE_DG:
+            		chckBxVEAMarkiseDG.setSelected(true);
+            		break;
+            	case E_MARKISE_EG:
+            		chckBxEMarkiseEG.setSelected(true);
+            		break;
+            	case E_MARKISE_DG:
+            		chckBxEMarkiseDG.setSelected(true);
+            		break;
+            	case EA_GARAGENTOR:
+            		chckBxEAGaragentor.setSelected(true);
+                case ST_GARAGENTOR:
+            		chckBxSTGaragentor.setSelected(true);
+            		break;
+            	default:
+            		System.out.println("Unbekannte Sonderwunsch-ID zu Aussenanlagen: " + sw);
+            		break;
+            }
+		}
     	// TODO
     }
     
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
-    	return null; // TODO
+    	return new boolean[] {
+                chckBxAbstellTerrasseEG.isSelected(),
+                chckBxVEAMarkiseEG.isSelected(),
+                chckBxVEAMarkiseDG.isSelected(),	
+                chckBxEMarkiseEG.isSelected(),	
+                chckBxEMarkiseDG.isSelected(),
+                chckBxEAGaragentor.isSelected(),  
+                chckBxSTGaragentor.isSelected()
+				};
     }
     
     @Override
     protected int[] checkboxenZuIntArray() {
-    	return null; // TODO
+    	Vector<Integer> v = new Vector<>();
+	
+        if (chckBxAbstellTerrasseEG.isSelected())
+            v.add(Sw.ABSTELL_TERRASSE_EG.id);
+        if (chckBxVEAMarkiseEG.isSelected())
+            v.add(Sw.VEA_MARKISE_EG.id);
+        if (chckBxVEAMarkiseDG.isSelected())
+            v.add(Sw.VEA_MARKISE_DG.id);
+        if (chckBxEMarkiseDG.isSelected())
+            v.add(Sw.E_MARKISE_EG.id);
+        if (chckBxEMarkiseDG.isSelected())
+            v.add(Sw.E_MARKISE_DG.id);
+        if (chckBxSTGaragentor.isSelected())
+        	v.add(Sw.EA_GARAGENTOR.id);
+        if (chckBxSTGaragentor.isSelected())
+        	v.add(Sw.ST_GARAGENTOR.id);
+
+        int[] aussenanlagenSw = new int[v.size()];
+        for (int i = 0; i < v.size(); i++)
+            aussenanlagenSw[i] = v.get(i);
+        
+        return aussenanlagenSw;
     }
     
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
-    	// TODO
+    	if (!aussenanlagenControl.pruefeKonstellationAussenanlagen(checkboxenZuIntArray()))
+    		return;
+        
+    	double preis = 0.0;
+
+
+        if (chckBxAbstellTerrasseEG.isSelected())   preis += Sw.ABSTELL_TERRASSE_EG.preis;
+        if (chckBxVEAMarkiseEG.isSelected()) 		preis += Sw.VEA_MARKISE_EG.preis;
+        if (chckBxVEAMarkiseDG.isSelected()) 	    preis += Sw.VEA_MARKISE_DG.preis;
+        if (chckBxEAGaragentor.isSelected())        preis += Sw.E_MARKISE_EG.preis;
+        if (chckBxSTGaragentor.isSelected())       	preis += Sw.E_MARKISE_DG.preis;
+        if (chckBxEMarkiseEG.isSelected())		    preis += Sw.EA_GARAGENTOR.preis;
+        if (chckBxEMarkiseDG.isSelected())		    preis += Sw.ST_GARAGENTOR.preis;
+        
+        txtGesamt.setText(String.format("%.2f", preis));
     }
     
     /**
