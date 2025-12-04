@@ -255,4 +255,9 @@ public class AussenanlagenView extends BasisView {
     protected void speichereSonderwuensche() {
     	aussenanlagenControl.speichereSonderwuensche(checkboxenZuIntArray());
     }
+    
+    // TODO: CSV-Export für Aussenanlagen-Sonderwünsch implementieren.
+	@Override
+	protected void exportiereSonderwuenscheAlsCsv() {
+	}
 }

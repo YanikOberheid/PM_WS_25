@@ -21,6 +21,9 @@ public abstract class BasisView {
    	private Label lblSonderwunsch   	= new Label("Sonderwunsch");
     private Button btnBerechnen 	 	= new Button("Preis berechnen");
     private Button btnSpeichern 	 	= new Button("Speichern");
+    private Button btnCsvExport          = new Button("CSV-Export");
+    
+    
     // Gesamtpreis-Anzeige - protected, da Zeile im GridPane unbekannt
     protected Label lblGesamt =
     		new Label("Gesamtpreis");
@@ -33,7 +36,7 @@ public abstract class BasisView {
     */
     public BasisView(Stage sonderwunschStage){
     	this.sonderwunschStage = sonderwunschStage;
-	    Scene scene = new Scene(borderPane, 560, 560);
+	    Scene scene = new Scene(borderPane, 700, 560);
 	    sonderwunschStage.setScene(scene);
 	
 	    this.initListener();
@@ -57,10 +60,9 @@ public abstract class BasisView {
 	    btnBerechnen.setMinSize(150,  25);
     	gridPaneButtons.add(btnSpeichern, 2, 0);
 	    btnSpeichern.setMinSize(150,  25);
-	    
-	    
-	    
-	    
+	    gridPaneButtons.add(btnCsvExport, 3, 0);
+        btnCsvExport.setMinSize(150, 25);
+        
 	    
     }  
     
@@ -72,6 +74,10 @@ public abstract class BasisView {
         btnSpeichern.setOnAction(aEvent -> {
     		speichereSonderwuensche();
     	});
+        btnCsvExport.setOnAction(aEvent -> {
+            exportiereSonderwuenscheAlsCsv();
+        });
+        
     }
     
     protected GridPane getGridPaneSonderwunsch() {
@@ -90,6 +96,10 @@ public abstract class BasisView {
   	protected void oeffneBasisView(){ 
 	    sonderwunschStage.showAndWait();
   	}
+  	
+    protected abstract void exportiereSonderwuenscheAlsCsv();
+    
+    
   	     	
   	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
   	protected abstract void berechneUndZeigePreisSonderwuensche();
