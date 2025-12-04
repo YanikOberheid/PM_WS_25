@@ -253,6 +253,6 @@ public class AussenanlagenView extends BasisView {
 	 */
     @Override
     protected void speichereSonderwuensche() {
-    	// TODO
+    	aussenanlagenControl.speichereSonderwuensche(checkboxenZuIntArray());
     }
 }
