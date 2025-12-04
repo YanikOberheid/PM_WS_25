@@ -207,4 +207,9 @@ public class HeizungView extends BasisView {
     	// Control kontrolliert Konstellation
         heizungControl.speichereSonderwuensche(checkboxenZuIntArray());
     }
+    
+    // TODO: CSV-Export für Heizung-Sonderwünsch implementieren.
+	@Override
+	protected void exportiereSonderwuenscheAlsCsv() {
+	}
 }

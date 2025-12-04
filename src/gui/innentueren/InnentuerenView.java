@@ -103,5 +103,9 @@ public class InnentuerenView extends BasisView {
         info.setContentText("Speichern ist in diesem Task noch nicht vorgesehen.");
         info.showAndWait();
     }
+    // TODO: CSV-Export für Innentüren-Sonderwünsch implementieren.
+	@Override
+	protected void exportiereSonderwuenscheAlsCsv() {
+	}
 
 }

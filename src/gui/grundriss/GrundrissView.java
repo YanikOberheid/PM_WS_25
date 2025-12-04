@@ -242,6 +242,14 @@ public class GrundrissView extends BasisView{
   		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
   		this.grundrissControl.speichereSonderwuensche(checkboxenZuIntArray());
   	}
+  	
+  	
+	    // TODO: CSV-Export für Grundriss-Sonderwünsch implementieren.
+  	@Override
+  	protected void exportiereSonderwuenscheAlsCsv() {
+  	}
+  	
+  	
  }
 
 

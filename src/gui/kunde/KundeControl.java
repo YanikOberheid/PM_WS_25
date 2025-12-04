@@ -231,5 +231,11 @@ public class KundeControl {
 	public void setAttributeNull() {
 		kundeModel.setAttributesNull();
 	}
+
+	public void exportiereKundenDatenAlsCsv() {
+	    // TODO: Export später implementieren
+	    System.out.println("HINWEIS: CSV-Export für Kundendaten (noch nicht implementiert)");
+	}
+
    
 }

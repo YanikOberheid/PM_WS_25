@@ -65,10 +65,7 @@ public class ParkettView extends BasisView {
 
     public ParkettView(ParkettControl parkettControl, Stage parkettStage) {
         super(parkettStage);
-        parkettStage.setTitle("Sonderwuensche zu Parkett");
-
-        parkettStage.setWidth(650);
-        parkettStage.setHeight(600);        
+        parkettStage.setTitle("Sonderwuensche zu Parkett");       
         this.parkettControl = parkettControl;
         parkettStage.setTitle("Sonderwünsche zu Parkett");
 
@@ -201,6 +198,10 @@ public class ParkettView extends BasisView {
     protected void speichereSonderwuensche() {
     }
     
+    // TODO: CSV-Export für Parkett-Sonderwünsch implementieren.
+	@Override
+	protected void exportiereSonderwuenscheAlsCsv() {
+	}
    
 
 }

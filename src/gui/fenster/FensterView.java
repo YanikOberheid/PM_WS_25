@@ -48,12 +48,10 @@ public class FensterView extends BasisView {
         super(fensterStage);
         this.fensterControl = fensterControl;
         fensterStage.setTitle("Sonderwuensche zu Fenstern und Außentueren");
-        fensterStage.setWidth(650);
-        fensterStage.setHeight(600);
         this.initKomponenten();
         // WICHTIG: keine Daten hier laden! Control macht das beim Öffnen.
         // KEIN: this.leseFensterSonderwuensche();
-        //Bitte !!!
+        //Bitttee !!!
     }
 
     @Override
@@ -228,4 +226,9 @@ public class FensterView extends BasisView {
     protected void speichereSonderwuensche() {
         fensterControl.speichereSonderwuensche(checkboxenZuIntArray());
     }
+    
+    // TODO: CSV-Export für Fenster-Sonderwünsch implementieren.
+	@Override
+	protected void exportiereSonderwuenscheAlsCsv() {
+	}
 }

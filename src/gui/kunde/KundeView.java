@@ -62,6 +62,7 @@ public class KundeView {
 	private Button btnAnlegen = new Button("Anlegen");
 	private Button btnAendern = new Button("Aendern");
 	private Button btnLoeschen = new Button("Loeschen");
+	private Button btnCsvExport = new Button("CSV-Export");
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
 	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
@@ -87,7 +88,7 @@ public class KundeView {
 		this.kundeModel = kundeModel;
 
 		primaryStage.setTitle(this.kundeModel.getUeberschrift());
-		Scene scene = new Scene(borderPane, 750, 420);
+		Scene scene = new Scene(borderPane, 920, 420);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -135,12 +136,14 @@ public class KundeView {
 		gridPane.add(txtEmail, 1, 7);
 
 		// Buttons
-		gridPane.add(btnAnlegen, 0, 8);
+		gridPane.add(btnAnlegen, 0, 9);
 		btnAnlegen.setMinSize(150, 25);
-		gridPane.add(btnAendern, 1, 8);
+		gridPane.add(btnAendern, 1, 9);
 		btnAendern.setMinSize(150, 25);
-		gridPane.add(btnLoeschen, 2, 8);
+		gridPane.add(btnLoeschen, 2, 9);
 		btnLoeschen.setMinSize(150, 25);
+		gridPane.add(btnCsvExport, 3, 9);
+		btnCsvExport.setMinSize(150, 25);		
 
 		// MenuBar und Menu
 		borderPane.setTop(mnBar);
@@ -167,7 +170,7 @@ public class KundeView {
 		
 		 // --- Beide Seiten in eine HBox ---
 	    HBox mainContent = new HBox(30);
-	    mainContent.setPadding(new Insets(20));
+	    mainContent.setPadding(new Insets(20, 80, 20, 20));
 	    mainContent.getChildren().addAll(gridPane, rightBox);
 		
 	    borderPane.setCenter(mainContent);
@@ -199,6 +202,10 @@ public class KundeView {
 	    btnLoeschen.setOnAction(aEvent -> {
 	        loescheKunden();
 	    });
+	    btnCsvExport.setOnAction(e -> {
+	        kundeControl.exportiereKundenDatenAlsCsv();
+	    });
+
 	    mnItmGrundriss.setOnAction(aEvent -> {
 	        kundeControl.oeffneGrundrissControl();
 	    });

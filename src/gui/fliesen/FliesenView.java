@@ -229,4 +229,9 @@ public class FliesenView extends BasisView {
 		// Control kontrolliert Konstellation
 		fliesenControl.speichereSonderwuensche(checkboxenZuIntArray());
 	}
+	
+    // TODO: CSV-Export für Fenster-Sonderwünsch implementieren.
+	@Override
+	protected void exportiereSonderwuenscheAlsCsv() {
+	}
 }
