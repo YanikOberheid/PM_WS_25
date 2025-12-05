@@ -11,7 +11,7 @@ import javafx.stage.Stage;
  */
 public class InnentuerenControl {
 
-	private final InnentuerenView innentuerenView;
+    private final InnentuerenView innentuerenView;
     private final KundeModel kundeModel;
 
     public InnentuerenControl() {
@@ -22,23 +22,32 @@ public class InnentuerenControl {
     }
     
     public void oeffneInnenturenView() {
-    	leseInnentuerenSonderwuensche();
-    	innentuerenView.oeffneInnentuerenView();
+        leseInnentuerenSonderwuensche();
+        innentuerenView.oeffneInnentuerenView();
     }
 
     public void leseInnentuerenSonderwuensche() {
         int[] swInnentueren = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.INNENTUEREN.id);
         if (swInnentueren != null)
-        	innentuerenView.updateSwCheckboxen(swInnentueren);
+            innentuerenView.updateSwCheckboxen(swInnentueren);
     }
     
-    // Muss noch implementiert werden
-	// Entsprechende Task
-    public void speichereSonderwuensche(int [] innentuerenSw) {
-    	
+    // Entsprechende Task: Auswahl für die Kategorie „Innentüren“ persistieren
+    public void speichereSonderwuensche(int[] innentuerenSw) {
+        try {
+            // Speichert ausschließlich für die Zielkategorie, ersetzt dort die Auswahl
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+                innentuerenSw, 
+                SwKategorie.INNENTUEREN.id
+            );
+            innentuerenView.zeigeInfo("Gespeichert", "Innentüren-Sonderwünsche wurden gespeichert.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            innentuerenView.zeigeFehler("Fehler", "Speichern der Innentüren-Sonderwünsche ist fehlgeschlagen.");
+        }
     }
     
-    // Spatere Implementierung Priorität 5
+    // Spätere Implementierung
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
         return true;
     }
