@@ -1,10 +1,12 @@
 package gui.fenster;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import business.kunde.KundeModel;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import business.kunde.SwKategorie;
 
 /*
  * Klasse, welche das Fenster mit den Sonderwuenschen zu Fenstern und
@@ -14,6 +16,19 @@ public final class FensterControl {
 
     private FensterView fensterView;
     private KundeModel kundeModel;
+    
+ // Feste Preiszuordnung für Fenster-/Außentüren-IDs (301–309)
+    private static final Map<Integer, Integer> PREISE = Map.of(
+        301, 590,   // 3.1 Schiebetüren EG
+        302, 590,   // 3.2 Schiebetüren DG
+        303, 690,   // 3.3 Einbruchschutz Haustür
+        304, 190,   // 3.4 Vorbereitung Rollläden EG
+        305, 190,   // 3.5 Vorbereitung Rollläden OG
+        306, 190,   // 3.6 Vorbereitung Rollläden DG
+        307, 990,   // 3.7 Elektrische Rollläden EG
+        308, 990,   // 3.8 Elektrische Rollläden OG
+        309, 990    // 3.9 Elektrische Rollläden DG
+    );
 
  
     public FensterControl() {
@@ -29,7 +44,10 @@ public final class FensterControl {
     }
 
     public void leseFensterSonderwuensche() {
-        int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
+        int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb(
+        		 SwKategorie.FENSTER_AUSSENTUEREN.id
+        		
+        		);
         if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
             this.fensterView.updateSwCheckboxen(ausgewaehlteSw);
         }
@@ -57,7 +75,7 @@ public final class FensterControl {
         }
 
         // Konstellation pruefen (Logik kommt später, hier immer true)
-        if (this.pruefeKonstellationSonderwuensche(zuPruefendeSwKonstellation)) {
+        if (this.pruefeKonstellationFensterAussentueren(zuPruefendeSwKonstellation)) {
             try {
                 this.kundeModel.updateAusgewaehlteSw(zuPruefendeSwKonstellation);
             } catch (Exception exc) {
@@ -66,8 +84,19 @@ public final class FensterControl {
             }
         }
     }
+    
+    public int berechnePreis(int[] ids) {
+        if (ids == null || ids.length == 0) return 0;
+        int summe = 0;
+        for (int id : ids) {
+            Integer p = PREISE.get(id);
+            if (p != null) summe += p;
+        }
+        return summe;
+    }
+    
   
-    public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
+    public boolean pruefeKonstellationFensterAussentueren(int[] ids) {
         return true;
     }
 }

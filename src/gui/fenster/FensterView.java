@@ -15,6 +15,12 @@ import javafx.stage.Stage;
 public class FensterView extends BasisView {
 
     private FensterControl fensterControl;
+    
+    
+    
+
+  
+
 
     // GUI-Elemente
     private Label lblSchiebetueren =
@@ -113,8 +119,14 @@ public class FensterView extends BasisView {
         if (ausgewaehlteSw == null) {
             return;
         }
-        System.out.println("Return Null");
+        
         for (int swId : ausgewaehlteSw) {
+            // **Neu:** nur Fenster-/Außentüren-IDs akzeptieren (301–309)
+            if (swId < 301 || swId > 309) {
+                continue; // fachfremde IDs ignorieren
+            }
+            
+        
             Sw sw = Sw.findeMitId(swId);
             switch (sw) {
                 case STUEREN_TERRASSE:
