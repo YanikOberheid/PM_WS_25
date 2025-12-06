@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.io.InputStream;
@@ -194,13 +195,21 @@ public final class KundeModel {
 	}
 	
 	// ------------ Sonderwünsche ------------ 
+	@Deprecated
 	private int[] ausgewaehlteSw = null;// enhaelt die IDs der ausgewaehlten Sonderwünsche
+	private int[][] ausgewaehlteSwMitAnzahl = null;
 	private SonderwuenscheDAOImplementation swDao = new SonderwuenscheDAOImplementation();
 	
+	@Deprecated
 	public int[] gibAusgewaehlteSwLokal() {
 		if (kunde == null) return null;
 		if (this.ausgewaehlteSw == null) return null;
 		return this.ausgewaehlteSw.clone();
+	}
+	public int[][] gibAusgewaehlteSwMitAnzahlLokal() {
+		if (kunde == null) return null;
+		if (this.ausgewaehlteSwMitAnzahl == null) return null;
+		return this.ausgewaehlteSwMitAnzahl.clone();
 	}
 	
 	/**
@@ -208,6 +217,7 @@ public final class KundeModel {
 	 *
 	 * @return Klon von this.ausgewaehlteSw oder null 
 	 */
+	@Deprecated
 	public int[] gibAusgewaehlteSwAusDb() {
 		if (kunde == null) return null; 
 		// throw new Exception("Es konnte kein Kunde gefunden werden");
@@ -232,6 +242,7 @@ public final class KundeModel {
 	 * @param ID einer Sonderwunschkategorie als int
 	 * @return Klon von this.ausgewaehlteSw oder null
 	 */
+	@Deprecated
 	public int[] gibAusgewaehlteSwAusDb(int kategorieId) {
 		if (this.kunde == null) return null;
 		// throw new Exception("Fehler beim Laden ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");
@@ -256,6 +267,7 @@ public final class KundeModel {
 	 * @param kategorieId, zu der Kategorie, die aus der Rückgabe ausgeschlossen werden soll
 	 * @return int[] mit IDs ohne die der angegebenen Kategorie
 	 */
+	@Deprecated
 	public int[] holeAusgewaehlteSwAusDbOhneKategorie(int kategorieId) {
 		if (this.kunde == null) return null;
 		int hausnr = this.kunde.getHausnummer();
@@ -274,12 +286,71 @@ public final class KundeModel {
 	}
 	
 	/**
+	 * 
+	 * 
+	 * @return ein int[i][2] mit Paaren aus Sonderwunsch-ID und Anzahl
+	 */
+	public int[][] gibAusgewaehlteSwMitAnzahlAusDb() {
+		if (kunde == null) return null; 
+		// throw new Exception("Es konnte kein Kunde gefunden werden");
+		int hausnr = this.kunde.getHausnummer();
+		
+		try {
+			this.ausgewaehlteSwMitAnzahl = this.swDao.getMitAnzahl(hausnr);
+			return this.ausgewaehlteSwMitAnzahl.clone();
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche mit Anzahl: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche mit Anzahl");
+			exc.printStackTrace();
+		}
+		return null;
+	}
+	
+	public int[][] gibAusgewaehlteSwMitAnzahlAusDb(int kategorieId) {
+		if (kunde == null) return null; 
+		// throw new Exception("Es konnte kein Kunde gefunden werden");
+		int hausnr = this.kunde.getHausnummer();
+		
+		try {
+			this.ausgewaehlteSwMitAnzahl = this.swDao.getMitAnzahl(hausnr, kategorieId);
+			return this.ausgewaehlteSwMitAnzahl.clone();
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche mit Anzahl: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche mit Anzahl");
+			exc.printStackTrace();
+		}
+		return null;
+	}
+	
+	public int[][] holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie(int kategorieId) {
+		if (this.kunde == null) return null;
+		int hausnr = this.kunde.getHausnummer();
+		
+		try {
+			return this.swDao.getMitAnzahlExcluding(hausnr, kategorieId);
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche mit Anzahl: SQL Fehler");
+			exc.printStackTrace();
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche (mit Anzahl) ohne " + kategorieId);
+			exc.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Holt Sonderwünsche zu einem Kunden Gibt ein Array an Sonderwunschoptionen zurueck, wenn ausgewaehlteSw nicht null ist. Ansonsten wird holeAusgewaehlteSwAusDb() aufgerufen.
 	 *
 	 * @param int[] mit IDs der ausgewaehlten Sonderwünsche
 	 * @throws SQLExceptio oder Exception 
 	 */
-	public void updateAusgewaehlteSw(int[] ausgewaehlteSw) throws SQLException, Exception{
+	@Deprecated
+	public void updateAusgewaehlteSw(int[] ausgewaehlteSw) throws SQLException, Exception {
 		if (this.kunde == null)
 			throw new Exception("Fehler beim Aktualisieren ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");;
 		int hausnr = this.kunde.getHausnummer();
@@ -296,8 +367,45 @@ public final class KundeModel {
 			// exc.printStackTrace();
 			throw exc;
 		}
+	}
+	
+	/**
+	 * Löscht alle vorhandenen Sonderwünsche zu einem Haus und fügt die übergebenen wieder ein.
+	 * Falls es Sonderwünsche mit Anzahl gibt, müssen diese als zusätzlicher Parameter angegeben
+	 * werden. Diese muss ein int[][] sein, wobei Sonderwunsch-ID und Anzahl nach folgendem Schema
+	 * angegeben werden sollen:
+	 * 		{{id_1, anz_1}, {id_2, anz_2}, ...}
+	 * 
+	 * @param hausnummer ist diejenige Hausnummer, die die angegebnen Sonderwünsche betreffen   
+	 * @param ausgewaehlteSw ist ein int[] an allen Sonderwunsch-IDs, die zu einem Haus ausgesucht wurden
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public void updateAusgewaehlteSw(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl)
+			throws SQLException, Exception {
+		if (this.kunde == null)
+			throw new Exception("Fehler beim Aktualisieren ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");;
+		int hausnr = this.kunde.getHausnummer();
 		
+		// Auf Duplikate prüfen
+		for (int sw: ausgewaehlteSw)
+			for (int[] swMA: ausgewaehlteSwMitAnzahl)
+				if (sw == swMA[0])
+					throw new IllegalArgumentException("Die Sonderwunsch-ID " + sw + " wurde mehrfach übergeben");
 		
+		try {
+			this.swDao.update(hausnr, ausgewaehlteSw, ausgewaehlteSwMitAnzahl);
+			this.ausgewaehlteSw = ausgewaehlteSw;
+			this.ausgewaehlteSwMitAnzahl = ausgewaehlteSwMitAnzahl;
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche mit Anzahl: SQL Fehler");
+			// exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche mit Anzahl");
+			// exc.printStackTrace();
+			throw exc;
+		}
 	}
 	
 	/**
@@ -306,6 +414,7 @@ public final class KundeModel {
      * * @param neueAuswahlIDs Ein Array mit den IDs der neu gewählten Sonderwünsche.
      * @param kategorieId    Die ID der Kategorie (z.B. 1 für Fliesen), deren Daten ersetzt werden sollen.
      */
+	@Deprecated
     public void speichereSonderwuenscheFuerKategorie(int[] neueAuswahlIDs, int kategorieId) throws Exception {
         if (this.kunde == null) {
             throw new Exception("Fehler: Kein Kunde ausgewählt.");
@@ -353,6 +462,48 @@ public final class KundeModel {
         // 6. Rufe die sichere Update-Methode auf
         // Da updateArray jetzt ALLES enthält (Grundriss + NEUE Fliesen), ist das Löschen im DAO sicher.
         this.updateAusgewaehlteSw(updateArray);
+        
+        System.out.println("✅ Sonderwünsche für Kategorie " + kategorieId + " erfolgreich gespeichert.");
+    }
+    
+    public void speichereSonderwuenscheFuerKategorie(int[] neueSw, int[][] neueSwMitAnzahl, int kategorieId)
+    		throws Exception {
+        if (this.kunde == null) {
+            throw new Exception("Fehler: Kein Kunde ausgewählt.");
+        }
+        int hausnr = this.kunde.getHausnummer();
+        
+        try {
+	        // Auf Duplikate prüfen
+	 		for (int sw: ausgewaehlteSw)
+	 			for (int[] swMA: ausgewaehlteSwMitAnzahl)
+	 				if (sw == swMA[0])
+	 					throw new IllegalArgumentException("Die Sonderwunsch-ID " + sw + " wurde mehrfach übergeben");
+	     	
+	 		// Alte Sw, die nicht zur Kategorie zählen, mit Anzahl holen
+	 		// {{id_1, anz_1}, {id_2, anz_2}, ...)
+	     	int[][] alteSwMitAnzahlExcluding = this.swDao.getMitAnzahlExcluding(hausnr, kategorieId);
+	     	
+	     	// Alte mit neuen Sonderwünschen fusionieren
+			int[][] alleSwMitAnzahl = new int[neueSwMitAnzahl.length + alteSwMitAnzahlExcluding.length][2];
+			for (int i = 0; i < alleSwMitAnzahl.length; i++) {
+				if (i < alteSwMitAnzahlExcluding.length) { // alte Sw mit Anzahl
+					alleSwMitAnzahl[i] = alteSwMitAnzahlExcluding[i];
+				} else { // neue Sw mit Anzahl
+					alleSwMitAnzahl[i] = neueSwMitAnzahl[i];
+				}
+			}
+	     	
+	     	this.swDao.update(hausnr, neueSw, alleSwMitAnzahl);
+	    } catch (SQLException exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche: SQL Fehler");
+			// exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche");
+			// exc.printStackTrace();
+			throw exc;
+		}
         
         System.out.println("✅ Sonderwünsche für Kategorie " + kategorieId + " erfolgreich gespeichert.");
     }
