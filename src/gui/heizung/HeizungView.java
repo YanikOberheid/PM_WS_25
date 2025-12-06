@@ -20,19 +20,19 @@ public class HeizungView extends BasisView {
     		new Label(Sw.STD_HEIZKOERPER.bes);
     private TextField txtStdHeizkoerper = new TextField();
     private Label lblStdHeizkoerperEuro = new Label("Euro");
-    private Spinner<Integer> spinStdHeizkoerper = new Spinner<Integer>();
+    private Spinner<Integer> spinStdHeizkoerper = new Spinner<Integer>(0, 20, 0);
 
     private Label lblGlattHeizkoerper =
             new Label(Sw.GLATT_HEIZKOERPER.bes);
     private TextField txtGlattHeizkoerper = new TextField();
     private Label lblGlattHeizkoerperEuro = new Label("Euro");
-    private Spinner<Integer> spinGlattHeizkoerper = new Spinner<Integer>();
+    private Spinner<Integer> spinGlattHeizkoerper = new Spinner<Integer>(0, 20, 0);
 
     private Label lblHandtuchHeizkoerper =
             new Label(Sw.HANDTUCH.bes);
     private TextField txtHandtuchHeizkoerper = new TextField();
     private Label lblHandtuchHeizkoerperEuro = new Label("Euro");
-    private Spinner<Integer> spinHandtuchHeizkoerper = new Spinner<Integer>();
+    private Spinner<Integer> spinHandtuchHeizkoerper = new Spinner<Integer>(0, 20, 0);
 
     private Label lblFbhOhneDG =
             new Label(Sw.FBH_OHNE_DG.bes);
