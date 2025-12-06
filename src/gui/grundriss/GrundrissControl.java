@@ -36,11 +36,12 @@ public final class GrundrissControl {
 	}
 
 	public void leseGrundrissSonderwuensche(){
-		int[] swGrundriss = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.GRUNDRISS.id);
+		int[][] swGrundriss = kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(SwKategorie.GRUNDRISS.id);
 		if (swGrundriss != null)
-			this.grundrissView.updateSwCheckboxen(swGrundriss);
+			this.grundrissView.updateSwInView(swGrundriss);
     } 
 	
+	@Deprecated
 	public void speichereSonderwuensche(int[] grundrissSw) {
 		// Erst Konstellation prüfen
         if (!pruefeKonstellationSonderwuensche(grundrissSw)) {
@@ -59,7 +60,38 @@ public final class GrundrissControl {
         }
 	}
 	
-	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw){
+	public void speichereSonderwuensche(int[] grundrissSw, int[][] grundrissSwMitAnzahl) {
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationSonderwuensche(grundrissSw, grundrissSwMitAnzahl)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+        
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+                    grundrissSw,
+                    grundrissSwMitAnzahl,
+                    SwKategorie.GRUNDRISS.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Grundriss-Varianten konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
+	}
+	
+	@Deprecated
+	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
+		return true;
+	}
+	
+	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl){
+		/* 
+		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
+		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
+		 * KundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie() die Auswahl der anderen
+		 * Kategorien.
+		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
+		 */ 
 		return true;
 	}
 }
