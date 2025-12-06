@@ -283,7 +283,7 @@ public class FensterView extends BasisView {
                     chckBxRollladenDg.setSelected(true);
                     break;
                 default:
-                    System.out.println("Unbekannte Sonderwunsch-ID zu Fenstern: " + swId);
+                    System.out.println("Unbekannte Sonderwunsch-ID zu Fenstern: " + sw[0]);
             }
         }
     }
@@ -367,7 +367,7 @@ public class FensterView extends BasisView {
      */
     @Override
     protected void speichereSonderwuensche() {
-        fensterControl.speichereSonderwuensche(checkboxenZuIntArray());
+        fensterControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
     }
     
     // TODO: CSV-Export für Fenster-Sonderwünsch implementieren.

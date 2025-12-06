@@ -16,20 +16,6 @@ public final class FensterControl {
 
     private FensterView fensterView;
     private KundeModel kundeModel;
-    
- // Feste Preiszuordnung für Fenster-/Außentüren-IDs (301–309)
-    private static final Map<Integer, Integer> PREISE = Map.of(
-        301, 590,   // 3.1 Schiebetüren EG
-        302, 590,   // 3.2 Schiebetüren DG
-        303, 690,   // 3.3 Einbruchschutz Haustür
-        304, 190,   // 3.4 Vorbereitung Rollläden EG
-        305, 190,   // 3.5 Vorbereitung Rollläden OG
-        306, 190,   // 3.6 Vorbereitung Rollläden DG
-        307, 990,   // 3.7 Elektrische Rollläden EG
-        308, 990,   // 3.8 Elektrische Rollläden OG
-        309, 990    // 3.9 Elektrische Rollläden DG
-    );
-
  
     public FensterControl() {
         Stage stageFenster = new Stage();
@@ -44,15 +30,14 @@ public final class FensterControl {
     }
 
     public void leseFensterSonderwuensche() {
-        int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb(
-        		 SwKategorie.FENSTER_AUSSENTUEREN.id
-        		
-        		);
-        if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
-            this.fensterView.updateSwCheckboxen(ausgewaehlteSw);
+        int[][] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(
+        		SwKategorie.FENSTER_AUSSENTUEREN.id);
+        if (ausgewaehlteSw != null) {
+            this.fensterView.updateSwInView(ausgewaehlteSw);
         }
     }
-
+    
+    @Deprecated
     public void speichereSonderwuensche(int[] fensterSw) {
         int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
         if (ausgewaehlteSw == null) {
@@ -85,18 +70,32 @@ public final class FensterControl {
         }
     }
     
-    public int berechnePreis(int[] ids) {
-        if (ids == null || ids.length == 0) return 0;
-        int summe = 0;
-        for (int id : ids) {
-            Integer p = PREISE.get(id);
-            if (p != null) summe += p;
+    public void speichereSonderwuensche(int[] fensterSw, int[][] fensterSwMitAnzahl) {
+    	// Erst Konstellation prüfen
+        if (!pruefeKonstellationFensterAussentueren(fensterSw, fensterSwMitAnzahl)) {
+            // Konflikt -> nicht speichern
+            return;
         }
-        return summe;
+
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+            		fensterSw,
+            		fensterSwMitAnzahl,
+                    SwKategorie.FENSTER_AUSSENTUEREN.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Heizungen konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
     }
     
-  
+    @Deprecated
     public boolean pruefeKonstellationFensterAussentueren(int[] ids) {
         return true;
+    }
+    
+    public boolean pruefeKonstellationFensterAussentueren(int[] ausgewaehlteSw,
+    		int[][] ausgewaehlteSwMitAnzahl) {
+        return true; // TODO
     }
 }
