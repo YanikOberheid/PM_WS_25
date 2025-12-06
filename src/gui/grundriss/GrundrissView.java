@@ -256,7 +256,7 @@ public class GrundrissView extends BasisView{
     }
     
     @Override
-    protected int[][] spinnerZu2DIntArray() {
+    public int[][] spinnerZu2DIntArray() {
     	return null;
     }
     

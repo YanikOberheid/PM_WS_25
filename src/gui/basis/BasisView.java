@@ -112,7 +112,7 @@ public abstract class BasisView {
   	public abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
   	public abstract void updateSwInView(int[][] ausgewaehlteSw);
   	protected abstract int[] checkboxenZuIntArray();
-  	protected abstract int[][] spinnerZu2DIntArray();
+  	public abstract int[][] spinnerZu2DIntArray();
   	
   	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
     protected void zeigeKonfliktFenster(String header, String text) {
