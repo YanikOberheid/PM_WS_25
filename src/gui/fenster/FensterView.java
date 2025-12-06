@@ -6,6 +6,7 @@ import business.kunde.Sw;
 import gui.basis.BasisView;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /*
@@ -16,39 +17,61 @@ public class FensterView extends BasisView {
 
     private FensterControl fensterControl;
     
-    
-    
-
-  
-
-
     // GUI-Elemente
-    private Label lblSchiebetueren =
-            new Label("Schiebetueren und Haustuer");
-    private CheckBox chckBxSchiebetuerEg =
-            new CheckBox(Sw.STUEREN_TERRASSE.bes);
-    private CheckBox chckBxSchiebetuerDg =
-            new CheckBox(Sw.STUEREN_DACHTERRASSE.bes);
-    private CheckBox chckBxEinbruchschutz =
-            new CheckBox(Sw.EBS_HAUSTUER.bes);
-
-    private Label lblVorbereitung =
-            new Label("Vorbereitung fuer elektrische Antriebe Rolllaeden");
-    private CheckBox chckBxVorbereitungEg =
-            new CheckBox(Sw.VEAR_EG.bes);
-    private CheckBox chckBxVorbereitungOg =
-            new CheckBox(Sw.VEAR_OG.bes);
-    private CheckBox chckBxVorbereitungDg =
-            new CheckBox(Sw.VEAR_DG.bes);
-
-    private Label lblRolllaeden =
-            new Label("Elektrische Rolllaeden");
-    private CheckBox chckBxRollladenEg =
-            new CheckBox(Sw.ER_EG.bes);
-    private CheckBox chckBxRollladenOg =
-            new CheckBox(Sw.ER_OG.bes);
-    private CheckBox chckBxRollladenDg =
-            new CheckBox(Sw.ER_DG.bes);
+    private Label lblSchiebetuerEg =
+    		new Label(Sw.STUEREN_TERRASSE.bes);
+    private TextField txtPreisSchiebetuerEg	= new TextField();
+    private Label lblSchiebetuerEgEuro		= new Label("Euro");
+    private CheckBox chckBxSchiebetuerEg	= new CheckBox();
+    
+    private Label lblSchiebetuerDg =
+    		new Label(Sw.STUEREN_DACHTERRASSE.bes);
+    private TextField txtPreisSchiebetuerDg	= new TextField();
+    private Label lblSchiebetuerDgEuro		= new Label("Euro");
+    private CheckBox chckBxSchiebetuerDg	= new CheckBox();
+    
+    private Label lblEinbruchschutz =
+    		new Label(Sw.EBS_HAUSTUER.bes);
+    private TextField txtPreisEinbruchschutz= new TextField();
+    private Label lblEinbruchschutzEuro		= new Label("Euro");
+    private CheckBox chckBxEinbruchschutz 	= new CheckBox();
+    
+    private Label lblVorbereitungEg =
+    		new Label(Sw.VEAR_EG.bes);
+    private TextField txtPreisVorbereitungEg= new TextField();
+    private Label lblVorbereitungEgEuro		= new Label("Euro");
+    private CheckBox chckBxVorbereitungEg 	= new CheckBox();
+    
+    private Label lblVorbereitungOg =
+    		new Label(Sw.VEAR_OG.bes);
+    private TextField txtPreisVorbereitungOg= new TextField();
+    private Label lblVorbereitungOgEuro		= new Label("Euro");
+    private CheckBox chckBxVorbereitungOg	= new CheckBox();
+    
+    private Label lblVorbereitungDg =
+    		new Label(Sw.VEAR_DG.bes);
+    private TextField txtPreisVorbereitungDg= new TextField();
+    private Label lblVorbereitungDgEuro		= new Label("Euro");
+    private CheckBox chckBxVorbereitungDg 	= new CheckBox();
+    
+    private Label lblRollladenEg =
+    		new Label(Sw.ER_EG.bes);
+    private TextField txtPreisRollladenEg	= new TextField();
+    private Label lblRollladenEgEuro		= new Label("Euro");
+    private CheckBox chckBxRollladenEg 		= new CheckBox();
+    
+    private Label lblRollladenOg =
+    		new Label(Sw.ER_OG.bes);
+    private TextField txtPreisRollladenOg 	= new TextField();
+    private Label lblRollladenOgEuro		= new Label("Euro");
+    private CheckBox chckBxRollladenOg 		= new CheckBox();
+    
+    private Label lblRollladenDg =
+    		new Label(Sw.ER_DG.bes);
+    private TextField txtPreisRollladenDg 	= new TextField();
+    private Label lblRollladenDgEuro		= new Label("Euro");
+    private CheckBox chckBxRollladenDg 		= new CheckBox();
+    
 
     public FensterView(FensterControl fensterControl, Stage fensterStage) {
         super(fensterStage);
