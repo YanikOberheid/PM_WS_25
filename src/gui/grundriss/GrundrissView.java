@@ -194,6 +194,7 @@ public class GrundrissView extends BasisView{
     	// Checkboxen für vorkommende IDs ankreuzen 
     	if (ausgewaehlteSw == null) return;
     	for (int[] sw: ausgewaehlteSw) {
+    		if (sw == null || sw.length != 2) continue;
     		switch (Sw.findeMitId(sw[0])) {
     			case WAND_KUECHE:
     				chckBxWandKueche.setSelected(true);
@@ -215,7 +216,7 @@ public class GrundrissView extends BasisView{
     				break;
     			default:
     				System.out.println(
-    						"Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw);
+    						"Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw[0]);
     		}
     	}
     }

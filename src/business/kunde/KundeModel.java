@@ -388,10 +388,11 @@ public final class KundeModel {
 		int hausnr = this.kunde.getHausnummer();
 		
 		// Auf Duplikate prüfen
-		for (int sw: ausgewaehlteSw)
-			for (int[] swMA: ausgewaehlteSwMitAnzahl)
-				if (sw == swMA[0])
-					throw new IllegalArgumentException("Die Sonderwunsch-ID " + sw + " wurde mehrfach übergeben");
+		if (ausgewaehlteSw != null && ausgewaehlteSwMitAnzahl != null)
+			for (int sw: ausgewaehlteSw)
+				for (int[] swMA: ausgewaehlteSwMitAnzahl)
+					if (sw == swMA[0])
+						throw new IllegalArgumentException("Die Sonderwunsch-ID " + sw + " wurde mehrfach übergeben");
 		
 		try {
 			this.swDao.update(hausnr, ausgewaehlteSw, ausgewaehlteSwMitAnzahl);
@@ -475,7 +476,8 @@ public final class KundeModel {
         
         try {
 	        // Auf Duplikate prüfen
-	 		for (int sw: ausgewaehlteSw)
+        	if (neueSw != null && ausgewaehlteSwMitAnzahl != null)
+	 		for (int sw: neueSw)
 	 			for (int[] swMA: ausgewaehlteSwMitAnzahl)
 	 				if (sw == swMA[0])
 	 					throw new IllegalArgumentException("Die Sonderwunsch-ID " + sw + " wurde mehrfach übergeben");
@@ -485,14 +487,17 @@ public final class KundeModel {
 	     	int[][] alteSwMitAnzahlExcluding = this.swDao.getMitAnzahlExcluding(hausnr, kategorieId);
 	     	
 	     	// Alte mit neuen Sonderwünschen fusionieren
-			int[][] alleSwMitAnzahl = new int[neueSwMitAnzahl.length + alteSwMitAnzahlExcluding.length][2];
-			for (int i = 0; i < alleSwMitAnzahl.length; i++) {
-				if (i < alteSwMitAnzahlExcluding.length) { // alte Sw mit Anzahl
-					alleSwMitAnzahl[i] = alteSwMitAnzahlExcluding[i];
-				} else { // neue Sw mit Anzahl
-					alleSwMitAnzahl[i] = neueSwMitAnzahl[i];
+	     	int[][] alleSwMitAnzahl = null;
+			if (neueSw != null && ausgewaehlteSwMitAnzahl != null) {
+				alleSwMitAnzahl = new int[neueSwMitAnzahl.length + alteSwMitAnzahlExcluding.length][2];
+				for (int i = 0; i < alleSwMitAnzahl.length; i++) {
+					if (i < alteSwMitAnzahlExcluding.length) { // alte Sw mit Anzahl
+						alleSwMitAnzahl[i] = alteSwMitAnzahlExcluding[i];
+					} else { // neue Sw mit Anzahl
+						alleSwMitAnzahl[i] = neueSwMitAnzahl[i];
+					}
 				}
-			}
+        	}
 	     	
 	     	this.swDao.update(hausnr, neueSw, alleSwMitAnzahl);
 	    } catch (SQLException exc) {

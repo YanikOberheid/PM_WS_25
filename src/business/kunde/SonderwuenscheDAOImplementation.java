@@ -321,29 +321,33 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			checkStmt.close();
 			// INSERT (ohne Anzahl)
 			pstmt = con.prepareStatement(sql_ins);
-			for (int id : ausgewaehlteSw) {
-    			if (validSw.contains(id)) { 
-        			pstmt.setInt(1, id);
-        			pstmt.setInt(2, hausnummer); 
-        			pstmt.executeUpdate();
-        			System.out.println("Speichere Sonderwunsch mit ID " + id);
-    			} else {
-        			System.out.println("Kein Sonderwunsch mit ID " + id + " gefunden. ID übersprungen.");
-    			} 
+			if (ausgewaehlteSw != null) {
+				for (int id : ausgewaehlteSw) {
+	    			if (validSw.contains(id)) { 
+	        			pstmt.setInt(1, id);
+	        			pstmt.setInt(2, hausnummer); 
+	        			pstmt.executeUpdate();
+	        			System.out.println("Speichere Sonderwunsch mit ID " + id);
+	    			} else {
+	        			System.out.println("Kein Sonderwunsch mit ID " + id + " gefunden. ID übersprungen.");
+	    			} 
+				}
 			}
 			// INSERT (mit Anzahl)
 			pstmt = con.prepareStatement(sql_ins_c);
-			for (int[] pair: ausgewaehlteSwMitAnzahl) {
-				if (pair[1] > 0 && validSw.contains(pair[0])) {
-					pstmt.setInt(1, hausnummer);
-					pstmt.setInt(2, pair[0]);
-					pstmt.setInt(3, pair[1]);
-					pstmt.executeUpdate();
-					System.out.println("Speichere Sonderwunsch mit ID " + pair[0]
-							+ " und Anzahl " + pair[1]);
-				} else {
-					System.out.println("Sonderwunsch-ID " + pair[0] + " oder Anzahl " + pair[1]
-							+ " nicht erlaubt. ID übersprungen.");
+			if (ausgewaehlteSwMitAnzahl != null) {
+				for (int[] pair: ausgewaehlteSwMitAnzahl) {
+					if (pair[1] > 0 && validSw.contains(pair[0])) {
+						pstmt.setInt(1, hausnummer);
+						pstmt.setInt(2, pair[0]);
+						pstmt.setInt(3, pair[1]);
+						pstmt.executeUpdate();
+						System.out.println("Speichere Sonderwunsch mit ID " + pair[0]
+								+ " und Anzahl " + pair[1]);
+					} else {
+						System.out.println("Sonderwunsch-ID " + pair[0] + " oder Anzahl " + pair[1]
+								+ " nicht erlaubt. ID übersprungen.");
+					}
 				}
 			}
 			// commit

@@ -23,18 +23,12 @@ public class AussenanlagenControl {
 	}
 	
 	public void leseAussenanlagenSonderwuensche() {
-	    // 1. Lokale Sonderwünsche versuchen
-	    int[] ausgewaehlteSw = kundeModel.gibAusgewaehlteSwLokal();
-	    
-	    // 2. Wenn lokal nichts da ist, aus DB holen
-	    if (ausgewaehlteSw == null || ausgewaehlteSw.length == 0) {
-	        ausgewaehlteSw = kundeModel.gibAusgewaehlteSwAusDb();
-	    }
-	    if (ausgewaehlteSw != null && ausgewaehlteSw.length > 0) {
-	        aussenanlagenView.updateSwCheckboxen(ausgewaehlteSw);
-	    }
+		int[][] swAussenanlagen = kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(SwKategorie.AUSSENANLAGEN.id);
+        if (swAussenanlagen != null)
+            aussenanlagenView.updateSwInView(swAussenanlagen);
 	}
 	
+	@Deprecated
 	public void speichereSonderwuensche(int[] aussenanlagenSw) {
 		// Erst Konstellation prüfen
         if (!pruefeKonstellationAussenanlagen(aussenanlagenSw)) {
@@ -53,7 +47,31 @@ public class AussenanlagenControl {
         }
 	}
 	
+	public void speichereSonderwuensche(int[] aussenanlagenSw, int[][] aussenanlagenSwMitAnzahl) {
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationAussenanlagen(aussenanlagenSw, aussenanlagenSwMitAnzahl)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+            		aussenanlagenSw,
+            		aussenanlagenSwMitAnzahl,
+                    SwKategorie.AUSSENANLAGEN.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Außenanlagen konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
+	}
+	
+	@Deprecated
 	public boolean pruefeKonstellationAussenanlagen(int[] ausgewaehlteSw) {
+		return true; // TODO
+	}
+	
+	public boolean pruefeKonstellationAussenanlagen(int[] ausgewaehlteSw, int[][] aussenanlagenSwMitAnzahl) {
 		return true; // TODO
 	}
 }

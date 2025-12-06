@@ -64,8 +64,7 @@ public class ParkettView extends BasisView {
 
 
     public ParkettView(ParkettControl parkettControl, Stage parkettStage) {
-        super(parkettStage);
-        parkettStage.setTitle("Sonderwuensche zu Parkett");       
+        super(parkettStage);    
         this.parkettControl = parkettControl;
         parkettStage.setTitle("Sonderwünsche zu Parkett");
 
@@ -162,11 +161,17 @@ public class ParkettView extends BasisView {
     private void leseParkettSonderwuensche(){
     	this.parkettControl.leseParkettSonderwuensche();
     }
-
+    
+    @Deprecated
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
     }
-
+    
+    @Override
+    public void updateSwInView(int[][] ausgewaehlteSw) {
+    	
+    }
+    
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {
@@ -201,6 +206,11 @@ public class ParkettView extends BasisView {
     // TODO: CSV-Export für Parkett-Sonderwünsch implementieren.
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
+	}
+
+	@Override
+	public int[][] spinnerZu2DIntArray() {
+		return null;
 	}
    
 

@@ -163,6 +163,7 @@ public class HeizungView extends BasisView {
         // Checkboxen für vorkommende IDs ankreuzen
         if (ausgewaehlteSw == null) return;
         for (int[] sw : ausgewaehlteSw) {
+        	if (sw == null || sw.length != 2) continue;
             switch (Sw.findeMitId(sw[0])) {
                 case STD_HEIZKOERPER:
                 	spinStdHeizkoerper.getValueFactory().setValue(sw[1]);
@@ -181,12 +182,11 @@ public class HeizungView extends BasisView {
                     break;
                 default:
                     System.out.println(
-                    		"Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw);
+                    		"Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw[0]);
             }
         }
     }
 
-    @Deprecated
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {// chckBxStdHeizkoerper.isSelected(),

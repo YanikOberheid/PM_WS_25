@@ -171,6 +171,7 @@ public class InnentuerenView extends BasisView {
         // Checkboxen für vorkommende IDs ankreuzen
         if (ausgewaehlteSw == null) return;
         for (int[] sw : ausgewaehlteSw) {
+        	if (sw == null || sw.length != 2) continue;
             switch (Sw.findeMitId(sw[0])) {
                 case KLARGLAS_TUER_INNEN:
                 	spinKlarglasTuerInnen.getValueFactory().setValue(sw[1]);
@@ -183,7 +184,7 @@ public class InnentuerenView extends BasisView {
                 	break;
                 default:
                     System.out.println(
-                    		"Unbekannte Sonderwunsch-ID zu Innentüren: " + sw);
+                    		"Unbekannte Sonderwunsch-ID zu Innentüren: " + sw[0]);
             }
         }
 	}

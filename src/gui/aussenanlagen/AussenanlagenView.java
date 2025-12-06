@@ -187,6 +187,48 @@ public class AussenanlagenView extends BasisView {
     	// TODO
     }
     
+    public void updateSwInView(int[][] ausgewaehlteSw) {
+		// Alles zurücksetzen
+	    chckBxAbstellTerrasseEG.setSelected(false);
+	    chckBxVEAMarkiseEG.setSelected(false);
+	    chckBxVEAMarkiseDG.setSelected(false);
+	    chckBxEMarkiseEG.setSelected(false);
+	    chckBxEMarkiseDG.setSelected(false);
+	    chckBxEAGaragentor.setSelected(false);
+	    chckBxSTGaragentor.setSelected(false);
+	
+		// Checkboxen für vorkommende IDs ankreuzen
+	    if (ausgewaehlteSw == null) return;
+	    for (int[] sw : ausgewaehlteSw) {
+	    	if (sw == null || sw.length != 2) continue;
+	        switch (Sw.findeMitId(sw[0])) {
+	        	case ABSTELL_TERRASSE_EG:
+	        		chckBxAbstellTerrasseEG.setSelected(true);
+	        		break;
+	        	case VEA_MARKISE_EG:
+	        		chckBxVEAMarkiseEG.setSelected(true);
+	        		break;
+	        	case VEA_MARKISE_DG:
+	        		chckBxVEAMarkiseDG.setSelected(true);
+	        		break;
+	        	case E_MARKISE_EG:
+	        		chckBxEMarkiseEG.setSelected(true);
+	        		break;
+	        	case E_MARKISE_DG:
+	        		chckBxEMarkiseDG.setSelected(true);
+	        		break;
+	        	case EA_GARAGENTOR:
+	        		chckBxEAGaragentor.setSelected(true);
+	            case ST_GARAGENTOR:
+	        		chckBxSTGaragentor.setSelected(true);
+	        		break;
+	        	default:
+	        		System.out.println("Unbekannte Sonderwunsch-ID zu Aussenanlagen: " + sw[0]);
+	        		break;
+	        }
+		}
+    }
+    
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {
@@ -227,10 +269,15 @@ public class AussenanlagenView extends BasisView {
         return aussenanlagenSw;
     }
     
+    @Override
+	public int[][] spinnerZu2DIntArray() {
+    	return null;
+    }
+    
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
-    	if (!aussenanlagenControl.pruefeKonstellationAussenanlagen(checkboxenZuIntArray()))
+    	if (!aussenanlagenControl.pruefeKonstellationAussenanlagen(checkboxenZuIntArray(), spinnerZu2DIntArray()))
     		return;
         
     	double preis = 0.0;
@@ -253,7 +300,7 @@ public class AussenanlagenView extends BasisView {
 	 */
     @Override
     protected void speichereSonderwuensche() {
-    	aussenanlagenControl.speichereSonderwuensche(checkboxenZuIntArray());
+    	aussenanlagenControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
     }
     
     // TODO: CSV-Export für Aussenanlagen-Sonderwünsch implementieren.
