@@ -128,6 +128,7 @@ public class FliesenView extends BasisView {
     }
 
     /** Checkboxen anhand der gespeicherten IDs setzen. */
+    @Deprecated
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
     	// Alles zurücksetzen
@@ -166,6 +167,46 @@ public class FliesenView extends BasisView {
             }
 		}
 	}
+    
+    @Override
+    public void updateSwInView(int[][] ausgewaehlteSw) {
+    	// Alles zurücksetzen
+    	chckBxFKuecheEGOhne.setSelected(false);
+    	chckBxFBadOGOhne.setSelected(false);
+    	chckBxFKuecheEGGross.setSelected(false);
+    	chckBxFBadOGGross.setSelected(false);
+    	chckBxFBadDG.setSelected(false);
+    	chckBxFBadDGGross.setSelected(false);
+
+    	// Checkboxen für vorkommende IDs ankreuzen
+        if (ausgewaehlteSw == null) return;
+        for (int[] sw : ausgewaehlteSw) {
+        	if (sw == null || sw.length != 2) continue;
+            switch (Sw.findeMitId(sw[0])) {
+            	case F_KUECHE_EG_OHNE:
+            		chckBxFKuecheEGOhne.setSelected(true);
+            		break;
+            	case F_BAD_OG_OHNE:
+            		chckBxFBadOGOhne.setSelected(true);
+            		break;
+            	case F_KUECHE_EG_GROSS:
+            		chckBxFKuecheEGGross.setSelected(true);
+            		break;
+            	case F_BAD_OG_GROSS:
+            		chckBxFBadOGGross.setSelected(true);
+            		break;
+            	case F_BAD_DG:
+            		chckBxFBadDG.setSelected(true);
+            		break;
+            	case F_BAD_DG_GROSS:
+            		chckBxFBadDGGross.setSelected(true);
+            		break;
+            	default:
+            		System.out.println("Unbekannte Sonderwunsch-ID zu Fliesen: " + sw[0]);
+            		break;
+            }
+		}
+    }
 	
     public boolean[] holeIsSelectedFuerCheckboxen() {
 		return new boolean[] {
@@ -176,6 +217,11 @@ public class FliesenView extends BasisView {
 		    	chckBxFBadDG.isSelected(),
 		    	chckBxFBadDGGross.isSelected(),
 				};
+	}
+    
+    @Override
+	public int[][] spinnerZu2DIntArray() {
+		return null;
 	}
 	
 	@Override
