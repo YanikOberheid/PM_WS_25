@@ -108,8 +108,11 @@ public abstract class BasisView {
   	protected abstract void speichereSonderwuensche();
   	
   	public abstract boolean[] holeIsSelectedFuerCheckboxen();
+  	@Deprecated
   	public abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
+  	public abstract void updateSwInView(int[][] ausgewaehlteSw);
   	protected abstract int[] checkboxenZuIntArray();
+  	public abstract int[][] spinnerZu2DIntArray();
   	
   	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
     protected void zeigeKonfliktFenster(String header, String text) {

@@ -23,12 +23,13 @@ public class HeizungControl {
     }
 
     public void leseHeizungsSonderwuensche() {
-        int[] swHeizung = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.HEIZKOERPER.id);
+        int[][] swHeizung = kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(SwKategorie.HEIZKOERPER.id);
         if (swHeizung != null)
-            heizungView.updateSwCheckboxen(swHeizung);
+            heizungView.updateSwInView(swHeizung);
     }
     
     // Speichern der ausgewählten Sonderwuensche
+    @Deprecated
     public void speichereSonderwuensche(int[] heizungsSw) {
         // Erst Konstellation prüfen
         if (!pruefeKonstellationHeizkoerper(heizungsSw)) {
@@ -46,8 +47,32 @@ public class HeizungControl {
             e.printStackTrace();
         }
     }
+    
+    public void speichereSonderwuensche(int[] heizungsSw, int[][] heizungsSwMitAnzahl) {
+        // Erst Konstellation prüfen
+        if (!pruefeKonstellationHeizkoerper(heizungsSw, heizungsSwMitAnzahl)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
 
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+                    heizungsSw,
+                    heizungsSwMitAnzahl,
+                    SwKategorie.HEIZKOERPER.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Heizungen konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
+    }
+    
+    @Deprecated
     public boolean pruefeKonstellationHeizkoerper(int[] ausgewaehlteSw) {
+        return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
+    }
+    
+    public boolean pruefeKonstellationHeizkoerper(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl) {
         return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
     }
 }

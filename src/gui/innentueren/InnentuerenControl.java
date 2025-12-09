@@ -27,12 +27,13 @@ public class InnentuerenControl {
     }
 
     public void leseInnentuerenSonderwuensche() {
-        int[] swInnentueren = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.INNENTUEREN.id);
+        int[][] swInnentueren = kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(SwKategorie.INNENTUEREN.id);
         if (swInnentueren != null)
-            innentuerenView.updateSwCheckboxen(swInnentueren);
+            innentuerenView.updateSwInView(swInnentueren);
     }
     
     // Entsprechende Task: Auswahl für die Kategorie „Innentüren“ persistieren
+    @Deprecated
     public void speichereSonderwuensche(int[] innentuerenSw) {
         try {
             // Speichert ausschließlich für die Zielkategorie, ersetzt dort die Auswahl
@@ -47,8 +48,32 @@ public class InnentuerenControl {
         }
     }
     
+    public void speichereSonderwuensche(int[] innentuerenSw, int[][] innentuerenSwMitAnzahl) {
+    	// Erst Konstellation prüfen
+        if (!pruefeKonstellationSonderwuensche(innentuerenSw, innentuerenSwMitAnzahl))
+        	return;
+        
+    	try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+                innentuerenSw,
+                innentuerenSwMitAnzahl,
+                SwKategorie.INNENTUEREN.id
+            );
+            innentuerenView.zeigeInfo("Gespeichert", "Innentüren-Sonderwünsche wurden gespeichert.");
+        } catch (Exception e) {
+        	System.out.println("Sonderwünsche zu Innentüren konnten nicht gespeichert werden.");
+            e.printStackTrace();
+            innentuerenView.zeigeFehler("Fehler", "Speichern der Innentüren-Sonderwünsche ist fehlgeschlagen.");
+        }
+    }
+    
     // Spätere Implementierung
+    @Deprecated
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
         return true;
+    }
+    
+    public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl) {
+        return true; // TODO
     }
 }

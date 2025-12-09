@@ -141,6 +141,7 @@ public class GrundrissView extends BasisView{
     	this.grundrissControl.leseGrundrissSonderwuensche();
     }
     
+    @Deprecated
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
     	// Alles zurücksetzen
@@ -181,6 +182,46 @@ public class GrundrissView extends BasisView{
     }
     
     @Override
+    public void updateSwInView(int[][] ausgewaehlteSw) {
+    	// Alles zurücksetzen
+    	chckBxWandKueche.setSelected(false);
+    	chckBxTuerKueche.setSelected(false);
+    	chckBxGrossesZimmerOG.setSelected(false);
+    	chckBxTreppenraumDG.setSelected(false);
+    	chckBxVorrichtungBadDG.setSelected(false);
+    	chckBxAusfuehrungBadDG.setSelected(false);
+    	
+    	// Checkboxen für vorkommende IDs ankreuzen 
+    	if (ausgewaehlteSw == null) return;
+    	for (int[] sw: ausgewaehlteSw) {
+    		if (sw == null || sw.length != 2) continue;
+    		switch (Sw.findeMitId(sw[0])) {
+    			case WAND_KUECHE:
+    				chckBxWandKueche.setSelected(true);
+    				break;
+    			case TUER_KUECHE:
+    				chckBxTuerKueche.setSelected(true);
+    				break;
+    			case GROSSES_ZIMMER_OG:
+    				chckBxGrossesZimmerOG.setSelected(true);
+    				break;
+    			case TREPPENRAUM_DG:
+    				chckBxTreppenraumDG.setSelected(true);
+    				break;
+    			case VORRICHTUNG_BAD_DG:
+    				chckBxVorrichtungBadDG.setSelected(true);
+    				break;
+    			case AUSFUEHRUNG_BAD_DG:
+    				chckBxAusfuehrungBadDG.setSelected(true);
+    				break;
+    			default:
+    				System.out.println(
+    						"Unbekannte Sonderwunsch-ID zu Heizkörpern: " + sw[0]);
+    		}
+    	}
+    }
+    
+    @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
     	return new boolean[] {
     			chckBxWandKueche.isSelected(),
@@ -215,10 +256,15 @@ public class GrundrissView extends BasisView{
         return grundrissSw;
     }
     
- 	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
+    @Override
+    public int[][] spinnerZu2DIntArray() {
+    	return null;
+    }
+    
+ 	/** berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
   	@Override
     protected void berechneUndZeigePreisSonderwuensche(){
-  		grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuIntArray());
+  		grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
   		
   		double preis = 0.0;
   		
@@ -232,7 +278,7 @@ public class GrundrissView extends BasisView{
   		txtGesamt.setText(String.format("%.2f", preis));
   	}
   	
-  	/*
+  	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
 	 * Übergibt die Auswahl zum Speichern an Control.
 	 */
@@ -240,7 +286,7 @@ public class GrundrissView extends BasisView{
   	protected void speichereSonderwuensche(){
   		
   		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
-  		this.grundrissControl.speichereSonderwuensche(checkboxenZuIntArray());
+  		this.grundrissControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
   	}
   	
   	

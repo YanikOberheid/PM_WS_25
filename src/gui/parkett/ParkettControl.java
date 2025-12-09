@@ -22,11 +22,20 @@ public final class ParkettControl {
 
     public void leseParkettSonderwuensche() {
     }
-
+    
+    @Deprecated
     public void speichereSonderwuensche(int[] parkettSw) {
     }
-
+    
+    public void speichereSonderwuensche(int[] parkettSw, int[][] parkettSwMitAnzahl) {
+    }
+    
+    @Deprecated
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
+        return true;
+    }
+    
+    public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl) {
         return true;
     }
 }

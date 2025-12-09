@@ -39,9 +39,10 @@ public class FliesenControl {
      * Liest die Sonderwünsche aus der Datenbank und aktualisiert die View.
      */
     public void leseFliesenSonderwuensche(){
-        int[] swFliesen = kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.FLIESEN.id);
+        int[][] swFliesen = kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(
+        		SwKategorie.FLIESEN.id);
         if (swFliesen != null) {
-            this.fliesenView.updateSwCheckboxen(swFliesen);
+            this.fliesenView.updateSwInView(swFliesen);
         }
     } 
 
@@ -49,6 +50,7 @@ public class FliesenControl {
      * [3] Speichert die ausgewählten Fliesen-Sonderwünsche in der Datenbank.
      * @param fliesenSw Array der IDs, die in der View ausgewählt wurden.
      */
+    @Deprecated
     public void speichereSonderwuensche(int[] fliesenSw) {
     	// Erst Konstellation prüfen
     	if (!pruefeKonstellationFliesen(fliesenSw)) {
@@ -67,7 +69,31 @@ public class FliesenControl {
         }
     }
     
+    public void speichereSonderwuensche(int[] fliesenSw, int[][] fliesenSwMitAnzahl) {
+    	// Erst Konstellation prüfen
+    	if (!pruefeKonstellationFliesen(fliesenSw, fliesenSwMitAnzahl)) {
+    		// Konflikt -> nicht speichern
+    		return;
+    	}
+    	
+        try {
+        	this.kundeModel.speichereSonderwuenscheFuerKategorie(
+        			fliesenSw,
+        			fliesenSwMitAnzahl,
+        			SwKategorie.FLIESEN.id);
+
+        } catch(Exception exc) {
+            exc.printStackTrace();
+            System.out.println("Fehler beim Speichern der Fliesen-Sonderwünsche.");
+        }
+    }
+    
+    @Deprecated
     public boolean pruefeKonstellationFliesen(int[] ausgewaehlteSw) {
     	return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
+    }
+    
+    public boolean pruefeKonstellationFliesen(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMMitAnzahl) {
+    	return true; // TODO
     }
 }
