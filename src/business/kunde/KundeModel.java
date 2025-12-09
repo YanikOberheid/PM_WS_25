@@ -269,7 +269,6 @@ public final class KundeModel {
 			System.out.println("Fehler beim Laden ausgewählter Sonderwünsche ohne " + kategorieId);
 			exc.printStackTrace();
 		}
-		
 		return null;
 	}
 	
