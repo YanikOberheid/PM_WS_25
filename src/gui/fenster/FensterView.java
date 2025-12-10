@@ -361,14 +361,60 @@ public class FensterView extends BasisView {
 
         txtGesamt.setText(String.format("%.2f", preis));
     }
+    
+    protected int[][] checkboxenZuAnzahlSonderwuensche() {
+    	Vector<int[]> v = new Vector<>();
 
+    	if (chckBxSchiebetuerEg.isSelected()) {
+    	    v.add(new int[]{ Sw.STUEREN_TERRASSE.id, 1 });
+    	}
+    	if (chckBxSchiebetuerDg.isSelected()) {
+    	    v.add(new int[]{ Sw.STUEREN_DACHTERRASSE.id, 1 });
+    	}
+    	if (chckBxEinbruchschutz.isSelected()) {
+    	    v.add(new int[]{ Sw.EBS_HAUSTUER.id, 1 });
+    	}
+    	
+    	if (chckBxVorbereitungEg.isSelected()) {
+    	    v.add(new int[]{ Sw.VEAR_EG.id, 1 });
+    	}
+    	if (chckBxVorbereitungOg.isSelected()) {
+    	    v.add(new int[]{ Sw.VEAR_OG.id, 1 });
+    	}
+    	if (chckBxVorbereitungDg.isSelected()) {
+    	    v.add(new int[]{ Sw.VEAR_DG.id, 1 });
+    	}
+    	
+    	if (chckBxRollladenEg.isSelected()) {
+    	    v.add(new int[]{ Sw.ER_EG.id, 1 });
+    	}
+    	if (chckBxRollladenOg.isSelected()) {
+    	    v.add(new int[]{ Sw.ER_OG.id, 1 });
+    	}
+    	if (chckBxRollladenDg.isSelected()) {
+    	    v.add(new int[]{ Sw.ER_DG.id, 1 });
+    	}
+        
+        return getAlleTupel(v);
+    }
+    
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+        int[][] result = new int[v.size()][];
+
+        for (int i = 0; i < v.size(); i++) {
+            result[i] = v.get(i);
+        }
+
+        return result;
+    }
+    
     /**
      * Wird von BasisView-Button "Speichern" aufgerufen.
      * Übergibt die Auswahl zum Speichern an Control.
      */
     @Override
     protected void speichereSonderwuensche() {
-        fensterControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
+        fensterControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
     }
     
     // TODO: CSV-Export für Fenster-Sonderwünsch implementieren.

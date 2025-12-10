@@ -183,91 +183,7 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 		}
 	}
 	
-	@Deprecated
-	@Override
-	public void update(int hausnummer, int[] ausgewaehlteSw) throws SQLException, Exception {
-		/* UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
-		 * Alle Eintraege mit der Hausnummer löschen/entfernen, also alle Zeilen mit der uebergebenden Hausnummer
-		*/ 
-		String sql_del = "DELETE FROM Sonderwunsch_has_Haus "
-						+ "WHERE Haus_Hausnr = ?";
-		
-		// Insert Sql Statement vorbereiten
-		// Gedacht für mehrmalige Nutzung - Zeile 137 Bis 142 - For Schleife
-		String sql_ins = "INSERT INTO Sonderwunsch_has_Haus "
-						+ "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) "
-						+ "VALUES (?, ?)";
-		
-		try {
-			/* 
-			 * Hinweis:
-			 * Connection-Objekte des JDBC sind standardmäßig im auto-commit Modus,
-			 * was hier verhindert, dass DELETE und INSERT nacheinander in einer
-			 * Transaktion durchgeführt werden können. Daher wird der Modus hier kurz-
-			 * zeitig verlassen.
-			 * Dies könnte an anderen Stellen zu Problemen führen, wenn zeitleich Trans-
-			 * aktionen gestartet werden, da sich bspw. in KundeDaoImplementation auf
-			 * auto-commit verlassen wird und commit() und dort rollback() nicht manuell
-			 * aufgerufen werden.
-			 * Für mehr, siehe Java Doc zu commit() und rollback().
-			 */
-			if (!con.getAutoCommit())
-				throw new Exception("Der Auto-Commit Modus sollte zu dem Zeitpunkt eines Updates"
-						+ "der Sonderwünsche eingeschaltet sein, war er aber nicht. Möglicherweise"
-						+ "wurde SonderwuenscheDAOImplementation.update() zu schnell"
-						+ "hintereinander aufgerufen oder der Modus an anderer Stelle deaktiviert"
-						+ "und nicht anschließend reaktiviert.");
-			con.setAutoCommit(false);
-			// DELETE
-			PreparedStatement pstmt = con.prepareStatement(sql_del);
-			pstmt.setInt(1, hausnummer);
-			pstmt.execute();
-			// SELECT (existierende IDs)
-			PreparedStatement checkStmt = con.prepareStatement(
-					"SELECT idSonderwunsch FROM Sonderwunsch");
-			ResultSet rs = checkStmt.executeQuery();
-			ArrayList<Integer> validSw = new ArrayList<Integer>();
-			while (rs.next()) {
-				validSw.add(rs.getInt(1));
-			}
-			rs.close();
-			checkStmt.close();
-			// INSERT
-			pstmt = con.prepareStatement(sql_ins);
-			for (int id : ausgewaehlteSw) {
-    			if (validSw.contains(id)) { 
-        			pstmt.setInt(1, id);
-        			pstmt.setInt(2, hausnummer); 
-        			pstmt.executeUpdate();
-        			System.out.println("Speichere Sonderwunsch mit ID " + id);
-    			} else {
-        			System.out.println("Kein Sonderwunsch mit ID " + id + " gefunden. ID übersprungen.");
-    			} 
-			}
-			// commit
-			con.commit();
-			con.setAutoCommit(true);
-			pstmt.close();
-		} catch (SQLException exc) {
-			try {
-				con.rollback();
-			} catch (SQLException exc2) {
-				System.out.println("Fehler beim Rollback während der Aktualisierung von Sonderwünschen");
-			}
-			try {
-				con.setAutoCommit(true);
-			} catch (SQLException exc2) {
-				System.out.println("Fehler beim Setzen der DB-Verbindung in auto-commit während der Aktualisierung von Sonderwünschen");
-			}
-			exc.printStackTrace();
-			throw exc;
-		} catch (Exception exc) {
-			exc.printStackTrace();
-			throw exc;
-		}
-	}
-	
-	public void update(int hausnummer, int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl)
+	public void update(int hausnummer, int[][] ausgewaehlteSwMitAnzahl)
 			throws SQLException, Exception {
 		/* UPDATE ist nur für existierende Tupel -> DELETE, gefolgt von INSERT nötig
 		 * Alle Eintraege mit der Hausnummer löschen/entfernen, also alle Zeilen mit der uebergebenden Hausnummer
@@ -275,11 +191,13 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 		String sql_del = "DELETE FROM Sonderwunsch_has_Haus "
 						+ "WHERE Haus_Hausnr = ?";
 		
+		/*
 		// Insert Sql Statement vorbereiten
 		// Gedacht für mehrmalige Nutzung - Zeile 137 Bis 142 - For Schleife
 		String sql_ins = "INSERT INTO Sonderwunsch_has_Haus "
 						+ "(Sonderwunsch_idSonderwunsch, Haus_Hausnr) "
 						+ "VALUES (?, ?)";
+		*/
 		
 		String sql_ins_c = "INSERT INTO Sonderwunsch_has_Haus "
 				+ "(Sonderwunsch_idSonderwunsch, Haus_Hausnr, Sonderwunsch_Anzahl) "
@@ -319,6 +237,8 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			}
 			rs.close();
 			checkStmt.close();
+			
+			/*
 			// INSERT (ohne Anzahl)
 			pstmt = con.prepareStatement(sql_ins);
 			if (ausgewaehlteSw != null) {
@@ -333,13 +253,15 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 	    			} 
 				}
 			}
+			*/
 			// INSERT (mit Anzahl)
 			pstmt = con.prepareStatement(sql_ins_c);
 			if (ausgewaehlteSwMitAnzahl != null) {
 				for (int[] pair: ausgewaehlteSwMitAnzahl) {
+					// Überprüfung der Anzahl Sonderwunsche (sollte größer 0 sein) und das die ID in der Sonderwunsch Tabelle existiert
 					if (pair[1] > 0 && validSw.contains(pair[0])) {
-						pstmt.setInt(1, hausnummer);
-						pstmt.setInt(2, pair[0]);
+						pstmt.setInt(1, pair[0]);
+						pstmt.setInt(2, hausnummer);
 						pstmt.setInt(3, pair[1]);
 						pstmt.executeUpdate();
 						System.out.println("Speichere Sonderwunsch mit ID " + pair[0]

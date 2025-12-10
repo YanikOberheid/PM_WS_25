@@ -36,7 +36,7 @@ public final class FensterControl {
             this.fensterView.updateSwInView(ausgewaehlteSw);
         }
     }
-    
+    /*
     @Deprecated
     public void speichereSonderwuensche(int[] fensterSw) {
         int[] ausgewaehlteSw = this.kundeModel.gibAusgewaehlteSwAusDb();
@@ -68,18 +68,17 @@ public final class FensterControl {
                         + "konnte nicht gespeichert werden");
             }
         }
-    }
+    }*/
     
-    public void speichereSonderwuensche(int[] fensterSw, int[][] fensterSwMitAnzahl) {
+    public void speichereSonderwuensche(int[][] fensterSwMitAnzahl) {
     	// Erst Konstellation prüfen
-        if (!pruefeKonstellationFensterAussentueren(fensterSw, fensterSwMitAnzahl)) {
+        if (!pruefeKonstellationFensterAussentueren(fensterSwMitAnzahl)) {
             // Konflikt -> nicht speichern
             return;
         }
 
         try {
             kundeModel.speichereSonderwuenscheFuerKategorie(
-            		fensterSw,
             		fensterSwMitAnzahl,
                     SwKategorie.FENSTER_AUSSENTUEREN.id
             );
@@ -89,8 +88,7 @@ public final class FensterControl {
         }
     }
     
-    @Deprecated
-    public boolean pruefeKonstellationFensterAussentueren(int[] ids) {
+    public boolean pruefeKonstellationFensterAussentueren(int[][] ids) {
         return true;
     }
     

@@ -46,8 +46,8 @@ public interface SonderwuenscheDAO {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public void update(int hausnummer, int[] ausgewaehlteSw)
-	        throws SQLException, Exception;
+	//public void update(int hausnummer, int[] ausgewaehlteSw)
+	  //      throws SQLException, Exception;
 	
 	/**
 	 * Löscht alle vorhandenen Sonderwünsche zu einem Haus und fügt die übergebenen wieder ein.
@@ -61,7 +61,7 @@ public interface SonderwuenscheDAO {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public void update(int hausnummer, int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl)
+	public void update(int hausnummer, int[][] ausgewaehlteSwMitAnzahl)
 			throws SQLException, Exception;
 	
 	// Delete benoetigt wenn der Kunde selbst gelöscht wird

@@ -41,6 +41,7 @@ public final class GrundrissControl {
 			this.grundrissView.updateSwInView(swGrundriss);
     } 
 	
+	/*
 	@Deprecated
 	public void speichereSonderwuensche(int[] grundrissSw) {
 		// Erst Konstellation prüfen
@@ -58,18 +59,17 @@ public final class GrundrissControl {
             System.out.println("Sonderwünsche zu Grundriss-Varianten konnten nicht gespeichert werden.");
             e.printStackTrace();
         }
-	}
+	}*/
 	
-	public void speichereSonderwuensche(int[] grundrissSw, int[][] grundrissSwMitAnzahl) {
+	public void speichereSonderwuensche(int[][] grundrissSwMitAnzahl) {
 		// Erst Konstellation prüfen
-        if (!pruefeKonstellationSonderwuensche(grundrissSw, grundrissSwMitAnzahl)) {
+        if (!pruefeKonstellationSonderwuensche(grundrissSwMitAnzahl)) {
             // Konflikt -> nicht speichern
             return;
         }
         
         try {
             kundeModel.speichereSonderwuenscheFuerKategorie(
-                    grundrissSw,
                     grundrissSwMitAnzahl,
                     SwKategorie.GRUNDRISS.id
             );
@@ -79,8 +79,8 @@ public final class GrundrissControl {
         }
 	}
 	
-	@Deprecated
-	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
+	
+	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSw) {
 		return true;
 	}
 	
