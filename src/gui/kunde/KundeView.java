@@ -45,7 +45,7 @@ public class KundeView {
 	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<Integer>();
 	
 	private Label lblKundennummer = new Label("Kundennummer");
-	private TextField txtKundennummer = new TextField();
+	private Label lblKundennummerFeld = new Label("-");
 	
 	private Label lblVorname = new Label("Vorname");
 	private TextField txtVorname = new TextField();
@@ -117,7 +117,7 @@ public class KundeView {
 		
 		// Kundennummer
 		gridPane.add(lblKundennummer, 0, 3);
-		gridPane.add(txtKundennummer, 1, 3);
+		gridPane.add(lblKundennummerFeld, 1, 3);
 		
 		// Vorname
 		gridPane.add(lblVorname, 0, 4);
@@ -236,7 +236,8 @@ public class KundeView {
 	private void leseKunden() {
 	    Integer hausnummer = cmbBxNummerHaus.getValue();
 	    if (hausnummer == 0) {
-	    	txtKundennummer.clear();
+	    	lblKundennummerFeld.setText("-");
+	    	//txtKundennummer.clear();
 	        txtVorname.clear();
 	        txtNachname.clear();
 	        txtNummer.clear();
@@ -255,7 +256,8 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
-		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		//Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		Integer kundenummer = Integer.parseInt(lblKundennummerFeld.getText());
 		
 		Kunde kunde = new Kunde(
 				kundenummer,
@@ -270,7 +272,9 @@ public class KundeView {
 
 	private void loescheKunden() {
 		Integer hausnummer = cmbBxNummerHaus.getValue();
-		Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		//Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		Integer kundenummer = Integer.parseInt(lblKundennummerFeld.getText());
+		
 		// Aktuell kann man selber die Kundennummer ändern!!!
 	    if (kundenummer != null & hausnummer != null) {
 	        kundeControl.loescheKunden(kundenummer, hausnummer);
@@ -281,14 +285,16 @@ public class KundeView {
 	
 	public void zeigeKundeAufGui(Kunde kunde) {
 	    if (kunde == null) {
-	    	txtKundennummer.clear();
+	    	//txtKundennummer.clear();
+	    	lblKundennummerFeld.setText("-");
 	        txtVorname.clear();
 	        txtNachname.clear();
 	        txtNummer.clear();
 	        txtEmail.clear();
 	        return;
 	    }
-	    txtKundennummer.setText(Integer.toString(kunde.getIdKunde()));
+	    //txtKundennummer.setText(Integer.toString(kunde.getIdKunde()));
+	    lblKundennummerFeld.setText(Integer.toString(kunde.getIdKunde()));
 	    txtVorname.setText(kunde.getVorname());
 	    txtNachname.setText(kunde.getNachname());
 	    txtNummer.setText(kunde.getTelefonnummer());

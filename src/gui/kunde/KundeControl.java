@@ -158,6 +158,7 @@ public class KundeControl {
 				return;
 			}
 			kundeModel.speichereKunden(kunde);
+			kundeView.zeigeKundeAufGui(kunde);
 			kundeView.zeigeErfolgsmeldung("Erfolg", "Der Kunde wurde erfolgreich angelegt.");
     	}
     	catch(SQLException exc){

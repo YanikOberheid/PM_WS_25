@@ -68,7 +68,7 @@ public class FliesenControl {
             System.out.println("Fehler beim Speichern der Fliesen-Sonderwünsche.");
         }
     }
-    
+    @Deprecated
     public void speichereSonderwuensche(int[] fliesenSw, int[][] fliesenSwMitAnzahl) {
     	// Erst Konstellation prüfen
     	if (!pruefeKonstellationFliesen(fliesenSw, fliesenSwMitAnzahl)) {
@@ -88,12 +88,45 @@ public class FliesenControl {
         }
     }
     
+    // Aktuellste Version
+ 	public void speichereSonderwuensche(int[][] fliesenSwMitAnzahl) {
+ 		// Erst Konstellation prüfen
+         if (!pruefeKonstellationSonderwuensche(fliesenSwMitAnzahl)) {
+             // Konflikt -> nicht speichern
+             return;
+         }
+         
+         try {
+             kundeModel.speichereSonderwuenscheFuerKategorie(
+            		 fliesenSwMitAnzahl,
+                     SwKategorie.FLIESEN.id
+             );
+         } catch (Exception e) {
+             System.out.println("Sonderwünsche zu Fliesen-Varianten konnten nicht gespeichert werden.");
+             e.printStackTrace();
+         }
+ 	}
+ 	
+    
     @Deprecated
     public boolean pruefeKonstellationFliesen(int[] ausgewaehlteSw) {
     	return true; // Erst alles durchlassen. Implementiation ist Priorität [5]
     }
     
+    @Deprecated
     public boolean pruefeKonstellationFliesen(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMMitAnzahl) {
     	return true; // TODO
     }
+    
+    // Aktuellste Version
+ 	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
+ 		/* 
+ 		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
+ 		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
+ 		 * KundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie() die Auswahl der anderen
+ 		 * Kategorien.
+ 		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
+ 		 */ 
+ 		return true;
+ 	}
 }

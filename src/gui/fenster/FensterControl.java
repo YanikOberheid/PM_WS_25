@@ -69,7 +69,7 @@ public final class FensterControl {
             }
         }
     }
-    
+    @Deprecated
     public void speichereSonderwuensche(int[] fensterSw, int[][] fensterSwMitAnzahl) {
     	// Erst Konstellation prüfen
         if (!pruefeKonstellationFensterAussentueren(fensterSw, fensterSwMitAnzahl)) {
@@ -89,13 +89,44 @@ public final class FensterControl {
         }
     }
     
+    // Aktuellste Version
+ 	public void speichereSonderwuensche(int[][] fensterSwMitAnzahl) {
+ 		// Erst Konstellation prüfen
+         if (!pruefeKonstellationFensterAussentueren(fensterSwMitAnzahl)) {
+             // Konflikt -> nicht speichern
+             return;
+         }
+         
+         try {
+             kundeModel.speichereSonderwuenscheFuerKategorie(
+            		 fensterSwMitAnzahl,
+                     SwKategorie.FENSTER_AUSSENTUEREN.id
+             );
+         } catch (Exception e) {
+             System.out.println("Sonderwünsche zu Fenster und Aussentueren-Varianten konnten nicht gespeichert werden.");
+             e.printStackTrace();
+         }
+ 	}
+    
     @Deprecated
     public boolean pruefeKonstellationFensterAussentueren(int[] ids) {
         return true;
     }
-    
+    @Deprecated
     public boolean pruefeKonstellationFensterAussentueren(int[] ausgewaehlteSw,
     		int[][] ausgewaehlteSwMitAnzahl) {
         return true; // TODO
     }
+    
+    // Aktuellste Version
+ 	public boolean pruefeKonstellationFensterAussentueren(int[][] ausgewaehlteSwMitAnzahl){
+ 		/* 
+ 		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
+ 		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
+ 		 * KundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie() die Auswahl der anderen
+ 		 * Kategorien.
+ 		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
+ 		 */ 
+ 		return true;
+ 	}
 }

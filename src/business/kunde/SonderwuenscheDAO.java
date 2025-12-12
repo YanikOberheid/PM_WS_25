@@ -61,10 +61,21 @@ public interface SonderwuenscheDAO {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
+	@Deprecated
 	public void update(int hausnummer, int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl)
+			throws SQLException, Exception;
+	
+	// Jetzt mit Anzahl Sonderwuensche
+	public void update(int hausnummer, int[][] ausgewaehlteSwMitAnzahl)
 			throws SQLException, Exception;
 	
 	// Delete benoetigt wenn der Kunde selbst gelöscht wird
 	public void delete(int hausnummer)
 			throws SQLException;
+	
+	
+	
+	
+	
+	
 }

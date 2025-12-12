@@ -3,6 +3,8 @@ package gui.parkett;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.util.Vector;
+
 import business.kunde.Sw;
 import gui.basis.BasisView;
 
@@ -232,7 +234,18 @@ public class ParkettView extends BasisView {
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
     }
-
+    
+    @Override
+    protected int[][] checkboxenZuAnzahlSonderwuensche(){
+    	return new int[1][2];
+    }
+    
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+    	return new int[1][2];
+    }
+    
+     
+    
     @Override
     protected void speichereSonderwuensche() {
     }
@@ -241,11 +254,12 @@ public class ParkettView extends BasisView {
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
 	}
-
+	
+	/*
 	@Override
 	public int[][] spinnerZu2DIntArray() {
 		return null;
-	}
+	}*/
    
 
 }

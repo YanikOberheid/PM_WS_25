@@ -60,6 +60,7 @@ public final class GrundrissControl {
         }
 	}
 	
+	@Deprecated
 	public void speichereSonderwuensche(int[] grundrissSw, int[][] grundrissSwMitAnzahl) {
 		// Erst Konstellation prüfen
         if (!pruefeKonstellationSonderwuensche(grundrissSw, grundrissSwMitAnzahl)) {
@@ -79,12 +80,44 @@ public final class GrundrissControl {
         }
 	}
 	
+	// Aktuellste Version
+	public void speichereSonderwuensche(int[][] grundrissSwMitAnzahl) {
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationSonderwuensche(grundrissSwMitAnzahl)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+        
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+                    grundrissSwMitAnzahl,
+                    SwKategorie.GRUNDRISS.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Grundriss-Varianten konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
+	}
+	
 	@Deprecated
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
 		return true;
 	}
 	
+	@Deprecated
 	public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl){
+		/* 
+		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
+		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
+		 * KundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie() die Auswahl der anderen
+		 * Kategorien.
+		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
+		 */ 
+		return true;
+	}
+	
+	// Aktuellste Version
+	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
 		/* 
 		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
 		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
