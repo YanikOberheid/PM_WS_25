@@ -1,5 +1,7 @@
 package gui.basis;
 
+import java.util.Vector;
+
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -111,8 +113,14 @@ public abstract class BasisView {
   	@Deprecated
   	public abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
   	public abstract void updateSwInView(int[][] ausgewaehlteSw);
+  	@Deprecated
   	protected abstract int[] checkboxenZuIntArray();
-  	public abstract int[][] spinnerZu2DIntArray();
+  	@Deprecated
+  	//public abstract int[][] spinnerZu2DIntArray();
+  	
+  	// SWs mit Anzahl
+  	protected abstract int[][] checkboxenZuAnzahlSonderwuensche();
+  	protected abstract int[][] getAlleTupel(Vector<int[]> v);
   	
   	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
     protected void zeigeKonfliktFenster(String header, String text) {

@@ -255,16 +255,16 @@ public class GrundrissView extends BasisView{
         
         return grundrissSw;
     }
-    
+    /*
     @Override
     public int[][] spinnerZu2DIntArray() {
     	return null;
-    }
+    }*/
     
  	/** berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
   	@Override
     protected void berechneUndZeigePreisSonderwuensche(){
-  		grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
+  		grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuIntArray());
   		
   		double preis = 0.0;
   		
@@ -278,15 +278,49 @@ public class GrundrissView extends BasisView{
   		txtGesamt.setText(String.format("%.2f", preis));
   	}
   	
+  	protected int[][] checkboxenZuAnzahlSonderwuensche() {
+    	Vector<int[]> v = new Vector<>();
+
+    	if (chckBxWandKueche.isSelected()) {
+    	    v.add(new int[]{ Sw.WAND_KUECHE.id, 1 });
+    	}
+    	if (chckBxTuerKueche.isSelected()) {
+    	    v.add(new int[]{ Sw.TUER_KUECHE.id, 1 });
+    	}
+    	if (chckBxGrossesZimmerOG.isSelected()) {
+    	    v.add(new int[]{ Sw.GROSSES_ZIMMER_OG.id, 1 });
+    	}
+    	if (chckBxTreppenraumDG.isSelected()) {
+    	    v.add(new int[]{ Sw.TREPPENRAUM_DG.id, 1 });
+    	}
+    	if (chckBxVorrichtungBadDG.isSelected()) {
+    	    v.add(new int[]{ Sw.VORRICHTUNG_BAD_DG.id, 1 });
+    	}
+    	if (chckBxAusfuehrungBadDG.isSelected()) {
+    	    v.add(new int[]{ Sw.AUSFUEHRUNG_BAD_DG.id, 1 });
+    	}
+        
+        return getAlleTupel(v);
+    }
+    
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+        int[][] result = new int[v.size()][];
+
+        for (int i = 0; i < v.size(); i++) {
+            result[i] = v.get(i);
+        }
+
+        return result;
+    }
+  	
   	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
 	 * Übergibt die Auswahl zum Speichern an Control.
 	 */
   	@Override
-  	protected void speichereSonderwuensche(){
-  		
+  	protected void speichereSonderwuensche() {
   		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
-  		this.grundrissControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
+  		this.grundrissControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
   	}
   	
   	

@@ -222,7 +222,7 @@ public class HeizungView extends BasisView {
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
-    	if (!heizungControl.pruefeKonstellationHeizkoerper(checkboxenZuIntArray(), spinnerZu2DIntArray()))
+    	if (!heizungControl.pruefeKonstellationSonderwuensche(checkboxenZuAnzahlSonderwuensche()))
     		return;
         
     	double preis = 0.0;
@@ -239,21 +239,59 @@ public class HeizungView extends BasisView {
         txtGesamt.setText(String.format("%.2f", preis));
     }
 
-    /**
+    protected int[][] checkboxenZuAnzahlSonderwuensche() {
+    	Vector<int[]> v = new Vector<>();
+    	
+    	int anzahl = 0;
+    	
+    	if (spinStdHeizkoerper.getValue() > 0){
+    		anzahl = spinStdHeizkoerper.getValue();
+    		v.add(new int[]{ Sw.STD_HEIZKOERPER.id, anzahl });
+    	}
+    	if (spinGlattHeizkoerper.getValue() > 0){
+    		anzahl = spinGlattHeizkoerper.getValue();
+    		v.add(new int[]{ Sw.GLATT_HEIZKOERPER.id, anzahl });
+    	}
+    	if (spinHandtuchHeizkoerper.getValue() > 0){
+    		anzahl = spinHandtuchHeizkoerper.getValue();
+    		v.add(new int[]{ Sw.HANDTUCH.id, anzahl });
+    	}
+    	if (chckBxFbhOhneDG.isSelected()) {
+    	    v.add(new int[]{ Sw.FBH_OHNE_DG.id, 1 });
+    	}
+    	if (chckBxFbhMitDG.isSelected()) {
+    	    v.add(new int[]{ Sw.FBH_MIT_DG.id, 1 });
+    	}
+        
+        return getAlleTupel(v);
+    }
+    
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+        int[][] result = new int[v.size()][];
+
+        for (int i = 0; i < v.size(); i++) {
+            result[i] = v.get(i);
+        }
+
+        return result;
+    }
+  	
+  	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
 	 * Übergibt die Auswahl zum Speichern an Control.
 	 */
-    @Override
-    protected void speichereSonderwuensche() {
-    	// Control kontrolliert Konstellation
-        heizungControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
-    }
+  	@Override
+  	protected void speichereSonderwuensche() {
+  		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
+  		this.heizungControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
+  	}
     
     // TODO: CSV-Export für Heizung-Sonderwünsch implementieren.
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
 	}
-
+	
+	/*
 	@Override
 	public int[][] spinnerZu2DIntArray() {
 		return new int[][] {
@@ -261,5 +299,5 @@ public class HeizungView extends BasisView {
 				{Sw.GLATT_HEIZKOERPER.id, spinGlattHeizkoerper.getValue()},
 				{Sw.HANDTUCH.id, spinHandtuchHeizkoerper.getValue()},
 		};
-	}
+	}*/
 }

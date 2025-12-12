@@ -381,6 +381,7 @@ public final class KundeModel {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
+	@Deprecated
 	public void updateAusgewaehlteSw(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl)
 			throws SQLException, Exception {
 		if (this.kunde == null)
@@ -397,6 +398,25 @@ public final class KundeModel {
 		try {
 			this.swDao.update(hausnr, ausgewaehlteSw, ausgewaehlteSwMitAnzahl);
 			this.ausgewaehlteSw = ausgewaehlteSw;
+			this.ausgewaehlteSwMitAnzahl = ausgewaehlteSwMitAnzahl;
+		} catch (SQLException exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche mit Anzahl: SQL Fehler");
+			// exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche mit Anzahl");
+			// exc.printStackTrace();
+			throw exc;
+		}
+	}
+	// Aktuellste Variante
+	public void updateAusgewaehlteSw(int[][] ausgewaehlteSwMitAnzahl)
+			throws SQLException, Exception {
+		if (this.kunde == null)
+			throw new Exception("Fehler beim Aktualisieren ausgewählter Sonderwünsche: Es konnte kein Kunde gefunden werden");;
+		int hausnr = this.kunde.getHausnummer();
+		try {
+			this.swDao.update(hausnr, ausgewaehlteSwMitAnzahl);
 			this.ausgewaehlteSwMitAnzahl = ausgewaehlteSwMitAnzahl;
 		} catch (SQLException exc) {
 			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche mit Anzahl: SQL Fehler");
@@ -466,7 +486,7 @@ public final class KundeModel {
         
         System.out.println("✅ Sonderwünsche für Kategorie " + kategorieId + " erfolgreich gespeichert.");
     }
-    
+    @Deprecated
     public void speichereSonderwuenscheFuerKategorie(int[] neueSw, int[][] neueSwMitAnzahl, int kategorieId)
     		throws Exception {
         if (this.kunde == null) {
@@ -500,6 +520,52 @@ public final class KundeModel {
         	}
 	     	
 	     	this.swDao.update(hausnr, neueSw, alleSwMitAnzahl);
+	    } catch (SQLException exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche: SQL Fehler");
+			// exc.printStackTrace();
+			throw exc;
+		} catch (Exception exc) {
+			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche");
+			// exc.printStackTrace();
+			throw exc;
+		}
+        
+        System.out.println("✅ Sonderwünsche für Kategorie " + kategorieId + " erfolgreich gespeichert.");
+    }
+    
+    // Aktuellste Variante
+    public void speichereSonderwuenscheFuerKategorie(int[][] neueSwMitAnzahl, int kategorieId)
+    		throws Exception {
+        if (this.kunde == null) {
+            throw new Exception("Fehler: Kein Kunde ausgewählt.");
+        }
+        int hausnr = this.kunde.getHausnummer();
+        
+        try {
+	 		// Alte Sw, die nicht zur Kategorie zählen, mit Anzahl holen
+	 		// {{id_1, anz_1}, {id_2, anz_2}, ...)
+	     	int[][] alteSwMitAnzahlExcluding = this.swDao.getMitAnzahlExcluding(hausnr, kategorieId);
+	     	
+	     	// Alte mit neuen Sonderwünschen fusionieren
+	     	int[][] alleSwMitAnzahl = null;
+	     	if (ausgewaehlteSwMitAnzahl != null && neueSwMitAnzahl != null) {
+				alleSwMitAnzahl = new int[neueSwMitAnzahl.length + alteSwMitAnzahlExcluding.length][2];
+				for (int i = 0; i < alleSwMitAnzahl.length; i++) {
+					if (i < alteSwMitAnzahlExcluding.length) { 
+						// Alte Sw mit Anzahl
+						alleSwMitAnzahl[i] = alteSwMitAnzahlExcluding[i];
+					} else { 
+						// Neue Sw mit Anzahl
+						int neueIndex = i -  alteSwMitAnzahlExcluding.length;
+						if(neueIndex < alleSwMitAnzahl.length) {
+							alleSwMitAnzahl[i] = neueSwMitAnzahl[neueIndex];
+						} else {
+
+						}
+					}
+				}
+        	}
+	     	this.swDao.update(hausnr, alleSwMitAnzahl);
 	    } catch (SQLException exc) {
 			System.out.println("Fehler beim Updaten ausgewählter Sonderwünsche: SQL Fehler");
 			// exc.printStackTrace();

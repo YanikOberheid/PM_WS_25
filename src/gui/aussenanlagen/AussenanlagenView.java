@@ -269,16 +269,17 @@ public class AussenanlagenView extends BasisView {
         return aussenanlagenSw;
     }
     
+    /*
     @Override
 	public int[][] spinnerZu2DIntArray() {
     	return null;
-    }
+    }*/
     
     /** Gesamtpreis berechnen und anzeigen. Wird bereits von BasisView.btnBerechnen.onClick aufgerufen! */
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
-    	if (!aussenanlagenControl.pruefeKonstellationAussenanlagen(checkboxenZuIntArray(), spinnerZu2DIntArray()))
-    		return;
+    	if (!aussenanlagenControl.pruefeKonstellationSonderwuensche(checkboxenZuAnzahlSonderwuensche()))
+			return;
         
     	double preis = 0.0;
 
@@ -294,14 +295,53 @@ public class AussenanlagenView extends BasisView {
         txtGesamt.setText(String.format("%.2f", preis));
     }
     
-    /**
+    protected int[][] checkboxenZuAnzahlSonderwuensche() {
+    	Vector<int[]> v = new Vector<>();
+
+    	if (chckBxAbstellTerrasseEG.isSelected()) {
+    	    v.add(new int[]{ Sw.ABSTELL_TERRASSE_EG.id, 1 });
+    	}
+    	if (chckBxVEAMarkiseEG.isSelected()) {
+    	    v.add(new int[]{ Sw.VEA_MARKISE_EG.id, 1 });
+    	}
+    	if (chckBxVEAMarkiseDG.isSelected()) {
+    	    v.add(new int[]{ Sw.VEA_MARKISE_DG.id, 1 });
+    	}
+    	if (chckBxEAGaragentor.isSelected()) {
+    	    v.add(new int[]{ Sw.E_MARKISE_EG.id, 1 });
+    	}
+    	if (chckBxSTGaragentor.isSelected()) {
+    	    v.add(new int[]{ Sw.E_MARKISE_DG.id, 1 });
+    	}
+    	if (chckBxEMarkiseEG.isSelected()) {
+    	    v.add(new int[]{ Sw.EA_GARAGENTOR.id, 1 });
+    	}
+    	if (chckBxEMarkiseDG.isSelected()) {
+    	    v.add(new int[]{ Sw.ST_GARAGENTOR.id, 1 });
+    	}
+        
+        return getAlleTupel(v);
+    }
+    
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+        int[][] result = new int[v.size()][];
+
+        for (int i = 0; i < v.size(); i++) {
+            result[i] = v.get(i);
+        }
+
+        return result;
+    }
+  	
+  	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
 	 * Übergibt die Auswahl zum Speichern an Control.
 	 */
-    @Override
-    protected void speichereSonderwuensche() {
-    	aussenanlagenControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
-    }
+  	@Override
+  	protected void speichereSonderwuensche() {
+  		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
+  		this.aussenanlagenControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
+  	}
     
     // TODO: CSV-Export für Aussenanlagen-Sonderwünsch implementieren.
 	@Override

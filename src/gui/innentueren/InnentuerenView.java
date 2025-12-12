@@ -1,5 +1,7 @@
 package gui.innentueren;
 
+import java.util.Vector;
+
 import business.kunde.Sw;
 import gui.basis.BasisView;
 import javafx.scene.control.*;
@@ -136,7 +138,7 @@ public class InnentuerenView extends BasisView {
 
     @Override
     protected void speichereSonderwuensche() {
-        innentuerenControl.speichereSonderwuensche(checkboxenZuIntArray(), spinnerZu2DIntArray());
+        innentuerenControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
     }
 
     // kurze Dialoge für Control-Rückmeldungen
@@ -188,7 +190,41 @@ public class InnentuerenView extends BasisView {
             }
         }
 	}
+	
+	@Override
+	protected int[][] checkboxenZuAnzahlSonderwuensche() {
+    	Vector<int[]> v = new Vector<>();
+    	
+    	int anzahl = 0;
+    	
+    	if (spinKlarglasTuerInnen.getValue() > 0){
+    		anzahl = spinKlarglasTuerInnen.getValue();
+    		v.add(new int[]{ Sw.KLARGLAS_TUER_INNEN.id, anzahl });
+    	}
+    	if (spinMilchglasTuerInnen.getValue() > 0){
+    		anzahl = spinMilchglasTuerInnen.getValue();
+    		v.add(new int[]{ Sw.MILCHGLAS_TUER_INNEN.id, anzahl });
+    	}
+    	if (spinHolztuerGarage.getValue() > 0){
+    		anzahl = spinHolztuerGarage.getValue();
+    		v.add(new int[]{ Sw.HOLZTUER_GARAGE.id, anzahl });
+    	}
+        
+        return getAlleTupel(v);
+    }
+	
+	@Override
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+        int[][] result = new int[v.size()][];
 
+        for (int i = 0; i < v.size(); i++) {
+            result[i] = v.get(i);
+        }
+
+        return result;
+    }
+	
+	/*
 	@Override
 	public int[][] spinnerZu2DIntArray() {
 		return new int[][] {
@@ -196,5 +232,5 @@ public class InnentuerenView extends BasisView {
 			{Sw.MILCHGLAS_TUER_INNEN.id, spinMilchglasTuerInnen.getValue()},
 			{Sw.HOLZTUER_GARAGE.id, spinHolztuerGarage.getValue()},
 	};
-	}
+	}*/
 }

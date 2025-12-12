@@ -47,7 +47,7 @@ public class InnentuerenControl {
             innentuerenView.zeigeFehler("Fehler", "Speichern der Innentüren-Sonderwünsche ist fehlgeschlagen.");
         }
     }
-    
+    @Deprecated
     public void speichereSonderwuensche(int[] innentuerenSw, int[][] innentuerenSwMitAnzahl) {
     	// Erst Konstellation prüfen
         if (!pruefeKonstellationSonderwuensche(innentuerenSw, innentuerenSwMitAnzahl))
@@ -67,13 +67,38 @@ public class InnentuerenControl {
         }
     }
     
+    // Aktuellste Version
+ 	public void speichereSonderwuensche(int[][] innentuerenSwMitAnzahl) {
+ 		// Erst Konstellation prüfen
+         if (!pruefeKonstellationSonderwuensche(innentuerenSwMitAnzahl)) {
+             // Konflikt -> nicht speichern
+             return;
+         }
+         
+         try {
+             kundeModel.speichereSonderwuenscheFuerKategorie(
+            		 innentuerenSwMitAnzahl,
+                     SwKategorie.INNENTUEREN.id
+             );
+         } catch (Exception e) {
+             System.out.println("Sonderwünsche zu Innentüren-Varianten konnten nicht gespeichert werden.");
+             e.printStackTrace();
+         }
+ 	} 
+    
     // Spätere Implementierung
     @Deprecated
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw) {
         return true;
     }
     
+    @Deprecated
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl) {
         return true; // TODO
     }
+    
+    // Aktuellste Version
+ 	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
+ 		return true;
+ 	}
 }

@@ -46,7 +46,7 @@ public class AussenanlagenControl {
             e.printStackTrace();
         }
 	}
-	
+	@Deprecated
 	public void speichereSonderwuensche(int[] aussenanlagenSw, int[][] aussenanlagenSwMitAnzahl) {
 		// Erst Konstellation prüfen
         if (!pruefeKonstellationAussenanlagen(aussenanlagenSw, aussenanlagenSwMitAnzahl)) {
@@ -66,12 +66,43 @@ public class AussenanlagenControl {
         }
 	}
 	
+	// Aktuellse Version
+	public void speichereSonderwuensche(int[][] aussenanlagenSwMitAnzahl) {
+		// Erst Konstellation prüfen
+        if (!pruefeKonstellationSonderwuensche(aussenanlagenSwMitAnzahl)) {
+            // Konflikt -> nicht speichern
+            return;
+        }
+        
+        try {
+            kundeModel.speichereSonderwuenscheFuerKategorie(
+            		aussenanlagenSwMitAnzahl,
+                    SwKategorie.AUSSENANLAGEN.id
+            );
+        } catch (Exception e) {
+            System.out.println("Sonderwünsche zu Aussenanlagen-Varianten konnten nicht gespeichert werden.");
+            e.printStackTrace();
+        }
+	}
+	
 	@Deprecated
 	public boolean pruefeKonstellationAussenanlagen(int[] ausgewaehlteSw) {
 		return true; // TODO
 	}
-	
+	@Deprecated
 	public boolean pruefeKonstellationAussenanlagen(int[] ausgewaehlteSw, int[][] aussenanlagenSwMitAnzahl) {
 		return true; // TODO
+	}
+	
+	// Aktuellse Version
+	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
+		/* 
+		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
+		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
+		 * KundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie() die Auswahl der anderen
+		 * Kategorien.
+		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
+		 */ 
+		return true;
 	}
 }

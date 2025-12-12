@@ -38,7 +38,12 @@ public final class ParkettControl {
     public void speichereSonderwuensche(int[] parkettSw) {
     }
     
+    @Deprecated
     public void speichereSonderwuensche(int[] parkettSw, int[][] parkettSwMitAnzahl) {
+    }
+    
+    // Aktuellste Version
+    public void speichereSonderwuensche(int[][] parkettSwMitAnzahl) {
     }
     
     @Deprecated
@@ -46,7 +51,13 @@ public final class ParkettControl {
         return true;
     }
     
+    @Deprecated
     public boolean pruefeKonstellationSonderwuensche(int[] ausgewaehlteSw, int[][] ausgewaehlteSwMitAnzahl) {
         return true;
     }
+    
+    // Aktuellste Version
+ 	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
+ 		return true;
+ 	}
 }

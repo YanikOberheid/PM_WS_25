@@ -219,10 +219,11 @@ public class FliesenView extends BasisView {
 				};
 	}
     
+    /*
     @Override
 	public int[][] spinnerZu2DIntArray() {
 		return null;
-	}
+	}*/
 	
 	@Override
     protected int[] checkboxenZuIntArray() {
@@ -251,7 +252,7 @@ public class FliesenView extends BasisView {
 
     @Override
     protected void berechneUndZeigePreisSonderwuensche() {
-    	if (!fliesenControl.pruefeKonstellationFliesen(checkboxenZuIntArray()))
+    	if (!fliesenControl.pruefeKonstellationSonderwuensche(checkboxenZuAnzahlSonderwuensche()))
     		return;
         
     	double preis = 0.0;
@@ -266,15 +267,50 @@ public class FliesenView extends BasisView {
         txtGesamt.setText(String.format("%.2f", preis));
     }
     
-    /**
+    protected int[][] checkboxenZuAnzahlSonderwuensche() {
+    	Vector<int[]> v = new Vector<>();
+
+    	if (chckBxFKuecheEGOhne.isSelected()) {
+    	    v.add(new int[]{ Sw.F_KUECHE_EG_OHNE.id, 1 });
+    	}
+    	if (chckBxFBadOGOhne.isSelected()) {
+    	    v.add(new int[]{ Sw.F_BAD_OG_OHNE.id, 1 });
+    	}
+    	if (chckBxFKuecheEGGross.isSelected()) {
+    	    v.add(new int[]{ Sw.F_KUECHE_EG_GROSS.id, 1 });
+    	}
+    	if (chckBxFBadOGGross.isSelected()) {
+    	    v.add(new int[]{ Sw.F_BAD_OG_GROSS.id, 1 });
+    	}
+    	if (chckBxFBadDG.isSelected()) {
+    	    v.add(new int[]{ Sw.F_BAD_DG.id, 1 });
+    	}
+    	if (chckBxFBadDGGross.isSelected()) {
+    	    v.add(new int[]{ Sw.F_BAD_DG_GROSS.id, 1 });
+    	}
+        
+        return getAlleTupel(v);
+    }
+    
+    protected int[][] getAlleTupel(Vector<int[]> v) {
+        int[][] result = new int[v.size()][];
+
+        for (int i = 0; i < v.size(); i++) {
+            result[i] = v.get(i);
+        }
+
+        return result;
+    }
+  	
+  	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
 	 * Übergibt die Auswahl zum Speichern an Control.
 	 */
-	@Override
-	protected void speichereSonderwuensche() {
-		// Control kontrolliert Konstellation
-		fliesenControl.speichereSonderwuensche(checkboxenZuIntArray());
-	}
+  	@Override
+  	protected void speichereSonderwuensche() {
+  		// Speichere Sonderwünsche (Prüfung in Control, da das Feld kundeModel private ist)
+  		this.fliesenControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
+  	}
 	
     // TODO: CSV-Export für Fenster-Sonderwünsch implementieren.
 	@Override
