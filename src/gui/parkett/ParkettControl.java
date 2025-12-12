@@ -3,6 +3,7 @@ package gui.parkett;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import business.kunde.KundeModel;
+import business.kunde.SwKategorie;
 
 public final class ParkettControl {
 
@@ -17,11 +18,21 @@ public final class ParkettControl {
     }
 
     public void oeffneParkettView() {
-        this.parkettView.oeffneParkettView();
+    	leseParkettSonderwuensche();
+        parkettView.oeffneParkettView();
+        
     }
 
     public void leseParkettSonderwuensche() {
+
+        int[][] swParkett =
+            kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(SwKategorie.PARKETT.id);
+
+        parkettView.updateSwInView(swParkett);
     }
+
+
+
     
     @Deprecated
     public void speichereSonderwuensche(int[] parkettSw) {
