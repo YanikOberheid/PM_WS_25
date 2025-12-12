@@ -167,10 +167,44 @@ public class ParkettView extends BasisView {
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
     }
     
+    
     @Override
+    
     public void updateSwInView(int[][] ausgewaehlteSw) {
-    	
+
+        // alles zurücksetzen
+        chckBxLhdEssEg.setSelected(false);
+        chckBxLhdKuecheEg.setSelected(false);
+        chckBxSpEssEg.setSelected(false);
+        chckBxSpKuecheEg.setSelected(false);
+        chckBxLhdOg.setSelected(false);
+        chckBxSpOg.setSelected(false);
+        chckBxLhdDgKomplett.setSelected(false);
+        chckBxLhdDgOhneBad.setSelected(false);
+        chckBxSpDgKomplett.setSelected(false);
+        chckBxSpDgOhneBad.setSelected(false);
+
+        if (ausgewaehlteSw == null) return;
+
+        for (int[] sw : ausgewaehlteSw) {
+            if (sw == null || sw.length != 2) continue;
+
+            switch (Sw.findeMitId(sw[0])) {
+                case LHD_M_ESS_EG -> chckBxLhdEssEg.setSelected(true);
+                case LHD_M_KUECHE_EG -> chckBxLhdKuecheEg.setSelected(true);
+                case SP_ESS_EG -> chckBxSpEssEg.setSelected(true);
+                case SP_KUECHE_EG -> chckBxSpKuecheEg.setSelected(true);
+                case LHD_M_OG -> chckBxLhdOg.setSelected(true);
+                case SP_OG -> chckBxSpOg.setSelected(true);
+                case LHD_M_KOMPLETT_DG -> chckBxLhdDgKomplett.setSelected(true);
+                case LDH_M_OHNE_BAD_DG -> chckBxLhdDgOhneBad.setSelected(true);
+                case SP_KOMPLETT_DG -> chckBxSpDgKomplett.setSelected(true);
+                case SP_OHNE_BAD_DG -> chckBxSpDgOhneBad.setSelected(true);
+                default -> System.out.println("Unbekannte Parkett-SW-ID: " + sw[0]);
+            }
+        }
     }
+
     
     @Override
     public boolean[] holeIsSelectedFuerCheckboxen() {
