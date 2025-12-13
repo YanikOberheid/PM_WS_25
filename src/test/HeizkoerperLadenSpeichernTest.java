@@ -44,7 +44,7 @@ public class HeizkoerperLadenSpeichernTest {
         int[] erwartet = {
                 Sw.STD_HEIZKOERPER.id,
                 Sw.HANDTUCH.id
-        };
+        };   
         kundeModel.speichereSonderwuenscheFuerKategorie(
                 erwartet,
                 SwKategorie.HEIZKOERPER.id
