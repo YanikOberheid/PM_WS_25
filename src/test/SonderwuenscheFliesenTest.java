@@ -10,7 +10,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import business.kunde.DatabaseConnection;
 import business.kunde.SonderwuenscheDAO;
 import business.kunde.SonderwuenscheDAOImplementation;
 
@@ -26,7 +25,7 @@ public class SonderwuenscheFliesenTest {
 		dao = new SonderwuenscheDAOImplementation();
 
 		// AutoCommit aktivieren
-		DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
+		business.kunde.DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
 
 		// Test Daten löschen
 		try {

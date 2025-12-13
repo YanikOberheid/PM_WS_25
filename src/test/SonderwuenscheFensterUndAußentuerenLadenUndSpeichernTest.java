@@ -10,7 +10,6 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import business.kunde.DatabaseConnection;
 import business.kunde.SonderwuenscheDAOImplementation;
 import business.kunde.Sw;
 import business.kunde.SwKategorie;
@@ -19,21 +18,25 @@ public class SonderwuenscheFensterUndAußentuerenLadenUndSpeichernTest {
 
 	private SonderwuenscheDAOImplementation swDao;
 	private final int TEST_HAUSNUMMER = 21; // Hausnummer für Test
-	private final int FENSTER_AUSSENTUEREN_KATEGORIE_ID = SwKategorie.FENSTER_AUSSENTUEREN.id;	// Sonderwunschkategorie Fenster und Aussentueren 
-	private final int FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID = Sw.STUEREN_TERRASSE.id; // Spezifisches Sonderwunsch aus der Sonderwunschkategorie Fenster und Aussentueren 
-	
-	/* 	
-	 *  Für das Ausführen der Methoden testSpeichernUndLadenFensterAussentueren & 
-	 * 	testLadenMitKategorieFensterAussentueren benötigt damit 
-	 * 	Sie sauber mit einem nicht vorhanden Datensatz in Sonderwunsch_has_Haus 
-	 *  mit der vordefinierten TEST_HAUSNUMMER arbeiten können
-	*/
+	private final int FENSTER_AUSSENTUEREN_KATEGORIE_ID = SwKategorie.FENSTER_AUSSENTUEREN.id; // Sonderwunschkategorie
+																								// Fenster und
+																								// Aussentueren
+	private final int FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID = Sw.STUEREN_TERRASSE.id; // Spezifisches Sonderwunsch aus
+																						// der Sonderwunschkategorie
+																						// Fenster und Aussentueren
+
+	/*
+	 * Für das Ausführen der Methoden testSpeichernUndLadenFensterAussentueren &
+	 * testLadenMitKategorieFensterAussentueren benötigt damit Sie sauber mit einem
+	 * nicht vorhanden Datensatz in Sonderwunsch_has_Haus mit der vordefinierten
+	 * TEST_HAUSNUMMER arbeiten können
+	 */
 	@BeforeEach
 	public void setUp() throws Exception {
 		swDao = new SonderwuenscheDAOImplementation();
 
 		// AutoCommit aktivieren
-		DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
+		business.kunde.DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
 
 		// Test Daten löschen
 		try {
@@ -55,7 +58,7 @@ public class SonderwuenscheFensterUndAußentuerenLadenUndSpeichernTest {
 
 		assertArrayEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void testLadenMitKategorieFensterAussentueren() throws Exception {
 		int[] daten = { FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID };
@@ -66,6 +69,7 @@ public class SonderwuenscheFensterUndAußentuerenLadenUndSpeichernTest {
 
 		assertNotNull(result, "Ergebnis darf nicht null sein");
 		assertEquals(1, result.length, "Es sollte genau 1 Fenster und Aussentueren-Sonderwunsch geben");
-		assertEquals(FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID, result[0], "Die ID muss "+ Integer.toString(Sw.STUEREN_TERRASSE.id) + " sein");
+		assertEquals(FENSTER_AUSSENTUEREN_SONDERWUNSCH_ID, result[0],
+				"Die ID muss " + Integer.toString(Sw.STUEREN_TERRASSE.id) + " sein");
 	}
 }
