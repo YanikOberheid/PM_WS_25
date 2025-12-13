@@ -1,6 +1,10 @@
 package gui.innentueren;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import business.kunde.KundeModel;
+import business.kunde.Sw;
 import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -101,4 +105,57 @@ public class InnentuerenControl {
  	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
  		return true;
  	}
+ 	
+ 	public void exportiereSonderwuenscheAlsCsv(int[][] innentuerenSwMitAnzahl) {
+ 	    try { 
+ 	        if (innentuerenSwMitAnzahl == null || innentuerenSwMitAnzahl.length == 0) {
+ 	            innentuerenView.zeigeInfo("Export", "Keine Sonderwünsche zu Innentüren vorhanden.");
+ 	            return;
+ 	        }
+ 	       
+ 	        // Kundendaten
+ 	        if (kundeModel.getKunde() == null) {
+ 	            innentuerenView.zeigeFehler("Export fehlgeschlagen", "Kein Kunde ausgewählt.");
+ 	            return;
+ 	        }
+
+ 	        int kundennummer = kundeModel.getKunde().getIdKunde();
+ 	        String nachname = kundeModel.getKunde().getNachname();
+ 	        
+ 	        String dateiname = kundennummer + "_" + nachname + "_Innentueren.csv";
+ 	        File file = new File(dateiname);
+
+ 	        try (FileWriter writer = new FileWriter(file)) {
+ 	            writer.write("Sonderwunsch;Anzahl;Einzelpreis;Gesamtpreis\n");
+
+ 	            for (int[] sw : innentuerenSwMitAnzahl) {
+ 	                Sw sonderwunsch = Sw.findeMitId(sw[0]);
+ 	                int anzahl = sw[1];
+ 	                double einzelpreis = sonderwunsch.preis;
+ 	                double gesamtpreis = anzahl * einzelpreis;
+
+ 	                writer.write(
+ 	                    sonderwunsch.bes + ";" +
+ 	                    anzahl + ";" +
+ 	                    einzelpreis + ";" +
+ 	                    gesamtpreis + "\n"
+ 	                );
+ 	            }
+ 	        }
+
+ 	        innentuerenView.zeigeInfo(
+ 	            "Export erfolgreich",
+ 	            "CSV-Datei wurde erstellt:\n" + file.getAbsolutePath()
+ 	        );
+
+ 	    } catch (Exception e) {
+ 	        e.printStackTrace();
+ 	        innentuerenView.zeigeFehler(
+ 	            "Export fehlgeschlagen",
+ 	            "Die CSV-Datei konnte nicht erstellt werden."
+ 	        );
+ 	    }
+ 	}
+
+
 }

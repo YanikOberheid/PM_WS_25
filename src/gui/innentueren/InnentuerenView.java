@@ -154,7 +154,9 @@ public class InnentuerenView extends BasisView {
 
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
-		// nicht Bestandteil dieses Tasks
+		
+		int[][] daten = checkboxenZuAnzahlSonderwuensche();
+	    innentuerenControl.exportiereSonderwuenscheAlsCsv(daten);
 	}
 
 	@Override
