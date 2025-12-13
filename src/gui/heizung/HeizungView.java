@@ -275,6 +275,14 @@ public class HeizungView extends BasisView {
 
         return result;
     }
+    
+    public void zeigeInfo(String titel, String nachricht) {
+		Alert a = new Alert(Alert.AlertType.INFORMATION);
+		a.setTitle(titel);
+		a.setHeaderText(null);
+		a.setContentText(nachricht);
+		a.showAndWait();
+	}
   	
   	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
@@ -286,9 +294,10 @@ public class HeizungView extends BasisView {
   		this.heizungControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
   	}
     
-    // TODO: CSV-Export für Heizung-Sonderwünsch implementieren.
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
+		int[][] daten = checkboxenZuAnzahlSonderwuensche();
+		heizungControl.exportiereSonderwuenscheAlsCsv(daten);
 	}
 	
 	/*
