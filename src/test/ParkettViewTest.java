@@ -48,18 +48,18 @@ public class ParkettViewTest {
 			actualRef.set(parkettView.holeIsSelectedFuerCheckboxen());
 		});
 
-		boolean[] expected = { true, // LHD_M_ESS_EG - 0
-				false, // LHD_M_KUECHE_EG -1
-				false, // SP_ESS_EG - 2
-				false, // SP_KUECHE_EG -3
-				false, // LHD_M_OG - 4
-				true, // SP_OG -5
-				false, // LHD_M_KOMPLETT_DG-6
-				false, // LDH_M_OHNE_BAD_DG - 7
-				false, // SP_KOMPLETT_DG - 8
-				true // SP_OHNE_BAD_DG - 9
+		boolean[] expected = { 
+				true, 	// LHD_M_ESS_EG - 0
+				false, 	// LHD_M_KUECHE_EG -1
+				false, 	// SP_ESS_EG - 2
+				false, 	// SP_KUECHE_EG -3
+				false, 	// LHD_M_OG - 4
+				true, 	// SP_OG -5
+				false, 	// LHD_M_KOMPLETT_DG-6
+				false, 	// LDH_M_OHNE_BAD_DG - 7
+				false, 	// SP_KOMPLETT_DG - 8
+				true 	// SP_OHNE_BAD_DG - 9
 		};
-
 		assertArrayEquals(expected, actualRef.get());
 	}
 
