@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import business.kunde.Sw;
 import gui.basis.BasisView;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -336,6 +337,14 @@ public class FensterView extends BasisView {
         return fensterSw;
     }
     
+    public void zeigeInfo(String titel, String nachricht) {
+		Alert a = new Alert(Alert.AlertType.INFORMATION);
+		a.setTitle(titel);
+		a.setHeaderText(null);
+		a.setContentText(nachricht);
+		a.showAndWait();
+	}
+    
     /*
     @Override
     public int[][] spinnerZu2DIntArray() {
@@ -420,8 +429,10 @@ public class FensterView extends BasisView {
   		this.fensterControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
   	}
     
-    // TODO: CSV-Export für Fenster-Sonderwünsch implementieren.
+    
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
+		int[][] daten = checkboxenZuAnzahlSonderwuensche();
+		fensterControl.exportiereSonderwuenscheAlsCsv(daten);
 	}
 }
