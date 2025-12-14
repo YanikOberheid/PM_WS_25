@@ -1,9 +1,12 @@
 package gui.fenster;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.Map;
 
 import business.kunde.KundeModel;
+import business.kunde.Sw;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import business.kunde.SwKategorie;
@@ -129,4 +132,59 @@ public final class FensterControl {
  		 */ 
  		return true;
  	}
+ 	public void exportiereSonderwuenscheAlsCsv(int[][] fensterSwMitAnzahl) {
+ 	    try {
+ 	        if (fensterSwMitAnzahl == null || fensterSwMitAnzahl.length == 0) {
+ 	            fensterView.zeigeInfo(
+ 	                "Export",
+ 	                "Keine Sonderwünsche zu Fenstern und Außentüren vorhanden."
+ 	            );
+ 	            return;
+ 	        }
+
+ 	        if (kundeModel.getKunde() == null) {
+ 	            fensterView.zeigeInfo(
+ 	                "Export fehlgeschlagen",
+ 	                "Kein Kunde ausgewählt."
+ 	            );
+ 	            return;
+ 	        }
+
+ 	        int kundennummer = kundeModel.getKunde().getIdKunde();
+ 	        String nachname = kundeModel.getKunde().getNachname();
+ 	        String dateiname = kundennummer + "_" + nachname + "_Fenster_Aussentueren.csv";
+ 	        File file = new File(dateiname);
+
+ 	        try (FileWriter writer = new FileWriter(file)) {
+ 	            writer.write("Sonderwunsch;Anzahl;Einzelpreis;Gesamtpreis\n");
+
+ 	            for (int[] sw : fensterSwMitAnzahl) {
+ 	                Sw sonderwunsch = Sw.findeMitId(sw[0]);
+ 	                int anzahl = sw[1];
+ 	                double einzelpreis = sonderwunsch.preis;
+ 	                double gesamtpreis = anzahl * einzelpreis;
+
+ 	                writer.write(
+ 	                    sonderwunsch.bes + ";" +
+ 	                    anzahl + ";" +
+ 	                    einzelpreis + ";" +
+ 	                    gesamtpreis + "\n"
+ 	                );
+ 	            }
+ 	        }
+
+ 	        fensterView.zeigeInfo(
+ 	            "Export erfolgreich",
+ 	            "CSV-Datei wurde erstellt:\n" + file.getAbsolutePath()
+ 	        );
+
+ 	    } catch (Exception e) {
+ 	        e.printStackTrace();
+ 	        fensterView.zeigeInfo(
+ 	            "Export fehlgeschlagen",
+ 	            "Die CSV-Datei konnte nicht erstellt werden."
+ 	        );
+ 	    }
+ 	}
+
 }
