@@ -1,6 +1,10 @@
 package gui.aussenanlagen;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import business.kunde.KundeModel;
+import business.kunde.Sw;
 import business.kunde.SwKategorie;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -104,5 +108,62 @@ public class AussenanlagenControl {
 		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
 		 */ 
 		return true;
+	}
+	
+	public void exportiereSonderwuenscheAlsCsv(int[][] aussenanlagenSwMitAnzahl) {
+	    try {
+	        if (aussenanlagenSwMitAnzahl == null || aussenanlagenSwMitAnzahl.length == 0) {
+	            aussenanlagenView.zeigeInfo(
+	                "Export",
+	                "Keine Sonderwünsche zu Außenanlagen vorhanden."
+	            );
+	            return;
+	        }
+
+	        if (kundeModel.getKunde() == null) {
+	            aussenanlagenView.zeigeInfo(
+	                "Export fehlgeschlagen",
+	                "Kein Kunde ausgewählt."
+	            );
+	            return;
+	        }
+
+	        int kundennummer = kundeModel.getKunde().getIdKunde();
+	        String nachname = kundeModel.getKunde().getNachname();
+
+	        String dateiname =
+	            kundennummer + "_" + nachname + "_Aussenanlagen.csv";
+	        File file = new File(dateiname);
+
+	        try (FileWriter writer = new FileWriter(file)) {
+	            writer.write("Sonderwunsch;Anzahl;Einzelpreis;Gesamtpreis\n");
+
+	            for (int[] sw : aussenanlagenSwMitAnzahl) {
+	                Sw sonderwunsch = Sw.findeMitId(sw[0]);
+	                int anzahl = sw[1];
+	                double einzelpreis = sonderwunsch.preis;
+	                double gesamtpreis = anzahl * einzelpreis;
+
+	                writer.write(
+	                    sonderwunsch.bes + ";" +
+	                    anzahl + ";" +
+	                    einzelpreis + ";" +
+	                    gesamtpreis + "\n"
+	                );
+	            }
+	        }
+
+	        aussenanlagenView.zeigeInfo(
+	            "Export erfolgreich",
+	            "CSV-Datei wurde erstellt:\n" + file.getAbsolutePath()
+	        );
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        aussenanlagenView.zeigeInfo(
+	            "Export fehlgeschlagen",
+	            "Die CSV-Datei konnte nicht erstellt werden."
+	        );
+	    }
 	}
 }

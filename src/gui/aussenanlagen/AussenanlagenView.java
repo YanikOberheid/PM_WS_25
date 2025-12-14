@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import business.kunde.Sw;
 import gui.basis.BasisView;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -332,6 +333,14 @@ public class AussenanlagenView extends BasisView {
 
         return result;
     }
+    
+    public void zeigeInfo(String titel, String nachricht) {
+		Alert a = new Alert(Alert.AlertType.INFORMATION);
+		a.setTitle(titel);
+		a.setHeaderText(null);
+		a.setContentText(nachricht);
+		a.showAndWait();
+	}
   	
   	/**
 	 * Wird von BasisView-Button "Speichern" aufgerufen.
@@ -343,8 +352,9 @@ public class AussenanlagenView extends BasisView {
   		this.aussenanlagenControl.speichereSonderwuensche(checkboxenZuAnzahlSonderwuensche());
   	}
     
-    // TODO: CSV-Export für Aussenanlagen-Sonderwünsch implementieren.
 	@Override
 	protected void exportiereSonderwuenscheAlsCsv() {
+		int[][] daten = checkboxenZuAnzahlSonderwuensche();
+		aussenanlagenControl.exportiereSonderwuenscheAlsCsv(daten);
 	}
 }
