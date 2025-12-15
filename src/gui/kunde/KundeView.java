@@ -65,11 +65,12 @@ public class KundeView {
 	private Button btnCsvExport = new Button("CSV-Export");
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
-	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
+	private MenuItem mnItmGrundriss = new MenuItem("Grundriss-Varianten");
 	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
 	private MenuItem mnItmInnentueren = new MenuItem("Innentüren");
-	private MenuItem mnItmHeizung = new MenuItem("Heizungsvarianten");
-	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
+	private MenuItem mnItmHeizung = new MenuItem("Heizungen");
+	private MenuItem mnItmSanitaer = new MenuItem("Sanitaerinstallation");
+	private MenuItem mnItmFliesen = new MenuItem("Fliesen");
 	private MenuItem mnItmAussenanlagen = new MenuItem("Außenanlagen");
 	private MenuItem mnItmParkett = new MenuItem("Parkett");
 
@@ -153,6 +154,7 @@ public class KundeView {
 		mnSonderwuensche.getItems().add(mnItmFenster);
 		mnSonderwuensche.getItems().add(mnItmInnentueren);
 		mnSonderwuensche.getItems().add(mnItmHeizung);
+		mnSonderwuensche.getItems().add(mnItmSanitaer);
 		mnSonderwuensche.getItems().add(mnItmFliesen);
 		mnSonderwuensche.getItems().add(mnItmAussenanlagen);
 		mnSonderwuensche.getItems().add(mnItmParkett);
@@ -226,6 +228,9 @@ public class KundeView {
 	    });
 	    mnItmAussenanlagen.setOnAction(aEvent -> {
 	        kundeControl.oeffneAussenanlagenControl();
+	    });
+	    mnItmSanitaer.setOnAction(aEvent -> {
+	        kundeControl.oeffneSanitaerinstallationControl();
 	    });
 	}
 

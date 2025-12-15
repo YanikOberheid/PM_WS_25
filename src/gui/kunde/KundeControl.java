@@ -13,6 +13,7 @@ import gui.aussenanlagen.AussenanlagenControl;
 import gui.fenster.FensterControl;
 import gui.innentueren.InnentuerenControl;
 import gui.parkett.ParkettControl;
+import gui.sanitaerinstallation.SanitaerinstallationControl;
 import gui.fliesen.FliesenControl;
 
 /**
@@ -28,6 +29,7 @@ public class KundeControl {
        zum Grundriss zu dem Kunden */
     private GrundrissControl grundrissControl;
     // Referenz auf das neue Control-Objekt für Fliesen
+    private SanitaerinstallationControl sanitaerControl;
     private FliesenControl fliesenControl;
     private HeizungControl heizungControl;
     private FensterControl fensterControl;
@@ -79,6 +81,19 @@ public class KundeControl {
         }
         this.heizungControl.leseHeizungsSonderwuensche();
         this.heizungControl.oeffneHeizungView();
+    }
+    
+    public void oeffneSanitaerinstallationControl(){
+    	if (kundeModel.getKunde() == null) {
+    		kundeView.zeigeFehlermeldung(keinKundeTitel, keinKundeMeldung);
+    		return;
+    	}
+        
+    	if (this.sanitaerControl == null){
+            this.sanitaerControl = new SanitaerinstallationControl();
+        }
+    	this.sanitaerControl .leseSanitaerinstallationSonderwuensche();
+        this.sanitaerControl .oeffneSanitaerinstallationView();
     }
     
     public void oeffneFliesenControl(){
