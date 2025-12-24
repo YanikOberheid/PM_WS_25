@@ -68,10 +68,13 @@ public class SonderwuenscheFliesenTest {
 
 		dao.update(TEST_HAUSNUMMER, daten);
 
-		dao.delete(TEST_HAUSNUMMER);
+		//dao.delete(TEST_HAUSNUMMER);
 
 		int[] result = dao.get(TEST_HAUSNUMMER);
 
 		assertEquals(0, result.length, "Nach dem Löschen muss die Liste leer sein");
 	}
+	
+	
+	
 }

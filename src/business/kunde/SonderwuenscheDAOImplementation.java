@@ -127,4 +127,16 @@ public class SonderwuenscheDAOImplementation implements SonderwuenscheDAO {
 			throw exc;
 		}
 	}
+
+	@Override
+	public void delete(int hausnummer) throws SQLException {
+	    Connection conn = DatabaseConnection.getInstance().getConnection();
+		String sql = "DELETE FROM Sonderwunsch_has_Haus WHERE Haus_Hausnr = ?";
+	    
+	    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setInt(1, hausnummer);
+	        stmt.executeUpdate();
+	    }
+	}
+
 }

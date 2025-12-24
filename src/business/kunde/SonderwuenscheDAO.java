@@ -11,4 +11,6 @@ public interface SonderwuenscheDAO {
 	
 	public void update(int hausnummer, int[] ausgewaehlteSw)
 	        throws SQLException, Exception;
+	public void delete(int hausnummer) throws SQLException;
+
 }
