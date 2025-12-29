@@ -137,10 +137,7 @@ public class ParkettView extends BasisView {
         super.oeffneBasisView();
     }
     
-    /**
-     * WICHTIG: @Override ENTFERNT.
-     * BasisView hat diese Methode noch nicht, aber der Control ruft sie auf.
-     */
+
     public void updateSwInView(int[][] ausgewaehlteSw) {
         for (CheckBox cb : allCheckboxes) {
             cb.setSelected(false);
@@ -158,11 +155,7 @@ public class ParkettView extends BasisView {
             }
         }
     }
-    
-    /**
-     * WICHTIG: @Override BEHALTEN.
-     * Das ist die Methode, die BasisView (alte Version) verlangt.
-     */
+
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
         if(ausgewaehlteSw == null) return;
@@ -232,11 +225,7 @@ public class ParkettView extends BasisView {
         }
     }
     
-    /**
-     * Falls BasisView (alt) diese Methode nicht hat, @Override entfernen.
-     * Falls es sie hat, lassen. Sicherheitshalber hier ohne Override, 
-     * da du wahrscheinlich die alte BasisView nutzt.
-     */
+
     protected void exportiereSonderwuenscheAlsCsv() {
         // TODO: Implementierung
     }
