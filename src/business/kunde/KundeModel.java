@@ -615,9 +615,20 @@ public final class KundeModel {
 	}
     
   	// Bild aus der DB bekommen
-	  public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
-		    KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
-		    return kundeDAO.loadImage(idBild);
-	  }
+	public InputStream holBildAusDB(int idBild) throws SQLException, Exception {
+		KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+	    return kundeDAO.loadImage(idBild);
+	}
     
+	public boolean hatKundeDG() throws Exception{
+		if (this.kunde == null || (this.kunde != null && this.kunde.getHausnummer() == 0))
+			throw new Exception ("Kunde hat keine gültige Hausnummer");
+		try {
+			KundeDaoImplementation kundeDAO = new KundeDaoImplementation();
+			return kundeDAO.hatHausnummerDG(this.kunde.getHausnummer());
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new Exception("Haustyp konnte nicht abgerufen werden");
+		}
+	}
 }

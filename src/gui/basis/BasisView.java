@@ -123,7 +123,7 @@ public abstract class BasisView {
   	protected abstract int[][] getAlleTupel(Vector<int[]> v);
   	
   	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
-    protected void zeigeKonfliktFenster(String header, String text) {
+    public void zeigeKonfliktFenster(String header, String text) {
         if (Platform.isFxApplicationThread()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Konflikt");

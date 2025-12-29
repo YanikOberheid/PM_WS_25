@@ -264,7 +264,8 @@ public class GrundrissView extends BasisView{
  	/** berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
   	@Override
     protected void berechneUndZeigePreisSonderwuensche(){
-  		grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuIntArray());
+  		if (!grundrissControl.pruefeKonstellationSonderwuensche(checkboxenZuAnzahlSonderwuensche()))
+  			return;
   		
   		double preis = 0.0;
   		
