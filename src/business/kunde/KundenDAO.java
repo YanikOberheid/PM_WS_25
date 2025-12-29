@@ -28,4 +28,6 @@ public interface KundenDAO {
 	// Bild Laden Methode
 	public InputStream loadImage(int id)
 			throws SQLException, Exception;
+	public boolean hatHausnummerDG(int hausnummer)
+			throws SQLException;
 }

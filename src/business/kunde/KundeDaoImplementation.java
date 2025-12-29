@@ -14,7 +14,8 @@ import java.sql.SQLException;
 public class KundeDaoImplementation implements KundenDAO {
 
 	static Connection con = DatabaseConnection.getInstance().getConnection();
-
+	public static final int HAUSTYP_MIT_DG_ID = 1;
+	
 	@Override
 	public int add(Kunde kunde) throws SQLException {
 		String sql = "INSERT INTO Kunde (Haus_Hausnr, Vorname, Nachname, Telefon, email) VALUES (?, ?, ?, ?, ?)";
@@ -129,5 +130,21 @@ public class KundeDaoImplementation implements KundenDAO {
 			}
 		}
 		return null; // kein Kunde gefunden
+	}
+	
+	@Override
+	public boolean hatHausnummerDG(int hausnummer) throws SQLException {
+		String sql = "SELECT Haustyp_idHaustyp FROM Haus WHERE Hausnr = ?";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setInt(1, hausnummer);
+		ResultSet result = pstmt.executeQuery();
+		if (result.next() && result.getInt(1) == HAUSTYP_MIT_DG_ID) {
+			result.close();
+			pstmt.close();
+			return true;
+		}
+		result.close();
+		pstmt.close();
+		return false;
 	}
 }
