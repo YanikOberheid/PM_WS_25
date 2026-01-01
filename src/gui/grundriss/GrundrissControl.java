@@ -127,11 +127,13 @@ public final class GrundrissControl {
 		try {
 			hausHatDG = kundeModel.hatKundeDG();
 		} catch (Exception e) {
-			// TODO: Zeige Fenster mit Fehlermeldung
+			grundrissView.zeigeKonfliktFenster("Fehler beim Prüfen des Haustyps",
+					"Es konnte nicht herausgefunden werden, ob das Haus ein Dachgeschoss hat");
 			return false;
 		}
 		
-		// int[][] andereSwMitAnzahl = kundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie(SwKategorie.GRUNDRISS.id);
+		/* int[][] andereSwMitAnzahl = kundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie(
+			SwKategorie.GRUNDRISS.id);*/
 		// Grundriss muss nicht mit Sonderwünschen aus anderen Kategorien abgleichen
 		
 		String text = "";
@@ -152,7 +154,7 @@ public final class GrundrissControl {
 					// Pruefe, ob 2.1 vorhanden
 					if (!swOhneAnzahl.contains(Sw.WAND_KUECHE.id))
 						text += "" + Sw.idZuText(Sw.TUER_KUECHE) + " kann nicht ohne " +
-								Sw.idZuText(Sw.WAND_KUECHE) + "ausgewählt weerden\n";
+								Sw.idZuText(Sw.WAND_KUECHE) + "ausgewählt werden\n";
 					break;
 				case TREPPENRAUM_DG: // 2.4 nur wenn DG
 					if (!hausHatDG)
@@ -166,7 +168,7 @@ public final class GrundrissControl {
 					// Pruefe, ob 2.5 vorhanden
 					if (!swOhneAnzahl.contains(Sw.VORRICHTUNG_BAD_DG.id))
 						text += "" + Sw.idZuText(Sw.AUSFUEHRUNG_BAD_DG) + " kann nicht ohne " +
-								Sw.idZuText(Sw.VORRICHTUNG_BAD_DG) + "ausgewählt weerden\n";
+								Sw.idZuText(Sw.VORRICHTUNG_BAD_DG) + "ausgewählt werden\n";
 					break;
 				default:
 					System.out.println("Sonderwunsch mit ID " + swId
@@ -176,7 +178,7 @@ public final class GrundrissControl {
 		}
 		
 		// Wenn mindestens ein Verstoß, zeige alle Verstöße und gebe false zurück
-		if (text.isEmpty()) {
+		if (!text.isEmpty()) {
 			grundrissView.zeigeKonfliktFenster("Konstellation nicht erlaubt", text);
 			return false;
 		}

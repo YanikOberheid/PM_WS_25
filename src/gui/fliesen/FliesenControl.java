@@ -2,7 +2,11 @@ package gui.fliesen;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Vector;
+
 import business.kunde.KundeModel;
+import business.kunde.Sw;
 import business.kunde.SwKategorie;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -118,15 +122,77 @@ public class FliesenControl {
     	return true; // TODO
     }
     
-    // Aktuellste Version
+ // Aktuellste Version
  	public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl){
- 		/* 
- 		 * - Prüfe, ob ein Sw in ausgewaehlteSw und ausgewaehlteSwMitAnzahl doppelt vorkommt.
- 		 * - Hole mit KundeModel.holeAusgewaehlteSwAusDbOhneKategorie() oder
- 		 * KundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie() die Auswahl der anderen
- 		 * Kategorien.
- 		 * - Prüfe, ob neue Auswahl mit der alten vereinbar ist und die Anzahlen erlaubt. 
- 		 */ 
+ 		// Prüfe, ob DG vorhanden ist
+ 		boolean hausHatDG;
+ 		try {
+ 			hausHatDG = kundeModel.hatKundeDG();
+ 		} catch (Exception e) {
+ 			fliesenView.zeigeKonfliktFenster("Fehler beim Prüfen des Haustyps",
+					"Es konnte nicht herausgefunden werden, ob das Haus ein Dachgeschoss hat");
+ 			return false;
+ 		}
+ 		
+ 		int[][] andereSwMitAnzahl = kundeModel.holeAusgewaehlteSwMitAnzahlAusDbOhneKategorie(
+ 			SwKategorie.FLIESEN.id);
+ 		
+ 		String text = "";
+ 		
+ 		// Fliesen haben alle Anzahl 0 oder 1
+ 		Vector<Integer> swOhneAnzahl = new Vector<Integer>();
+ 		for (int[] swMitAnzahl: ausgewaehlteSwMitAnzahl)
+ 			if (swMitAnzahl[1] == 1)
+ 				swOhneAnzahl.add(swMitAnzahl[0]);
+ 		// 2.6 hat Anzahl 0 oder 1
+ 		for (int[] swMitAnzahl: andereSwMitAnzahl)
+ 			if (swMitAnzahl[1] == 1 && swMitAnzahl[0] == Sw.AUSFUEHRUNG_BAD_DG.id)
+ 				swOhneAnzahl.add(swMitAnzahl[0]);
+ 		
+ 		// 7.3 nur wenn nicht 7.1; 7.4 nur wenn nicht 7.2; 7.5 nur wenn DG und 2.6; 7.6 nur wenn 7.5
+ 		// aus Trello > Backlog > "[Info] Konstellation an Sonderwünschen"
+ 		
+ 		// Durch ausgewaehlteSwMitAnzahl iterieren
+ 		for (int swId: swOhneAnzahl) {
+ 			switch (Sw.findeMitId(swId)) { // Enum über id an Index 0 holen
+ 				case F_KUECHE_EG_GROSS: // 7.3 nur wenn nicht 7.1
+ 					// Pruefe, ob 7.1 vorhanden
+ 					if (swOhneAnzahl.contains(Sw.F_KUECHE_EG_OHNE.id))
+ 						text += "" + Sw.idZuText(Sw.F_KUECHE_EG_GROSS) + " kann nicht mit " +
+ 								Sw.idZuText(Sw.F_KUECHE_EG_OHNE) + "ausgewählt werden\n";
+ 					break;
+ 				case F_BAD_OG_GROSS: // 7.4 nur wenn nicht 7.2
+ 					// Prüefe, ob 7.2 vorhanden
+ 					if (swOhneAnzahl.contains(Sw.F_BAD_OG_OHNE.id))
+ 						text += "" + Sw.idZuText(Sw.F_BAD_OG_GROSS) + " kann nicht mit " +
+ 								Sw.idZuText(Sw.F_BAD_OG_OHNE) + "ausgewählt werden\n";
+ 					break;
+ 				case F_BAD_DG: // 7.5 nur wenn DG und 2.6
+ 					if (!hausHatDG)
+ 						text += "" + Sw.idZuText(Sw.TREPPENRAUM_DG) + " kann nicht ohne Dachgeschoss ausgewählt werden";
+ 					// Prüefe, ob 2.6 vorhanden
+ 					if (!swOhneAnzahl.contains(Sw.AUSFUEHRUNG_BAD_DG.id))
+ 						text += "" + Sw.idZuText(Sw.F_BAD_DG) + " kann nicht ohne " +
+ 								Sw.idZuText(Sw.AUSFUEHRUNG_BAD_DG) + "ausgewählt werden\n";
+ 					break;
+ 				case F_BAD_DG_GROSS: // 7.6 nur wenn 7.5
+ 					// Pruefe, ob 7.5 vorhanden
+ 					if (!swOhneAnzahl.contains(Sw.F_BAD_DG.id))
+ 						text += "" + Sw.idZuText(Sw.F_BAD_DG_GROSS) + " kann nicht ohne " +
+ 								Sw.idZuText(Sw.F_BAD_DG) + "ausgewählt werden\n";
+ 					break;
+ 				default:
+ 					System.out.println("Sonderwunsch mit ID " + swId
+ 							+ " hat keinen Fall beim Prüfen der Konstellation (Fliesen)");
+ 					break;
+ 			}
+ 		}
+ 		
+ 		// Wenn mindestens ein Verstoß, zeige alle Verstöße und gebe false zurück
+ 		if (!text.isEmpty()) {
+ 			fliesenView.zeigeKonfliktFenster("Konstellation nicht erlaubt", text);
+ 			return false;
+ 		}
  		return true;
  	}
 }
