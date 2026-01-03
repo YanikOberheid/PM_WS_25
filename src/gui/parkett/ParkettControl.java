@@ -1,5 +1,9 @@
 package gui.parkett;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Modality;
@@ -9,7 +13,7 @@ import business.kunde.Sw;
 import business.kunde.SwKategorie;
 
 /**
- * Controller-Klasse für die Parkett-Sonderwünsche.
+ * Controller für die Parkett-Sonderwünsche.
  */
 public final class ParkettControl {
 
@@ -24,14 +28,12 @@ public final class ParkettControl {
         this.parkettView = new ParkettView(this, stageParkett);
     }
 
+    /**
+     * Öffnet die View und lädt vorhandene Daten.
+     */
     public void oeffneParkettView() {
-        // Sicherheitsprüfung: Ist ein Kunde da?
         if (this.kundeModel.getKunde() == null) {
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Kein Kunde ausgewählt");
-            alert.setHeaderText(null);
-            alert.setContentText("Bitte wählen Sie zuerst einen Kunden aus.");
-            alert.showAndWait();
+            zeigeFehler("Kein Kunde ausgewählt", "Bitte wählen Sie zuerst einen Kunden aus.");
             return;
         }
         
@@ -39,98 +41,161 @@ public final class ParkettControl {
         this.parkettView.oeffneParkettView();
     }
 
+    /**
+     * Lädt die Sonderwünsche aus der Datenbank in die View.
+     */
     public void leseParkettSonderwuensche() {
-        // FEHLERBEHEBUNG:
-        // Das Model hat die Methode gibAusgewaehlteSwMitAnzahlAusDb noch nicht.
-        // Wir nutzen die alte Methode und konvertieren manuell.
-        
-        // 1. Alte Methode aufrufen (gibt int[] zurück)
+        try {
+            // Versuch: Neues Format (mit Anzahl)
+            int[][] swIds = this.kundeModel.gibAusgewaehlteSwMitAnzahlAusDb(SwKategorie.PARKETT.id);
+            if (swIds != null) {
+                this.parkettView.updateSwInView(swIds);
+                this.parkettView.berechneUndZeigePreisSonderwuensche();
+                return;
+            }
+        } catch (Exception e) {
+            // Ignorieren, Fallback nutzen
+        }
+
+        // Fallback: Altes Format (nur IDs)
         int[] swIds = this.kundeModel.gibAusgewaehlteSwAusDb(SwKategorie.PARKETT.id);
-        
-        // 2. Konvertierung zu int[][] für die View
         int[][] swParkett;
         
         if (swIds != null) {
             swParkett = new int[swIds.length][2];
             for (int i = 0; i < swIds.length; i++) {
-                swParkett[i][0] = swIds[i]; // ID
-                swParkett[i][1] = 1;        // Anzahl (Standard 1 bei Parkett)
+                swParkett[i][0] = swIds[i]; 
+                swParkett[i][1] = 1;        
             }
         } else {
             swParkett = new int[0][0];
         }
 
-        // 3. View updaten
         this.parkettView.updateSwInView(swParkett);
-        
-        // 4. Preis berechnen
         this.parkettView.berechneUndZeigePreisSonderwuensche();
     }
 
     /**
-     * Speichern der Sonderwünsche.
-     * Nimmt das neue Format (int[][]) entgegen, muss aber für das Model
-     * wahrscheinlich wieder in int[] umwandeln.
+     * Speichert die Auswahl nach erfolgreicher Validierung.
      */
     public void speichereSonderwuensche(int[][] parkettSwMitAnzahl) {
-        try {
-            // FEHLERBEHEBUNG:
-            // Wir müssen das 2D-Array wieder in ein einfaches ID-Array flachklopfen,
-            // da das KundeModel wahrscheinlich nur 'speichereSonderwuenscheFuerKategorie' kennt.
-            
-            int[] simpleIds = new int[parkettSwMitAnzahl.length];
-            for(int i = 0; i < parkettSwMitAnzahl.length; i++) {
-                simpleIds[i] = parkettSwMitAnzahl[i][0]; // Nur die ID nehmen
-            }
+        if (!pruefeKonstellationSonderwuensche(parkettSwMitAnzahl)) {
+            return;
+        }
 
-            // Alte Speichermethode des Models aufrufen
-            this.kundeModel.speichereSonderwuenscheFuerKategorie(simpleIds, SwKategorie.PARKETT.id);
-             
+        try {
+            this.kundeModel.speichereSonderwuenscheFuerKategorie(parkettSwMitAnzahl, SwKategorie.PARKETT.id);
         } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Fehler");
-            alert.setContentText("Fehler beim Speichern: " + e.getMessage());
-            alert.showAndWait();
+            // Fallback für alte Model-Methoden
+            try {
+                int[] simpleIds = new int[parkettSwMitAnzahl.length];
+                for(int i = 0; i < parkettSwMitAnzahl.length; i++) {
+                    simpleIds[i] = parkettSwMitAnzahl[i][0];
+                }
+                this.kundeModel.speichereSonderwuenscheFuerKategorie(simpleIds, SwKategorie.PARKETT.id);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                zeigeFehler("Fehler", "Fehler beim Speichern: " + ex.getMessage());
+            }
         }
     }
 
     /**
-     * Validierung: Prüft auf widersprüchliche Auswahlen.
+     * Prüft auf widersprüchliche Auswahlen (EG, OG, DG).
      */
     public boolean pruefeKonstellationSonderwuensche(int[][] ausgewaehlteSwMitAnzahl) {
-        // Extrahiere nur die IDs in ein einfaches Array für die Prüfung
         int[] ids = new int[ausgewaehlteSwMitAnzahl.length];
         for(int i=0; i<ausgewaehlteSwMitAnzahl.length; i++) {
             ids[i] = ausgewaehlteSwMitAnzahl[i][0];
         }
         
-        // Prüfen
-        boolean hatLhdEssEg = contains(ids, Sw.LHD_M_ESS_EG.id);
-        boolean hatSpEssEg  = contains(ids, Sw.SP_ESS_EG.id);
-        
-        boolean hatLhdKueche = contains(ids, Sw.LHD_M_KUECHE_EG.id);
-        boolean hatSpKueche  = contains(ids, Sw.SP_KUECHE_EG.id);
-
-        boolean hatLhdOg = contains(ids, Sw.LHD_M_OG.id);
-        boolean hatSpOg  = contains(ids, Sw.SP_OG.id);
-        
-        if (hatLhdEssEg && hatSpEssEg) {
-            zeigeFehler("Widerspruch im EG (Essbereich)", "Landhausdielen und Stäbchenparkett können nicht gleichzeitig gewählt werden.");
+        // --- EG Prüfung ---
+        if (contains(ids, Sw.LHD_M_ESS_EG.id) && contains(ids, Sw.SP_ESS_EG.id)) {
+            zeigeFehler("Widerspruch im EG (Essbereich)", "Landhausdielen und Stäbchenparkett gleichzeitig nicht möglich.");
             return false;
         }
         
-        if (hatLhdKueche && hatSpKueche) {
-            zeigeFehler("Widerspruch im EG (Küche)", "Landhausdielen und Stäbchenparkett können nicht gleichzeitig gewählt werden.");
+        if (contains(ids, Sw.LHD_M_KUECHE_EG.id) && contains(ids, Sw.SP_KUECHE_EG.id)) {
+            zeigeFehler("Widerspruch im EG (Küche)", "Landhausdielen und Stäbchenparkett gleichzeitig nicht möglich.");
             return false;
         }
 
-        if (hatLhdOg && hatSpOg) {
-            zeigeFehler("Widerspruch im OG", "Landhausdielen und Stäbchenparkett können nicht gleichzeitig gewählt werden.");
+        // --- OG Prüfung ---
+        if (contains(ids, Sw.LHD_M_OG.id) && contains(ids, Sw.SP_OG.id)) {
+            zeigeFehler("Widerspruch im OG", "Landhausdielen und Stäbchenparkett gleichzeitig nicht möglich.");
+            return false;
+        }
+        
+        // --- DG Prüfung ---
+        int countDg = 0;
+        if (contains(ids, Sw.LHD_M_KOMPLETT_DG.id)) countDg++;
+        if (contains(ids, Sw.LDH_M_OHNE_BAD_DG.id)) countDg++;
+        if (contains(ids, Sw.SP_KOMPLETT_DG.id)) countDg++;
+        if (contains(ids, Sw.SP_OHNE_BAD_DG.id)) countDg++;
+        
+        if (countDg > 1) {
+            zeigeFehler("Widerspruch im DG", "Im Dachgeschoss darf nur eine Option gewählt werden.");
             return false;
         }
         
         return true;
+    }
+    
+    /**
+     * Exportiert die aktuelle Auswahl als CSV-Datei.
+     */
+    public void exportiereSonderwuenscheAlsCsv(int[][] parkettSwMitAnzahl) {
+        if (!pruefeKonstellationSonderwuensche(parkettSwMitAnzahl)) {
+            return;
+        }
+        
+        if (parkettSwMitAnzahl == null || parkettSwMitAnzahl.length == 0) {
+            zeigeFehler("Export", "Keine Sonderwünsche ausgewählt.");
+            return;
+        }
+
+        if (kundeModel.getKunde() == null) {
+            zeigeFehler("Export Fehler", "Kein Kunde ausgewählt.");
+            return;
+        }
+
+        try {
+            int kundennummer = kundeModel.getKunde().getIdKunde();
+            String nachname = kundeModel.getKunde().getNachname();
+            String dateiname = kundennummer + "_" + nachname + "_Parkett.csv";
+            File file = new File(dateiname);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Sonderwunsch;Anzahl;Einzelpreis;Gesamtpreis\n");
+
+            for (int[] tupel : parkettSwMitAnzahl) {
+                Sw sw = Sw.findeMitId(tupel[0]);
+                int anzahl = tupel[1];
+                
+                if (sw != null) {
+                    double einzel = sw.preis;
+                    double gesamt = einzel * anzahl;
+                    sb.append(sw.bes).append(";")
+                      .append(anzahl).append(";")
+                      .append(einzel).append(";")
+                      .append(gesamt).append("\n");
+                }
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(sb.toString());
+            }
+            
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Export erfolgreich");
+            alert.setHeaderText(null);
+            alert.setContentText("Exportiert nach: " + file.getAbsolutePath());
+            alert.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            zeigeFehler("Export Fehler", "Datei konnte nicht geschrieben werden.");
+        }
     }
 
     private boolean contains(int[] arr, int val) {
@@ -143,7 +208,7 @@ public final class ParkettControl {
     
     private void zeigeFehler(String header, String content) {
         Alert alert = new Alert(AlertType.WARNING);
-        alert.setTitle("Plausibilitätsprüfung");
+        alert.setTitle("Hinweis");
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
