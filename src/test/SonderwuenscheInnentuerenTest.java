@@ -13,21 +13,19 @@ import org.junit.jupiter.api.Test;
 import business.kunde.SonderwuenscheDAO;
 import business.kunde.SonderwuenscheDAOImplementation;
 
-public class SonderwuenscheFliesenTest {
+public class SonderwuenscheInnentuerenTest {
 
 	private SonderwuenscheDAO dao;
-	private final int TEST_HAUSNUMMER = 2; // Hausnummer für Test
-	private final int FLIESEN_KATEGORIE = 70;
-	private final int FLIESEN_ID = 705; // fliesen im bad sonderwunsch
+	private final int TEST_HAUSNUMMER = 3;
+	private final int INNENTUER_KATEGORIE = 40;
+	private final int INNENTUER_ID = 4;
 
 	@BeforeEach
 	public void setUp() throws Exception {
 		dao = new SonderwuenscheDAOImplementation();
 
-		// AutoCommit aktivieren
 		business.kunde.DatabaseConnection.getInstance().getConnection().setAutoCommit(true);
 
-		// Test Daten löschen
 		try {
 			dao.delete(TEST_HAUSNUMMER);
 		} catch (SQLException ignored) {
@@ -35,35 +33,33 @@ public class SonderwuenscheFliesenTest {
 	}
 
 	@Test
-	public void testSpeichernUndLadenFliesen() throws Exception {
-		int[] expected = { FLIESEN_ID };
+	public void testSpeichernUndLadenInnentueren() throws Exception {
+		int[] expected = { INNENTUER_ID };
 
 		dao.update(TEST_HAUSNUMMER, expected);
 
 		int[] actual = dao.get(TEST_HAUSNUMMER);
-
-		Arrays.sort(expected);
 		Arrays.sort(actual);
 
 		assertArrayEquals(expected, actual);
 	}
 
 	@Test
-	public void testLadenMitKategorieFliesen() throws Exception {
-		int[] daten = { FLIESEN_ID };
+	public void testLadenMitKategorieInnentueren() throws Exception {
+		int[] daten = { INNENTUER_ID };
 
 		dao.update(TEST_HAUSNUMMER, daten);
 
-		int[] result = dao.get(TEST_HAUSNUMMER, FLIESEN_KATEGORIE);
+		int[] result = dao.get(TEST_HAUSNUMMER, INNENTUER_KATEGORIE);
 
-		assertNotNull(result, "Ergebnis darf nicht null sein");
-		assertEquals(1, result.length, "Es sollte genau 1 Fliesen-Sonderwunsch geben");
-		assertEquals(FLIESEN_ID, result[0], "Die ID muss 705 sein");
+		assertNotNull(result);
+		assertEquals(1, result.length);
+		assertEquals(INNENTUER_ID, result[0]);
 	}
 
 	@Test
-	public void testDeleteFliesen() throws Exception {
-		int[] daten = { FLIESEN_ID };
+	public void testDeleteInnentueren() throws Exception {
+		int[] daten = { INNENTUER_ID };
 
 		dao.update(TEST_HAUSNUMMER, daten);
 
@@ -71,6 +67,6 @@ public class SonderwuenscheFliesenTest {
 
 		int[] result = dao.get(TEST_HAUSNUMMER);
 
-		assertEquals(0, result.length, "Nach dem Löschen muss die Liste leer sein");
+		assertEquals(0, result.length);
 	}
 }

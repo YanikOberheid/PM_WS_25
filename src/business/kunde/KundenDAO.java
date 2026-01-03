@@ -1,5 +1,6 @@
 package business.kunde;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 
 /*
@@ -11,5 +12,22 @@ public interface KundenDAO {
 	        throws SQLException;
 	
 	public boolean istHausnummerBesetzt(int hausnummer)
+			throws SQLException;
+	
+	public Kunde findByHausnummer(int hausnummer)
+			throws SQLException;
+	
+	public Kunde findByKundennummer(int idKunde)
+			throws SQLException;
+	
+	public boolean deleteKunde(int kundennummer)
+			throws SQLException;
+	
+	public void updateKunde(Kunde kunde)
+			throws SQLException;
+	// Bild Laden Methode
+	public InputStream loadImage(int id)
+			throws SQLException, Exception;
+	public boolean hatHausnummerDG(int hausnummer)
 			throws SQLException;
 }

@@ -1,14 +1,31 @@
 package gui.kunde;
 
-import javafx.geometry.*;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.*;
-import javafx.scene.text.*;
-import javafx.stage.Stage;
+import java.io.InputStream;
+import java.sql.SQLException;
+
 import business.kunde.Kunde;
 import business.kunde.KundeModel;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 /**
  * Klasse, welche das Grundfenster mit den Kundendaten bereitstellt.
@@ -20,12 +37,27 @@ public class KundeView {
 	// das Model-Objekt des Grundfensters mit den Kundendaten
 	private KundeModel kundeModel;
 
+	// Pfad zur Platzhalter-Grafik im Klassenpfad
+	private static final String STANDARD_HAUS_BILD = "/gui/images/haus_placeholder.png";
+
+	// private static final String DACHGESCHOSS_HAUS_BILD =
+	// "/gui/images/haus_placeholder.png";
+	private static final int DACHGESCHOSS_HAUS_BILD = 1;
+	private static final int STANDARD_HAUS_BILD_ = 2;
+
 	// ---Anfang Attribute der grafischen Oberflaeche---
+
+	// --- Bildanzeige (neu für Task [3]) ---
+	private final ImageView hausImageView = new ImageView();
+
 	private BorderPane borderPane = new BorderPane();
 	private GridPane gridPane = new GridPane();
 	private Label lblKunde = new Label("Kunde");
 	private Label lblNummerHaus = new Label("Plannummer des Hauses");
 	private ComboBox<Integer> cmbBxNummerHaus = new ComboBox<Integer>();
+
+	private Label lblKundennummer = new Label("Kundennummer");
+	private Label lblKundennummerFeld = new Label("-");
 
 	private Label lblVorname = new Label("Vorname");
 	private TextField txtVorname = new TextField();
@@ -42,10 +74,19 @@ public class KundeView {
 	private Button btnAnlegen = new Button("Anlegen");
 	private Button btnAendern = new Button("Aendern");
 	private Button btnLoeschen = new Button("Loeschen");
+	private Button btnCsvExport = new Button("CSV-Export");
+	private Button btnCsvExportAlleSw = new Button("Export Sonderwünsche");
 	private MenuBar mnBar = new MenuBar();
 	private Menu mnSonderwuensche = new Menu("Sonderwuensche");
-	private MenuItem mnItmGrundriss = new MenuItem("Grundrissvarianten");
-	private MenuItem mnItmFliesen = new MenuItem("Fliesenvarianten");
+	private MenuItem mnItmGrundriss = new MenuItem("Grundriss-Varianten");
+	private MenuItem mnItmFenster = new MenuItem("Fenster und Außentueren");
+	private MenuItem mnItmInnentueren = new MenuItem("Innentüren");
+	private MenuItem mnItmHeizung = new MenuItem("Heizungen");
+	private MenuItem mnItmSanitaer = new MenuItem("Sanitaerinstallation");
+	private MenuItem mnItmFliesen = new MenuItem("Fliesen");
+	private MenuItem mnItmAussenanlagen = new MenuItem("Außenanlagen");
+	private MenuItem mnItmParkett = new MenuItem("Parkett");
+
 	// -------Ende Attribute der grafischen Oberflaeche-------
 
 	/**
@@ -60,7 +101,7 @@ public class KundeView {
 		this.kundeModel = kundeModel;
 
 		primaryStage.setTitle(this.kundeModel.getUeberschrift());
-		Scene scene = new Scene(borderPane, 550, 400);
+		Scene scene = new Scene(borderPane, 920, 420);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -85,36 +126,83 @@ public class KundeView {
 		gridPane.add(cmbBxNummerHaus, 1, 2);
 		cmbBxNummerHaus.setMinSize(150, 25);
 		cmbBxNummerHaus.setItems(this.kundeModel.getPlannummern());
+		cmbBxNummerHaus.setValue(0);
+
+		// Kundennummer
+		gridPane.add(lblKundennummer, 0, 3);
+		gridPane.add(lblKundennummerFeld, 1, 3);
 
 		// Vorname
-		gridPane.add(lblVorname, 0, 3);
-		gridPane.add(txtVorname, 1, 3);
+		gridPane.add(lblVorname, 0, 4);
+		gridPane.add(txtVorname, 1, 4);
 
 		// Nachname
-		gridPane.add(lblNachname, 0, 4);
-		gridPane.add(txtNachname, 1, 4);
+		gridPane.add(lblNachname, 0, 5);
+		gridPane.add(txtNachname, 1, 5);
 
 		// Telefonnummer
-		gridPane.add(lblNummer, 0, 5);
-		gridPane.add(txtNummer, 1, 5);
+		gridPane.add(lblNummer, 0, 6);
+		gridPane.add(txtNummer, 1, 6);
 
 		// E-Mail
-		gridPane.add(lblEmail, 0, 6);
-		gridPane.add(txtEmail, 1, 6);
+		gridPane.add(lblEmail, 0, 7);
+		gridPane.add(txtEmail, 1, 7);
 
 		// Buttons
-		gridPane.add(btnAnlegen, 0, 7);
+		gridPane.add(btnAnlegen, 0, 9);
 		btnAnlegen.setMinSize(150, 25);
-		gridPane.add(btnAendern, 1, 7);
+
+		gridPane.add(btnCsvExportAlleSw, 0, 10);
+		btnCsvExportAlleSw.setMinSize(150, 25);
+		btnCsvExportAlleSw.setPrefWidth(150);
+
+		gridPane.add(btnAendern, 1, 9);
 		btnAendern.setMinSize(150, 25);
-		gridPane.add(btnLoeschen, 2, 7);
+
+		gridPane.add(btnLoeschen, 2, 9);
 		btnLoeschen.setMinSize(150, 25);
+
+		gridPane.add(btnCsvExport, 3, 9);
+		btnCsvExport.setMinSize(150, 25);
 
 		// MenuBar und Menu
 		borderPane.setTop(mnBar);
+
 		mnBar.getMenus().add(mnSonderwuensche);
 		mnSonderwuensche.getItems().add(mnItmGrundriss);
+		mnSonderwuensche.getItems().add(mnItmFenster);
+		mnSonderwuensche.getItems().add(mnItmInnentueren);
+		mnSonderwuensche.getItems().add(mnItmHeizung);
+		mnSonderwuensche.getItems().add(mnItmSanitaer);
 		mnSonderwuensche.getItems().add(mnItmFliesen);
+		mnSonderwuensche.getItems().add(mnItmAussenanlagen);
+		mnSonderwuensche.getItems().add(mnItmParkett);
+
+		// --- Rechts: Bildbereich (neu) ---
+		VBox rightBox = new VBox(10);
+		rightBox.setAlignment(Pos.TOP_CENTER);
+
+		Label lblBild = new Label("Hausbild");
+		initialisiereHausBild(); // Größe/Platzhalter konfigurieren
+
+		rightBox.getChildren().addAll(lblBild, hausImageView);
+
+		// --- Beide Seiten in eine HBox ---
+		HBox mainContent = new HBox(30);
+		mainContent.setPadding(new Insets(20, 80, 20, 20));
+		mainContent.getChildren().addAll(gridPane, rightBox);
+
+		borderPane.setCenter(mainContent);
+
+		// Hinweis: Bild wird NICHT sofort gesetzt – erst nach Laden der Kundendaten
+		// Noch kein Bild laden – erst wenn Kundendaten/Plannummer gewählt wurden
+		// Bild aber anzeigen, sonst ist ImageView zu klein oder leer!
+		/*
+		 * var url = getClass().getResource(STANDARD_HAUS_BILD); if (url != null) {
+		 * hausImageView.setImage(new Image(url.toExternalForm())); } else {
+		 * hausImageView.setImage(null); }
+		 */
+		hausImageView.setImage(null);
 	}
 
 	/* initialisiert die Listener zu den Steuerelementen auf de Maske */
@@ -132,23 +220,55 @@ public class KundeView {
 		btnLoeschen.setOnAction(aEvent -> {
 			loescheKunden();
 		});
+		btnCsvExport.setOnAction(e -> {
+			kundeControl.exportiereKundenDatenAlsCsv();
+		});
+		btnCsvExportAlleSw.setOnAction(e -> {
+			kundeControl.exportiereAlleSonderwuenscheAlsCsv();
+		});
+
 		mnItmGrundriss.setOnAction(aEvent -> {
 			kundeControl.oeffneGrundrissControl();
 		});
 		mnItmFliesen.setOnAction(aEvent -> {
-	        kundeControl.oeffneFliesenControl();
-	    });
+			kundeControl.oeffneFliesenControl();
+		});
+		mnItmHeizung.setOnAction(aEvent -> {
+			kundeControl.oeffneHeizungControl();
+		});
+		mnItmFenster.setOnAction(aEvent -> {
+			kundeControl.oeffneFensterControl();
+		});
+		mnItmInnentueren.setOnAction(aEvent -> {
+			kundeControl.oeffneInnentuerenControl();
+		});
+		mnItmParkett.setOnAction(aEvent -> {
+			kundeControl.oeffneParkettControl(); // ✭ WICHTIG ✭
+		});
+		mnItmAussenanlagen.setOnAction(aEvent -> {
+			kundeControl.oeffneAussenanlagenControl();
+		});
+		mnItmSanitaer.setOnAction(aEvent -> {
+			kundeControl.oeffneSanitaerinstallationControl();
+		});
 	}
 
 	private void holeInfoDachgeschoss() {
 	}
 
 	private void leseKunden() {
-	    Integer hausnummer = cmbBxNummerHaus.getValue();
-	    
-	    if (hausnummer != null) {
-	        kundeControl.ladeKundenZuHausnummer(hausnummer);
-	    }
+		Integer hausnummer = cmbBxNummerHaus.getValue();
+		if (hausnummer == 0) {
+			lblKundennummerFeld.setText("-");
+			// txtKundennummer.clear();
+			txtVorname.clear();
+			txtNachname.clear();
+			txtNummer.clear();
+			txtEmail.clear();
+			kundeControl.setAttributeNull();
+		} else {
+			kundeControl.ladeKundenZuHausnummer(hausnummer);
+		}
 	}
 
 	private void legeKundenAn() {
@@ -158,38 +278,43 @@ public class KundeView {
 	}
 
 	private void aendereKunden() {
-		Kunde kunde = new Kunde(
-		        cmbBxNummerHaus.getValue(),
-		        txtVorname.getText(),
-		        txtNachname.getText(),
-		        txtNummer.getText(),
-		        txtEmail.getText()
-		    );
-		    kundeControl.updateKunde(kunde);
+		// Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		Integer kundenummer = Integer.parseInt(lblKundennummerFeld.getText());
+
+		Kunde kunde = new Kunde(kundenummer, cmbBxNummerHaus.getValue(), txtVorname.getText(), txtNachname.getText(),
+				txtNummer.getText(), txtEmail.getText());
+		kundeControl.updateKunde(kunde);
 	}
 
 	private void loescheKunden() {
 		Integer hausnummer = cmbBxNummerHaus.getValue();
-	    if (hausnummer != null) {
-	        kundeControl.loescheKunden(hausnummer);
-	    } else {
-	        zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
-	    }
-	}
-	
-	public void zeigeKundeAufGui(Kunde kunde) {
-	    if (kunde == null) {
-	        txtVorname.clear();
-	        txtNachname.clear();
-	        txtNummer.clear();
-	        txtEmail.clear();
-	        return;
-	    }
+		// Integer kundenummer = Integer.parseInt(txtKundennummer.getText());
+		Integer kundenummer = Integer.parseInt(lblKundennummerFeld.getText());
 
-	    txtVorname.setText(kunde.getVorname());
-	    txtNachname.setText(kunde.getNachname());
-	    txtNummer.setText(kunde.getTelefonnummer());
-	    txtEmail.setText(kunde.getEmail());
+		// Aktuell kann man selber die Kundennummer ändern!!!
+		if (kundenummer != null & hausnummer != null) {
+			kundeControl.loescheKunden(kundenummer, hausnummer);
+		} else {
+			zeigeFehlermeldung("Fehler", "Bitte zuerst eine Hausnummer auswählen.");
+		}
+	}
+
+	public void zeigeKundeAufGui(Kunde kunde) {
+		if (kunde == null) {
+			// txtKundennummer.clear();
+			lblKundennummerFeld.setText("-");
+			txtVorname.clear();
+			txtNachname.clear();
+			txtNummer.clear();
+			txtEmail.clear();
+			return;
+		}
+		// txtKundennummer.setText(Integer.toString(kunde.getIdKunde()));
+		lblKundennummerFeld.setText(Integer.toString(kunde.getIdKunde()));
+		txtVorname.setText(kunde.getVorname());
+		txtNachname.setText(kunde.getNachname());
+		txtNummer.setText(kunde.getTelefonnummer());
+		txtEmail.setText(kunde.getEmail());
 	}
 
 	/**
@@ -205,12 +330,105 @@ public class KundeView {
 		alert.setContentText(meldung);
 		alert.show();
 	}
-	
+
 	public void zeigeErfolgsmeldung(String ueberschrift, String meldung) {
-	    Alert alert = new Alert(AlertType.INFORMATION);
-	    alert.setTitle("Erfolg");
-	    alert.setHeaderText(ueberschrift);
-	    alert.setContentText(meldung);
-	    alert.show();
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Erfolg");
+		alert.setHeaderText(ueberschrift);
+		alert.setContentText(meldung);
+		alert.show();
+	}
+
+	// === Neu: Methoden für Task [3] – Bildanzeige nach dem Laden ===
+
+	/**
+	 * Wird vom Control aufgerufen, sobald Kundendaten geladen wurden. Lädt das
+	 * Standardbild aus dem Klassenpfad und zeigt es im rechten Bereich.
+	 */
+	public void zeigeHausBildNachLaden() {
+		try {
+			var url = getClass().getResource(STANDARD_HAUS_BILD);
+			if (url != null) {
+				hausImageView.setImage(new Image(url.toExternalForm()));
+			} else {
+				System.err.println("Hausbild nicht gefunden: " + STANDARD_HAUS_BILD);
+				hausImageView.setImage(null);
+			}
+		} catch (Exception ex) {
+			System.err.println("Fehler beim Laden des Hausbildes: " + ex.getMessage());
+			hausImageView.setImage(null);
+		}
+	}
+
+	/**
+	 * Blendet das Hausbild aus (z. B. wenn kein Kunde vorhanden ist).
+	 */
+	public void entferneHausBild() {
+		hausImageView.setImage(null);
+	}
+
+	private void initialisiereHausBild() {
+		hausImageView.setFitWidth(260);
+		hausImageView.setFitHeight(180);
+		hausImageView.setPreserveRatio(true);
+		// Noch kein Bild zeigen – erst nach dem Laden der Kundendaten:
+		hausImageView.setImage(null);
+	}
+
+	public void zeigeHausBild(InputStream inputStream) {
+		if (inputStream != null) {
+			hausImageView.setImage(new Image(inputStream));
+		} else {
+			hausImageView.setImage(null);
+		}
+	}
+
+	/**
+	 * Wird nach dem Laden der Kundendaten aufgerufen. Ein entsprechendes Bild wird
+	 * je nach mit oder ohne Dachgeschoss angezeigt
+	 */
+	public void zeigeHausBildFuerHausnummer(int hausnummer) {
+
+		if (hausnummer == 0) {
+			zeigeHausBild(null);
+		} else {
+
+			int[] keinDachgeschoss = { 1, 6, 7, 14, 15, 24 };
+			boolean found = false;
+
+			for (int n : keinDachgeschoss) {
+				if (hausnummer == n) {
+					found = true;
+					break;
+				}
+			}
+
+			if (found) {
+				System.out.println("Haus hat keinen Dachgeschoss!");
+				try {
+					InputStream img = kundeControl.ladeBildAusDB(STANDARD_HAUS_BILD_);
+					zeigeHausBild(img);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				// zeigeHausBild(STANDARD_HAUS_BILD);
+			} else {
+				System.out.println("Haus hat einen Dachgeschoss!");
+				try {
+					InputStream img = kundeControl.ladeBildAusDB(DACHGESCHOSS_HAUS_BILD);
+					zeigeHausBild(img);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

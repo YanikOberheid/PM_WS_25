@@ -1,5 +1,8 @@
 package gui.basis;
 
+import java.util.Vector;
+
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -20,6 +23,14 @@ public abstract class BasisView {
    	private Label lblSonderwunsch   	= new Label("Sonderwunsch");
     private Button btnBerechnen 	 	= new Button("Preis berechnen");
     private Button btnSpeichern 	 	= new Button("Speichern");
+    private Button btnCsvExport          = new Button("CSV-Export");
+    
+    
+    // Gesamtpreis-Anzeige - protected, da Zeile im GridPane unbekannt
+    protected Label lblGesamt =
+    		new Label("Gesamtpreis");
+    protected TextField txtGesamt = new TextField();
+    protected Label lblGesamtEuro = new Label("Euro");
     //-------Ende Attribute der grafischen Oberflaeche-------
   
    /**
@@ -27,7 +38,7 @@ public abstract class BasisView {
     */
     public BasisView(Stage sonderwunschStage){
     	this.sonderwunschStage = sonderwunschStage;
-	    Scene scene = new Scene(borderPane, 560, 400);
+	    Scene scene = new Scene(borderPane, 700, 560);
 	    sonderwunschStage.setScene(scene);
 	
 	    this.initListener();
@@ -51,6 +62,10 @@ public abstract class BasisView {
 	    btnBerechnen.setMinSize(150,  25);
     	gridPaneButtons.add(btnSpeichern, 2, 0);
 	    btnSpeichern.setMinSize(150,  25);
+	    gridPaneButtons.add(btnCsvExport, 3, 0);
+        btnCsvExport.setMinSize(150, 25);
+        
+	    
     }  
     
     /* Es muessen die Listener implementiert werden. */
@@ -61,6 +76,10 @@ public abstract class BasisView {
         btnSpeichern.setOnAction(aEvent -> {
     		speichereSonderwuensche();
     	});
+        btnCsvExport.setOnAction(aEvent -> {
+            exportiereSonderwuenscheAlsCsv();
+        });
+        
     }
     
     protected GridPane getGridPaneSonderwunsch() {
@@ -71,12 +90,18 @@ public abstract class BasisView {
   		return lblSonderwunsch;
   	}
   	
+  	
+  	// Bearbeit 
   	/*
   	 * macht das BasisView-Objekt sichtbar.
   	 */
   	protected void oeffneBasisView(){ 
 	    sonderwunschStage.showAndWait();
   	}
+  	
+    protected abstract void exportiereSonderwuenscheAlsCsv();
+    
+    
   	     	
   	/* berechnet den Preis der ausgesuchten Sonderwuensche und zeigt diesen an */
   	protected abstract void berechneUndZeigePreisSonderwuensche();
@@ -84,6 +109,32 @@ public abstract class BasisView {
    	/* speichert die ausgesuchten Sonderwuensche in der Datenbank ab */
   	protected abstract void speichereSonderwuensche();
   	
+  	public abstract boolean[] holeIsSelectedFuerCheckboxen();
+  	@Deprecated
+  	public abstract void updateSwCheckboxen(int[] ausgewaehlteSw);
+  	public abstract void updateSwInView(int[][] ausgewaehlteSw);
+  	@Deprecated
+  	protected abstract int[] checkboxenZuIntArray();
+  	@Deprecated
+  	//public abstract int[][] spinnerZu2DIntArray();
+  	
+  	// SWs mit Anzahl
+  	protected abstract int[][] checkboxenZuAnzahlSonderwuensche();
+  	protected abstract int[][] getAlleTupel(Vector<int[]> v);
+  	
+  	/** Zeigt ein Fehlerfenster; in Unit-Tests (ohne FX-Thread) wird nur geloggt. */
+    public void zeigeKonfliktFenster(String header, String text) {
+        if (Platform.isFxApplicationThread()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Konflikt");
+            alert.setHeaderText(header);
+            alert.setContentText(text);
+            alert.showAndWait();
+        } else {
+            // In Tests ohne JavaFX-Thread vermeiden wir Fehler:
+            System.out.println("Konflikt (ohne FX-UI): " + header + " - " + text);
+        }
+    }
  	
 }
 
