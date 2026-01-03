@@ -1,34 +1,33 @@
 package gui.parkett;
 
-import javafx.scene.control.*;
+import gui.basis.BasisView;
+import business.kunde.Sw;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.Vector;
 
-import business.kunde.Sw;
-import gui.basis.BasisView;
-
 /**
- * View-Klasse für die Anzeige der Parkett-Optionen.
+ * View für die Parkett-Optionen.
  */
 public class ParkettView extends BasisView {
 
     private ParkettControl parkettControl;
 
-    // --- Definition der GUI-Elemente ---
-    // Erdgeschoss - Essbereich
+    // --- GUI-Elemente ---
     private Label lblLhdEssEg = new Label(Sw.LHD_M_ESS_EG.bes);
     private TextField txtPreisLhdEssEg = new TextField();
     private Label lblLhdEssEgEuro = new Label("Euro");
     private CheckBox chckBxLhdEssEg = new CheckBox();
 
-    // Erdgeschoss - Küche
     private Label lblLhdKuecheEg = new Label(Sw.LHD_M_KUECHE_EG.bes);
     private TextField txtPreisLhdKuecheEg = new TextField();
     private Label lblLhdKuecheEgEuro = new Label("Euro");
     private CheckBox chckBxLhdKuecheEg = new CheckBox();
 
-    // Stäbchenparkett Varianten EG
     private Label lblSpEssEg = new Label(Sw.SP_ESS_EG.bes);
     private TextField txtPreisSpEssEg = new TextField();
     private Label lblSpEssEgEuro = new Label("Euro");
@@ -39,7 +38,6 @@ public class ParkettView extends BasisView {
     private Label lblSpKuecheEgEuro = new Label("Euro");
     private CheckBox chckBxSpKuecheEg = new CheckBox();
 
-    // Obergeschoss
     private Label lblLhdOg = new Label(Sw.LHD_M_OG.bes);
     private TextField txtPreisLhdOg = new TextField();
     private Label lblLhdOgEuro = new Label("Euro");
@@ -50,7 +48,6 @@ public class ParkettView extends BasisView {
     private Label lblSpOgEuro = new Label("Euro");
     private CheckBox chckBxSpOg = new CheckBox();
 
-    // Dachgeschoss
     private Label lblLhdDgKomplett = new Label(Sw.LHD_M_KOMPLETT_DG.bes);
     private TextField txtPreisLhdDgKomplett = new TextField();
     private Label lblLhdDgKomplettEuro = new Label("Euro");
@@ -71,17 +68,14 @@ public class ParkettView extends BasisView {
     private Label lblSpDgOhneBadEuro = new Label("Euro");
     private CheckBox chckBxSpDgOhneBad = new CheckBox();
 
-    // Array für Iterationen
     private CheckBox[] allCheckboxes;
 
     public ParkettView(ParkettControl parkettControl, Stage parkettStage) {
         super(parkettStage);
         this.parkettControl = parkettControl;
         parkettStage.setTitle("Sonderwünsche zu Parkett");
-        
-        parkettStage.setWidth(650);
+        parkettStage.setWidth(700);
         parkettStage.setHeight(600);        
-
         initKomponenten();
     }
 
@@ -112,6 +106,7 @@ public class ParkettView extends BasisView {
             chckBxLhdDgKomplett, chckBxLhdDgOhneBad, chckBxSpDgKomplett, chckBxSpDgOhneBad
         };
         
+        // Mapping für einfachere Verarbeitung
         chckBxLhdEssEg.setUserData(Sw.LHD_M_ESS_EG);
         chckBxLhdKuecheEg.setUserData(Sw.LHD_M_KUECHE_EG);
         chckBxSpEssEg.setUserData(Sw.SP_ESS_EG);
@@ -137,12 +132,10 @@ public class ParkettView extends BasisView {
         super.oeffneBasisView();
     }
     
-
     public void updateSwInView(int[][] ausgewaehlteSw) {
         for (CheckBox cb : allCheckboxes) {
             cb.setSelected(false);
         }
-        
         if (ausgewaehlteSw == null) return;
 
         for (int[] tupel : ausgewaehlteSw) {
@@ -159,13 +152,11 @@ public class ParkettView extends BasisView {
     @Override
     public void updateSwCheckboxen(int[] ausgewaehlteSw) {
         if(ausgewaehlteSw == null) return;
-        
         int[][] temp = new int[ausgewaehlteSw.length][2];
         for(int i=0; i<ausgewaehlteSw.length; i++) {
             temp[i][0] = ausgewaehlteSw[i];
             temp[i][1] = 1;
         }
-        // Delegiere an die neue Logik
         updateSwInView(temp);
     }
 
@@ -190,9 +181,6 @@ public class ParkettView extends BasisView {
         return ids.stream().mapToInt(i -> i).toArray();
     }
     
-    /**
-     * WICHTIG: @Override ENTFERNT, falls BasisView dies nicht kennt.
-     */
     protected int[][] checkboxenZuAnzahlSonderwuensche() {
         int[] ids = checkboxenZuIntArray();
         int[][] result = new int[ids.length][2];
@@ -203,8 +191,17 @@ public class ParkettView extends BasisView {
         return result;
     }
 
+    /**
+     * Berechnet den Gesamtpreis und zeigt ihn an, sofern valide.
+     */
     @Override
     public void berechneUndZeigePreisSonderwuensche() {
+        int[][] currentSelection = checkboxenZuAnzahlSonderwuensche();
+        if (!parkettControl.pruefeKonstellationSonderwuensche(currentSelection)) {
+             txtGesamt.setText("Ungültig");
+             return;
+        }
+
         double gesamt = 0;
         for (CheckBox cb : allCheckboxes) {
             if (cb.isSelected()) {
@@ -215,24 +212,26 @@ public class ParkettView extends BasisView {
         txtGesamt.setText(String.format("%.2f", gesamt));
     }
 
+    /**
+     * Delegiert Speichern an Controller.
+     */
     @Override
     protected void speichereSonderwuensche() {
         int[][] selectedData = checkboxenZuAnzahlSonderwuensche();
-        
-        if (this.parkettControl.pruefeKonstellationSonderwuensche(selectedData)) {
-            this.parkettControl.speichereSonderwuensche(selectedData);
-            ((Stage) getGridPaneSonderwunsch().getScene().getWindow()).close();
-        }
+        this.parkettControl.speichereSonderwuensche(selectedData);
     }
     
-
+    /**
+     * Delegiert Export an Controller.
+     */
+    @Override
     protected void exportiereSonderwuenscheAlsCsv() {
-        // TODO: Implementierung
+        int[][] selectedData = checkboxenZuAnzahlSonderwuensche();
+        this.parkettControl.exportiereSonderwuenscheAlsCsv(selectedData);
     }
 
 	@Override
 	protected int[][] getAlleTupel(Vector<int[]> v) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
